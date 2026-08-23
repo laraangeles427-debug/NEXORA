@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXORA | Conectando conocimiento</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #061225;
+            color: white;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 8%;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 3px;
+            color: white;
+        }
+
+        .logo span {
+            color: #08c8f5;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 25px;
+            font-size: 15px;
+        }
+
+        nav a:hover {
+            color: #08c8f5;
+        }
+
+        .hero {
+            min-height: 75vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .hero-content {
+            max-width: 850px;
+        }
+
+        .hero h1 {
+            font-size: 64px;
+            letter-spacing: 8px;
+            margin-bottom: 15px;
+        }
+
+        .hero h1 span {
+            color: #08c8f5;
+        }
+
+        .hero h2 {
+            font-size: 22px;
+            font-weight: normal;
+            margin-bottom: 20px;
+            color: #dce6f2;
+        }
+
+        .hero p {
+            font-size: 17px;
+            line-height: 1.7;
+            color: #b8c5d6;
+            margin-bottom: 35px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .primary {
+            background: #08c8f5;
+            color: #061225;
+        }
+
+        .primary:hover {
+            transform: translateY(-3px);
+        }
+
+        .secondary {
+            border: 1px solid #08c8f5;
+            color: white;
+        }
+
+        .secondary:hover {
+            background: #08c8f5;
+            color: #061225;
+        }
+
+        .modules {
+            padding: 60px 8%;
+            background: #08182d;
+            text-align: center;
+        }
+
+        .modules h2 {
+            font-size: 32px;
+            margin-bottom: 40px;
+        }
+
+        .module-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .module {
+            background: #0d2038;
+            padding: 30px 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.08);
+            transition: 0.3s;
+        }
+
+        .module:hover {
+            transform: translateY(-5px);
+            border-color: #08c8f5;
+        }
+
+        .module h3 {
+            margin-bottom: 12px;
+            color: #08c8f5;
+        }
+
+        .module p {
+            color: #b8c5d6;
+            line-height: 1.5;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #8c9bad;
+            font-size: 14px;
+        }
+
+        @media (max-width: 700px) {
+            .hero h1 {
+                font-size: 42px;
+            }
+
+            nav {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">
+            NEX<span>O</span>RA
+        </div>
+
+        <nav>
+            <a href="#inicio">Inicio</a>
+            <a href="#modulos">Módulos</a>
+            <a href="#nosotros">NEXORA</a>
+        </nav>
+    </header>
+
+    <main>
+
+        <section class="hero" id="inicio">
+            <div class="hero-content">
+
+                <h1>NEX<span>O</span>RA</h1>
+
+                <h2>Conectando conocimiento, creando oportunidades.</h2>
+
+                <p>
+                    Plataforma web inclusiva orientada a fortalecer la
+                    educación financiera, la contabilidad y la tributación
+                    mediante herramientas digitales accesibles, prácticas
+                    e innovadoras.
+                </p>
+
+                <div class="buttons">
+                    <a href="#modulos" class="btn primary">
+                        Comenzar
+                    </a>
+
+                    <a href="#nosotros" class="btn secondary">
+                        Conocer NEXORA
+                    </a>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="modules" id="modulos">
+
+            <h2>Áreas de aprendizaje</h2>
+
+            <div class="module-container">
+
+                <div class="module">
+                    <h3>Educación Financiera</h3>
+                    <p>
+                        Aprende a organizar ingresos, gastos,
+                        ahorro y planificación financiera.
+                    </p>
+                </div>
+
+                <div class="module">
+                    <h3>Contabilidad</h3>
+                    <p>
+                        Fortalece tus conocimientos contables
+                        mediante contenidos y actividades prácticas.
+                    </p>
+                </div>
+
+                <div class="module">
+                    <h3>Tributación</h3>
+                    <p>
+                        Comprende conceptos y obligaciones
+                        tributarias de manera sencilla.
+                    </p>
+                </div>
+
+                <div class="module">
+                    <h3>Accesibilidad</h3>
+                    <p>
+                        Un entorno pensado para facilitar el
+                        aprendizaje de diferentes usuarios.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+        <section class="modules" id="nosotros">
+
+            <h2>¿Qué es NEXORA?</h2>
+
+            <p style="max-width: 800px; margin: auto; line-height: 1.8; color: #b8c5d6;">
+                NEXORA es una propuesta tecnológica que busca acercar
+                el conocimiento financiero, contable y tributario a la
+                comunidad mediante una plataforma web accesible,
+                intuitiva y orientada al aprendizaje práctico.
+            </p>
+
+        </section>
+
+    </main>
+
+    <footer>
+        NEXORA © 2026 — Conectando conocimiento, creando oportunidades.
+    </footer>
+
+</body>
+</html>
