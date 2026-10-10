@@ -2,202 +2,515 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>NEXORA | Educación y asesoría</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="NEXORA: educación financiera, contabilidad y tributación con herramientas educativas accesibles.">
+<title>NEXORA | Conectando conocimiento</title>
 <style>
-:root{--navy:#101b3c;--blue:#2457e6;--cyan:#35d5d0;--bg:#f4f7ff;--card:#fff;--text:#182442;--muted:#64718b;--border:#e1e7f3}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:110px}
-body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif;line-height:1.6}
-header{position:sticky;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--border)}
-.nav{max-width:1100px;margin:auto;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}
-.logo{font-size:25px;font-weight:900;color:var(--navy);text-decoration:none}
-.logo span{color:var(--blue)}
-nav{display:flex;gap:16px;flex-wrap:wrap}
-nav a{font-size:14px;font-weight:bold;text-decoration:none}
-nav a:hover{color:var(--blue)}
-main{max-width:1100px;margin:auto;padding:24px 20px}
-.hero{background:linear-gradient(130deg,#101b3c,#2045a2);color:white;border-radius:24px;padding:45px;display:grid;grid-template-columns:1.5fr 1fr;gap:20px;align-items:center}
-.eyebrow{color:var(--cyan);font-size:13px;font-weight:bold;letter-spacing:2px}
-h1{font-size:clamp(36px,5vw,58px);line-height:1.1;margin:12px 0}
-.hero p{color:#e3eaff}
-.hero-art{text-align:center;font-size:80px}
-.btn{display:inline-block;border:0;border-radius:11px;padding:11px 17px;background:var(--blue);color:white;font-weight:bold;text-decoration:none;cursor:pointer;margin-top:8px}
-.btn-light{background:white;color:var(--navy)}
-section{margin-top:42px}
-h2{font-size:28px;line-height:1.25;margin:7px 0}
-h3{margin:8px 0}
-.tag{font-size:12px;font-weight:bold;color:var(--blue);letter-spacing:1px}
-.lead,.card p,.muted{color:var(--muted)}
-.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}
-.card,.panel{background:var(--card);padding:22px;border:1px solid var(--border);border-radius:18px}
-.card p{font-size:14px}
-.symbol{font-size:32px}
-.panel{margin-top:18px}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-label{display:block;font-size:14px;font-weight:bold;margin:12px 0 5px}
-input,select{width:100%;padding:12px;border:1px solid #cbd5e5;border-radius:9px;background:var(--card);color:var(--text);font:inherit}
-.result,.feedback{margin-top:15px;padding:16px;border-radius:12px;background:#e8fbf5;border:1px solid #b8eddb}
-.result strong{color:#087f65}
-.note{font-size:12px;color:var(--muted)}
-.quiz-option{display:flex;gap:10px;align-items:flex-start;padding:10px;border:1px solid var(--border);border-radius:9px;margin:8px 0;cursor:pointer}
-.quiz-option input{width:auto;margin-top:6px}
-footer{margin-top:45px;padding:28px 20px;background:var(--navy);color:white}
-.footer-inner{max-width:1100px;margin:auto}
-.tools{position:fixed;bottom:15px;right:15px;display:flex;gap:7px;z-index:6}
-.tools button{background:var(--navy);color:white;border:0;border-radius:30px;padding:11px 14px;cursor:pointer;font-weight:bold}
-body.large{font-size:19px}
-body.contrast{--bg:#fff;--card:#fff;--text:#000;--muted:#222;--border:#555;--navy:#000;--blue:#0039b8;--cyan:#ff0}
-body.contrast .hero{background:#000;border:2px solid white}
-@media(max-width:720px){.hero{grid-template-columns:1fr;padding:28px 22px}.hero-art{font-size:55px}.grid,.two{grid-template-columns:1fr}main{padding:18px 14px}.card,.panel{padding:18px}.nav{align-items:flex-start}nav{gap:10px 14px}}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+:root {
+  --black: #030711;
+  --night: #071326;
+  --panel: #091a32;
+  --blue: #087bff;
+  --cyan: #00d9ff;
+  --white: #f4f8ff;
+  --muted: #a8bbd5;
+  --line: #123b68;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 100px; }
+body {
+  margin: 0;
+  background: var(--black);
+  color: var(--white);
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.6;
+}
+a { color: inherit; }
+button, input, select { font: inherit; }
+a:focus-visible, button:focus-visible,
+input:focus-visible, select:focus-visible {
+  outline: 3px solid var(--cyan);
+  outline-offset: 3px;
+}
+header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #030711f5;
+  border-bottom: 1px solid var(--line);
+}
+.nav {
+  max-width: 1180px;
+  margin: auto;
+  padding: 15px 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+.logo {
+  color: var(--white);
+  font-size: 27px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  text-decoration: none;
+}
+.logo span { color: var(--cyan); }
+nav { display: flex; flex-wrap: wrap; gap: 18px; }
+nav a {
+  text-decoration: none;
+  color: #d5e4fa;
+  font-size: 14px;
+  font-weight: bold;
+}
+nav a:hover { color: var(--cyan); }
+main { max-width: 1180px; margin: auto; padding: 24px 22px; }
+.hero {
+  display: grid;
+  grid-template-columns: 1.1fr .9fr;
+  align-items: center;
+  gap: 25px;
+  padding: 48px 40px;
+  min-height: 390px;
+  border: 1px solid #0d3d73;
+  border-radius: 24px;
+  background: radial-gradient(ellipse at 80% 45%, #073b83, #061b3b 38%, #030711 75%);
+  overflow: hidden;
+}
+.eyebrow, .tag {
+  display: inline-block;
+  color: var(--cyan);
+  border: 1px solid var(--blue);
+  border-radius: 30px;
+  padding: 5px 11px;
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+h1 {
+  font-size: clamp(38px, 5vw, 62px);
+  line-height: 1.08;
+  margin: 18px 0 12px;
+}
+.glow { color: var(--cyan); }
+.hero p { color: #cfddf1; max-width: 580px; }
+.hero-art { text-align: center; }
+.device {
+  max-width: 340px;
+  margin: auto;
+  padding: 30px 18px;
+  border: 1px solid var(--cyan);
+  border-radius: 22px;
+  background: linear-gradient(145deg, #0c2448, #030711);
+  box-shadow: 0 0 35px #087bff35;
+  transform: rotate(-2deg);
+}
+.device-logo { font-size: 52px; font-weight: 900; letter-spacing: 4px; }
+.device-logo span { color: var(--cyan); }
+.device small { color: #b6d5ff; letter-spacing: 2px; }
+.chips { display: flex; gap: 7px; justify-content: center; flex-wrap: wrap; margin-top: 18px; }
+.chips span { border: 1px solid #1458a0; padding: 5px 8px; border-radius: 6px; font-size: 10px; color: #bcecff; }
+.btn {
+  display: inline-block;
+  margin-top: 9px;
+  padding: 11px 16px;
+  border: 1px solid var(--cyan);
+  border-radius: 10px;
+  background: var(--cyan);
+  color: #00101e;
+  text-decoration: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+.btn:hover { box-shadow: 0 0 18px #00d9ff40; }
+.btn-outline { background: transparent; color: var(--white); border-color: var(--blue); }
+section { margin-top: 43px; }
+.section-head { margin-bottom: 18px; }
+h2 { font-size: clamp(26px, 3vw, 34px); line-height: 1.2; margin: 10px 0; }
+h3 { margin: 12px 0 7px; }
+.lead, .card p, .panel p { color: var(--muted); }
+.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.card, .panel {
+  background: linear-gradient(145deg, #091a32, #050d1b);
+  border: 1px solid var(--line);
+  border-radius: 17px;
+  padding: 22px;
+}
+.card:hover { border-color: var(--blue); box-shadow: 0 0 22px #087bff12; }
+.card p, .panel p { font-size: 14px; }
+.symbol {
+  display: grid;
+  place-items: center;
+  width: 51px;
+  height: 51px;
+  border: 1px solid var(--blue);
+  border-radius: 14px;
+  background: #071e3c;
+  color: var(--cyan);
+  font-size: 25px;
+}
+.advisory {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr 1fr 1fr;
+  gap: 13px;
+  align-items: stretch;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: linear-gradient(110deg, #06152b, #030711 60%, #071a35);
+}
+.advisory-intro { padding: 8px; }
+.advisory-intro h2 { font-size: 26px; }
+.advisory-intro p { color: var(--muted); font-size: 13px; }
+.mini-card { background: #061326; border: 1px solid var(--line); border-radius: 14px; padding: 16px; }
+.mini-card h3 { font-size: 15px; }
+.mini-card p { color: var(--muted); font-size: 12px; }
+.two-panels { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+label { display: block; font-size: 14px; font-weight: bold; margin: 12px 0 6px; }
+input, select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #21466e;
+  border-radius: 9px;
+  background: #030b18;
+  color: var(--white);
+}
+input::placeholder { color: #7187a5; }
+.result, .feedback {
+  margin-top: 15px;
+  padding: 15px;
+  border: 1px solid var(--blue);
+  border-radius: 12px;
+  background: #061a33;
+  color: #e7f4ff;
+}
+.note { font-size: 12px !important; color: #8fa8c7 !important; }
+.quiz-option {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  cursor: pointer;
+}
+.quiz-option:hover { border-color: var(--cyan); }
+.quiz-option input { width: auto; margin-top: 6px; accent-color: var(--cyan); }
+.quiz-option span { color: #dbeaff; }
+.feature-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 16px; }
+.feature { text-align: center; padding: 12px 6px; border-right: 1px solid var(--line); }
+.feature:last-child { border: 0; }
+.feature .symbol { margin: auto; border-radius: 50%; }
+.feature h3 { font-size: 13px; }
+.feature p { font-size: 12px; }
+footer { margin-top: 45px; padding: 28px 22px; background: #02050c; border-top: 1px solid var(--line); }
+.footer-inner {
+  max-width: 1180px; margin: auto;
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 15px; flex-wrap: wrap;
+}
+.footer-inner p { color: var(--muted); font-size: 12px; }
+.tools {
+  position: fixed; right: 12px; bottom: 12px; z-index: 20;
+  display: flex; gap: 7px; padding: 7px;
+  border: 1px solid var(--line); border-radius: 13px; background: #061326ee;
+}
+.tools button {
+  padding: 10px 12px; border: 1px solid #1b4b79;
+  border-radius: 8px; background: #0a2140; color: white;
+  cursor: pointer; font-weight: bold;
+}
+body.large-text { font-size: 19px; }
+body.high-contrast {
+  --black: #000; --night: #000; --panel: #000; --blue: #00aaff;
+  --cyan: #ffff00; --white: #fff; --muted: #fff; --line: #fff;
+}
+body.high-contrast .hero, body.high-contrast .card,
+body.high-contrast .panel, body.high-contrast .mini-card {
+  background: #000; border: 2px solid #fff;
+}
+@media(max-width:900px) {
+  .advisory { grid-template-columns: 1fr 1fr; }
+  .advisory-intro { grid-column: 1 / -1; }
+}
+@media(max-width:680px) {
+  .nav { flex-direction: column; align-items: flex-start; }
+  nav { gap: 10px 14px; }
+  main { padding: 18px 14px; }
+  .hero { grid-template-columns: 1fr; padding: 28px 21px; }
+  .hero-art { padding: 10px 0; }
+  .grid, .two-panels, .two, .advisory { grid-template-columns: 1fr; }
+  .advisory-intro { grid-column: auto; }
+  .card, .panel { padding: 18px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  html { scroll-behavior: auto; }
+  * { transition: none !important; }
+}
 </style>
 </head>
 <body>
 <header>
-<div class="nav">
-<a class="logo" href="#inicio">◈ NEX<span>ORA</span></a>
-<nav aria-label="Menú principal">
-<a href="#inicio">Inicio</a>
-<a href="#aprender">Aprender</a>
-<a href="#asesoria">Asesoría</a>
-<a href="#recursos">Recursos</a>
-<a href="#acerca">Nosotros</a>
-</nav>
-</div>
+  <div class="nav">
+    <a class="logo" href="#inicio">NEX<span>O</span>RA</a>
+    <nav aria-label="Menú principal">
+      <a href="#inicio">Inicio</a>
+      <a href="#aprender">Aprender</a>
+      <a href="#asesoria">Asesoría</a>
+      <a href="#recursos">Recursos</a>
+      <a href="#nosotros">Nosotros</a>
+    </nav>
+  </div>
 </header>
 
 <main>
-<section id="inicio" class="hero" style="margin-top:0">
-<div>
-<div class="eyebrow">SITIO WEB EDUCATIVO</div>
-<h1>Tu futuro también se aprende.</h1>
-<p><strong>Conectando conocimiento, creando oportunidades.</strong></p>
-<p>Aprende a organizar tus finanzas, comprende la contabilidad y conoce conceptos tributarios con herramientas prácticas y accesibles.</p>
-<a class="btn btn-light" href="#aprender">Comenzar a aprender →</a>
-</div>
-<div class="hero-art" aria-hidden="true">📊 💡</div>
-</section>
+  <section id="inicio" class="hero" style="margin-top:0">
+    <div>
+      <span class="eyebrow">Sitio web educativo</span>
+      <h1>Tu futuro también<br>se <span class="glow">aprende.</span></h1>
+      <p><strong>Conectando conocimiento, creando oportunidades.</strong></p>
+      <p>Aprende a organizar tus finanzas, comprender la contabilidad y conocer conceptos tributarios con herramientas prácticas y accesibles.</p>
+      <a class="btn" href="#aprender">Comenzar a aprender →</a>
+    </div>
+    <div class="hero-art">
+      <div class="device">
+        <div class="device-logo">NEX<span>O</span>RA</div>
+        <small>CONOCIMIENTO EN MOVIMIENTO</small>
+        <div class="chips"><span>FINANZAS</span><span>CONTABILIDAD</span><span>TRIBUTACIÓN</span></div>
+      </div>
+    </div>
+  </section>
 
-<section id="aprender">
-<div class="tag">APRENDE A TU RITMO</div>
-<h2>Explora nuestros módulos</h2>
-<p class="lead">Aprende conceptos fundamentales y practica lo aprendido.</p>
-<div class="grid">
-<article class="card"><div class="symbol">💰</div><h3>Educación financiera</h3><p>Presupuestos, ahorro, ingresos y gastos para tomar decisiones informadas.</p><a class="btn" href="#finanzas">Entrar al módulo</a></article>
-<article class="card"><div class="symbol">🧮</div><h3>Contabilidad</h3><p>Comprende las cuentas contables y practica con ejemplos.</p><a class="btn" href="#contabilidad">Entrar al módulo</a></article>
-<article class="card"><div class="symbol">🧾</div><h3>Tributación</h3><p>Conoce comprobantes y conceptos tributarios de Ecuador.</p><a class="btn" href="#tributacion">Entrar al módulo</a></article>
-</div>
-</section>
+  <section id="aprender">
+    <div class="section-head"><span class="tag">Aprende a tu ritmo</span><h2>Explora nuestros módulos</h2><p class="lead">Aprende conceptos fundamentales y pon a prueba tus conocimientos.</p></div>
+    <div class="grid">
+      <article class="card"><div class="symbol">▤</div><h3>Educación financiera</h3><p>Presupuestos, ahorro, ingresos y gastos para tomar decisiones informadas.</p><a class="btn btn-outline" href="#recursos" data-topic="finanzas">Explorar módulo →</a></article>
+      <article class="card"><div class="symbol">▦</div><h3>Contabilidad</h3><p>Comprende las cuentas contables y practica con ejemplos.</p><a class="btn btn-outline" href="#recursos" data-topic="contabilidad">Explorar módulo →</a></article>
+      <article class="card"><div class="symbol">▧</div><h3>Tributación</h3><p>Conoce comprobantes y conceptos tributarios de Ecuador.</p><a class="btn btn-outline" href="#recursos" data-topic="tributacion">Explorar módulo →</a></article>
+    </div>
+  </section>
 
-<section id="asesoria">
-<div class="tag">HERRAMIENTAS PRÁCTICAS</div>
-<h2>Asesoría y orientación NEXORA</h2>
-<p class="lead">Herramientas educativas para organizar información y comprender situaciones habituales. No sustituyen una consulta profesional personalizada.</p>
+  <section id="asesoria">
+    <div class="advisory">
+      <div class="advisory-intro"><span class="tag">Herramientas prácticas</span><h2>Asesoría y orientación NEXORA</h2><p>Herramientas educativas para comprender situaciones habituales. No sustituyen una consulta profesional personalizada.</p></div>
+      <article class="mini-card"><div class="symbol">▦</div><h3>Calculadora de presupuesto</h3><p>Calcula tus ingresos, gastos y ahorro mensual.</p><a class="btn" href="#calculadora">Usar calculadora →</a></article>
+      <article class="mini-card"><div class="symbol">▤</div><h3>Orientación contable</h3><p>Conoce la clasificación habitual de las cuentas.</p><a class="btn btn-outline" href="#contabilidad-guia">Consultar →</a></article>
+      <article class="mini-card"><div class="symbol">▧</div><h3>Orientación tributaria</h3><p>Guías sobre facturas y conceptos tributarios.</p><a class="btn btn-outline" href="#tributacion-guia">Consultar →</a></article>
+    </div>
 
-<div class="panel" id="finanzas">
-<div class="symbol">💰</div>
-<h3>Asesoría financiera: simulador de presupuesto</h3>
-<p>Introduce tus ingresos y gastos mensuales para calcular tu saldo disponible.</p>
-<form id="budget">
-<div class="two">
-<div><label for="income">Ingresos mensuales ($)</label><input id="income" type="number" min="0" step=".01" placeholder="Ej. 600" required></div>
-<div><label for="fixed">Gastos fijos ($)</label><input id="fixed" type="number" min="0" step=".01" placeholder="Ej. 250" required></div>
-<div><label for="variable">Gastos variables ($)</label><input id="variable" type="number" min="0" step=".01" placeholder="Ej. 150" required></div>
-<div><label for="goal">Meta de ahorro ($)</label><input id="goal" type="number" min="0" step=".01" value="0" required></div>
-</div>
-<button class="btn" type="submit">Calcular presupuesto</button>
-<button class="btn" type="reset" style="background:#101b3c">Limpiar</button>
-</form>
-<div id="budgetResult" class="result" aria-live="polite" hidden></div>
-</div>
+    <div class="panel" id="calculadora">
+      <span class="tag">01 / Finanzas personales</span><h2>Calculadora de presupuesto</h2>
+      <p class="lead">Introduce tus valores para calcular tu saldo disponible.</p>
+      <form id="budgetForm">
+        <div class="two">
+          <div><label for="income">Ingresos mensuales ($)</label><input id="income" type="number" min="0" step="0.01" placeholder="Ej. 600" required></div>
+          <div><label for="fixed">Gastos fijos ($)</label><input id="fixed" type="number" min="0" step="0.01" placeholder="Ej. 250" required></div>
+          <div><label for="variable">Gastos variables ($)</label><input id="variable" type="number" min="0" step="0.01" placeholder="Ej. 150" required></div>
+          <div><label for="goal">Meta de ahorro ($)</label><input id="goal" type="number" min="0" step="0.01" value="0" required></div>
+        </div>
+        <button class="btn" type="submit">Calcular presupuesto →</button>
+        <button class="btn btn-outline" type="reset">Limpiar</button>
+      </form>
+      <div id="budgetResult" class="result" aria-live="polite" hidden></div>
+    </div>
 
-<div class="grid">
-<article class="card" id="contabilidad">
-<div class="symbol">📒</div><h3>Orientación contable</h3>
-<p>Selecciona una cuenta para conocer su clasificación habitual.</p>
-<label for="account">Tipo de cuenta</label>
-<select id="account"><option value="">Seleccionar…</option><option value="activo">Activo</option><option value="pasivo">Pasivo</option><option value="patrimonio">Patrimonio</option><option value="ingreso">Ingreso</option><option value="gasto">Gasto</option></select>
-<button class="btn" id="accountBtn" type="button">Consultar</button>
-<div id="accountResult" class="feedback" aria-live="polite" hidden></div>
-<p class="note">La clasificación concreta depende de la operación y del plan de cuentas aplicable.</p>
-</article>
+    <div class="grid" style="margin-top:16px">
+      <article class="card" id="contabilidad-guia">
+        <span class="tag">02 / Contabilidad</span><h3>Orientación contable</h3>
+        <p>Selecciona una cuenta para conocer su clasificación habitual.</p>
+        <label for="account">Tipo de cuenta</label>
+        <select id="account"><option value="">Seleccionar cuenta…</option><option value="activo">Activo</option><option value="pasivo">Pasivo</option><option value="patrimonio">Patrimonio</option><option value="ingreso">Ingreso</option><option value="gasto">Gasto</option></select>
+        <button class="btn" id="accountBtn" type="button">Consultar cuenta →</button>
+        <div id="accountResult" class="feedback" aria-live="polite" hidden></div>
+      </article>
+      <article class="card" id="tributacion-guia">
+        <span class="tag">03 / Tributación</span><h3>Orientación tributaria</h3>
+        <p>Consulta una guía introductoria sobre comprobantes en Ecuador.</p>
+        <label for="taxTopic">Tema de consulta</label>
+        <select id="taxTopic"><option value="">Seleccionar tema…</option><option value="factura">Factura</option><option value="nota">Nota de crédito</option><option value="retencion">Comprobante de retención</option><option value="obligaciones">Obligaciones tributarias</option></select>
+        <button class="btn" id="taxBtn" type="button">Consultar guía →</button>
+        <div id="taxResult" class="feedback" aria-live="polite" hidden></div>
+        <p class="note">Verifica la normativa vigente con el SRI o con un profesional autorizado.</p>
+      </article>
+      <article class="card"><span class="tag">Orientación responsable</span><h3>Aprende con confianza</h3><p>NEXORA ofrece información educativa general. No realiza declaraciones, trámites oficiales ni servicios profesionales personalizados.</p><div class="symbol">✦</div></article>
+    </div>
+  </section>
 
-<article class="card" id="tributacion">
-<div class="symbol">🧾</div><h3>Orientación tributaria</h3>
-<p>Consulta una guía introductoria sobre comprobantes en Ecuador.</p>
-<label for="taxTopic">Tema de consulta</label>
-<select id="taxTopic"><option value="">Seleccionar…</option><option value="factura">Factura</option><option value="nota">Nota de crédito</option><option value="retencion">Comprobante de retención</option><option value="obligaciones">Obligaciones tributarias</option></select>
-<button class="btn" id="taxBtn" type="button">Consultar guía</button>
-<div id="taxResult" class="feedback" aria-live="polite" hidden></div>
-<p class="note">Verifica los requisitos vigentes con el SRI o con un profesional autorizado.</p>
-</article>
-</div>
-</section>
+  <section id="recursos">
+    <div class="section-head"><span class="tag">Practica lo aprendido</span><h2>Cuestionario interactivo</h2><p class="lead">Elige un tema, responde y comprueba tu respuesta.</p></div>
+    <div class="two-panels">
+      <div class="panel">
+        <label for="quizTopic">Tema del cuestionario</label>
+        <select id="quizTopic"><option value="finanzas">Educación financiera</option><option value="contabilidad">Contabilidad</option><option value="tributacion">Tributación</option></select>
+        <h3 id="quizQuestion"></h3>
+        <form id="quizForm"><div id="quizOptions"></div><button class="btn" type="submit">Comprobar respuesta →</button></form>
+        <div id="quizFeedback" class="feedback" aria-live="polite" hidden></div>
+      </div>
+      <div class="panel"><span class="tag">Aprendizaje activo</span><h2>Aprender haciendo</h2><p class="lead">Practica conceptos útiles para la vida diaria y el entorno contable.</p><div class="feature-row"><div class="feature"><div class="symbol">↗</div><h3>Practica</h3><p>Resuelve ejercicios.</p></div><div class="feature"><div class="symbol">◎</div><h3>Comprende</h3><p>Revisa la explicación.</p></div><div class="feature"><div class="symbol">◇</div><h3>Avanza</h3><p>Prueba otro tema.</p></div></div></div>
+    </div>
+  </section>
 
-<section id="recursos">
-<div class="tag">PRACTICA LO APRENDIDO</div>
-<h2>Cuestionario interactivo</h2>
-<p class="lead">Selecciona un tema, responde y comprueba tu respuesta.</p>
-<div class="panel">
-<label for="quizTopic">Tema</label>
-<select id="quizTopic"><option value="finanzas">Educación financiera</option><option value="contabilidad">Contabilidad</option><option value="tributacion">Tributación</option></select>
-<h3 id="question"></h3>
-<form id="quiz"><div id="options"></div><button class="btn" type="submit">Comprobar respuesta</button></form>
-<div id="quizResult" class="feedback" aria-live="polite" hidden></div>
-</div>
-</section>
-
-<section id="acerca">
-<div class="tag">NUESTRA PROPUESTA</div><h2>Conocimiento para todos</h2>
-<div class="grid">
-<article class="card"><div class="symbol">🎓</div><h3>Aprendizaje práctico</h3><p>Explicaciones y ejercicios para comprender conceptos.</p></article>
-<article class="card"><div class="symbol">♿</div><h3>Accesibilidad</h3><p>Controles para ampliar el texto y aumentar el contraste.</p></article>
-<article class="card"><div class="symbol">🌱</div><h3>En desarrollo</h3><p>NEXORA busca ampliar sus recursos y mejorar continuamente.</p></article>
-</div>
-<div class="panel"><h3>¿Qué es NEXORA?</h3><p>NEXORA es un proyecto de sitio web educativo que busca fortalecer los conocimientos de educación financiera, contabilidad y tributación mediante contenidos accesibles y actividades prácticas.</p><p class="note">Las herramientas actuales son educativas. No realizan declaraciones, trámites oficiales ni servicios profesionales personalizados.</p></div>
-</section>
+  <section id="nosotros">
+    <div class="section-head"><span class="tag">Nuestra propuesta</span><h2>Conocimiento para todos</h2></div>
+    <div class="grid">
+      <article class="card"><div class="symbol">⌘</div><h3>Aprendizaje práctico</h3><p>Explicaciones y ejercicios para comprender conceptos.</p></article>
+      <article class="card"><div class="symbol">♿</div><h3>Accesibilidad</h3><p>Controles para ampliar el texto y mejorar el contraste.</p></article>
+      <article class="card"><div class="symbol">✧</div><h3>En desarrollo</h3><p>Ampliamos los recursos educativos continuamente.</p></article>
+    </div>
+    <div class="panel"><h3>¿Qué es NEXORA?</h3><p>NEXORA es un proyecto de sitio web educativo que busca fortalecer los conocimientos de educación financiera, contabilidad y tributación mediante contenidos accesibles y actividades prácticas.</p></div>
+  </section>
 </main>
 
-<footer><div class="footer-inner"><div class="logo" style="color:white">◈ NEX<span>ORA</span></div><p>Conectando conocimiento, creando oportunidades.</p><p class="note" style="color:#dce5ff">Proyecto educativo en desarrollo · Ecuador</p></div></footer>
-<div class="tools" aria-label="Accesibilidad"><button id="fontBtn" type="button" aria-pressed="false">A+</button><button id="contrastBtn" type="button" aria-pressed="false">Contraste</button></div>
+<footer><div class="footer-inner"><div><a class="logo" href="#inicio">NEX<span>O</span>RA</a><p>Conectando conocimiento, creando oportunidades.</p></div><p>Proyecto educativo en desarrollo · Ecuador</p></div></footer>
+<div class="tools" aria-label="Controles de accesibilidad"><button type="button" id="fontBtn" aria-pressed="false">A+</button><button type="button" id="contrastBtn" aria-pressed="false">◐ Contraste</button></div>
 
 <script>
 "use strict";
-const money=n=>new Intl.NumberFormat("es-EC",{style:"currency",currency:"USD"}).format(n);
-const budget=document.getElementById("budget"),budgetResult=document.getElementById("budgetResult");
-budget.addEventListener("submit",e=>{
-e.preventDefault();
-const income=Number(document.getElementById("income").value),fixed=Number(document.getElementById("fixed").value),variable=Number(document.getElementById("variable").value),goal=Number(document.getElementById("goal").value);
-if([income,fixed,variable,goal].some(n=>!Number.isFinite(n)||n<0)){budgetResult.textContent="Ingresa valores válidos iguales o mayores que cero.";budgetResult.hidden=false;return}
-const expenses=fixed+variable,balance=income-expenses,after=balance-goal;
-let advice=balance<0?"Tus gastos superan tus ingresos. Revisa cuáles gastos puedes reducir.":goal>balance?"Tu meta de ahorro supera el saldo disponible. Considera ajustar la meta.":balance===0?"Tus ingresos cubren exactamente tus gastos. Revisa si puedes crear un margen para imprevistos.":"Tu presupuesto cubre los gastos registrados y la meta de ahorro. Considera reservar una parte para imprevistos.";
-budgetResult.replaceChildren();
-const title=document.createElement("h3");title.textContent="Resultado de tu presupuesto";budgetResult.append(title);
-[["Ingresos mensuales",income],["Gastos totales",expenses],["Saldo antes del ahorro",balance],["Saldo después de apartar el ahorro",after]].forEach(([label,value])=>{const p=document.createElement("p");p.textContent=label+": "+money(value);budgetResult.append(p)});
-const p=document.createElement("p");p.textContent="Orientación: "+advice;budgetResult.append(p);
-const note=document.createElement("p");note.className="note";note.textContent="El resultado usa solo los datos ingresados. No se guardan ni envían.";budgetResult.append(note);budgetResult.hidden=false;
+const money = value => new Intl.NumberFormat("es-EC",{style:"currency",currency:"USD"}).format(value);
+
+const budgetForm = document.getElementById("budgetForm");
+const budgetResult = document.getElementById("budgetResult");
+budgetForm.addEventListener("submit", event => {
+  event.preventDefault();
+  const income = Number(document.getElementById("income").value);
+  const fixed = Number(document.getElementById("fixed").value);
+  const variable = Number(document.getElementById("variable").value);
+  const goal = Number(document.getElementById("goal").value);
+  if ([income,fixed,variable,goal].some(value => !Number.isFinite(value) || value < 0)) {
+    budgetResult.textContent = "Ingresa valores válidos iguales o mayores que cero.";
+    budgetResult.hidden = false;
+    return;
+  }
+  const expenses = fixed + variable;
+  const balance = income - expenses;
+  const afterGoal = balance - goal;
+  let advice = balance < 0
+    ? "Tus gastos superan tus ingresos. Revisa qué gastos puedes reducir."
+    : goal > balance
+      ? "Tu meta de ahorro supera el saldo disponible. Considera ajustar la meta."
+      : "Revisa periódicamente tu presupuesto y reserva para imprevistos si es posible.";
+  budgetResult.replaceChildren();
+  const title = document.createElement("h3");
+  title.textContent = "Resultado de tu presupuesto";
+  budgetResult.append(title);
+  [["Ingresos mensuales",income],["Gastos totales",expenses],["Saldo antes del ahorro",balance],["Saldo después del ahorro",afterGoal]].forEach(([label,value]) => {
+    const p = document.createElement("p");
+    p.textContent = label + ": " + money(value);
+    budgetResult.append(p);
+  });
+  const note = document.createElement("p");
+  note.textContent = "Orientación: " + advice;
+  budgetResult.append(note);
+  const privacy = document.createElement("p");
+  privacy.className = "note";
+  privacy.textContent = "El cálculo utiliza los valores ingresados; no se guardan ni envían.";
+  budgetResult.append(privacy);
+  budgetResult.hidden = false;
 });
-budget.addEventListener("reset",()=>{budgetResult.hidden=true;budgetResult.replaceChildren()});
+budgetForm.addEventListener("reset", () => {
+  budgetResult.hidden = true;
+  budgetResult.replaceChildren();
+});
 
-const accountInfo={activo:"Activo: recursos que posee o controla el negocio, como efectivo, inventario o equipos.",pasivo:"Pasivo: obligaciones pendientes, como préstamos o cuentas por pagar.",patrimonio:"Patrimonio: participación residual del propietario después de considerar los pasivos.",ingreso:"Ingreso: valor generado por ventas u otras actividades del negocio.",gasto:"Gasto: recursos consumidos para mantener las operaciones, como alquiler o servicios."};
-document.getElementById("accountBtn").addEventListener("click",()=>{const v=document.getElementById("account").value,r=document.getElementById("accountResult");r.textContent=v?accountInfo[v]:"Selecciona una cuenta para ver la orientación.";r.hidden=false});
-
-const taxInfo={factura:"La factura documenta una venta de bienes o prestación de servicios y debe cumplir los requisitos vigentes establecidos por el SRI.",nota:"Una nota de crédito puede documentar devoluciones o ajustes permitidos relacionados con comprobantes previos, conforme a las reglas aplicables.",retencion:"El comprobante de retención documenta las retenciones efectuadas cuando corresponde según la normativa tributaria.",obligaciones:"Las obligaciones dependen de la actividad económica, el régimen tributario y la situación del contribuyente. Consulta el portal oficial del SRI."};
-document.getElementById("taxBtn").addEventListener("click",()=>{const v=document.getElementById("taxTopic").value,r=document.getElementById("taxResult");r.textContent=v?taxInfo[v]:"Selecciona un tema para consultar la guía.";r.hidden=false});
-
-const quizzes={
-finanzas:{q:"Si recibes $100 y gastas $70, ¿cuánto dinero te queda?",o:["$20","$30","$70","$170"],a:1,f:"$100 − $70 = $30. El saldo se obtiene restando los gastos de los ingresos."},
-contabilidad:{q:"¿Cuál de estas cuentas representa una deuda del negocio?",o:["Caja","Ventas","Cuentas por pagar","Capital"],a:2,f:"Las cuentas por pagar representan obligaciones pendientes y normalmente se clasifican como pasivos."},
-tributacion:{q:"¿Cuál es una función de la factura en una operación comercial?",o:["Reemplazar todos los impuestos","Respaldar una transacción","Eliminar la contabilidad","Garantizar una ganancia"],a:1,f:"La factura es un comprobante que respalda una transacción y debe cumplir los requisitos aplicables."}
+const accountInfo = {
+  activo:"Activo: recursos que posee o controla el negocio, como efectivo, inventario o equipos.",
+  pasivo:"Pasivo: obligaciones pendientes, como préstamos o cuentas por pagar.",
+  patrimonio:"Patrimonio: participación residual del propietario después de considerar los pasivos.",
+  ingreso:"Ingreso: valor generado por ventas u otras actividades del negocio.",
+  gasto:"Gasto: recursos consumidos para mantener las operaciones, como alquiler o servicios."
 };
-const topic=document.getElementById("quizTopic"),question=document.getElementById("question"),options=document.getElementById("options"),quizResult=document.getElementById("quizResult"),quiz=document.getElementById("quiz");
-function loadQuiz(){const q=quizzes[topic.value];question.textContent=q.q;options.replaceChildren();quizResult.hidden=true;quizResult.textContent="";q.o.forEach((text,i)=>{const label=document.createElement("label");label.className="quiz-option";const radio=document.createElement("input");radio.type="radio";radio.name="answer";radio.value=i;radio.required=true;const span=document.createElement("span");span.textContent=text;label.append(radio,span);options.append(label)})}
-topic.addEventListener("change",loadQuiz);
-quiz.addEventListener("submit",e=>{e.preventDefault();const chosen=quiz.querySelector('input[name="answer"]:checked');if(!chosen)return;const q=quizzes[topic.value];quizResult.textContent=(Number(chosen.value)===q.a?"¡Muy bien! ":"Revisa el concepto. ")+q.f;quizResult.hidden=false});
+document.getElementById("accountBtn").addEventListener("click", () => {
+  const value = document.getElementById("account").value;
+  const result = document.getElementById("accountResult");
+  result.textContent = value ? accountInfo[value] : "Selecciona una cuenta para ver la orientación.";
+  result.hidden = false;
+});
+
+const taxInfo = {
+  factura:"La factura documenta una venta de bienes o prestación de servicios y debe cumplir los requisitos vigentes establecidos por el SRI.",
+  nota:"Una nota de crédito puede documentar devoluciones o ajustes permitidos relacionados con comprobantes previos, conforme a las reglas aplicables.",
+  retencion:"El comprobante de retención documenta las retenciones efectuadas cuando corresponde según la normativa tributaria.",
+  obligaciones:"Las obligaciones dependen de la actividad económica, el régimen tributario y la situación del contribuyente. Consulta el portal oficial del SRI."
+};
+document.getElementById("taxBtn").addEventListener("click", () => {
+  const value = document.getElementById("taxTopic").value;
+  const result = document.getElementById("taxResult");
+  result.textContent = value ? taxInfo[value] : "Selecciona un tema para consultar la guía.";
+  result.hidden = false;
+});
+
+const quizzes = {
+  finanzas:{
+    question:"Si recibes $100 y gastas $70, ¿cuánto dinero te queda?",
+    options:["$20","$30","$70","$170"], answer:1,
+    explanation:"$100 − $70 = $30. El saldo se obtiene restando los gastos de los ingresos."
+  },
+  contabilidad:{
+    question:"¿Cuál de estas cuentas representa una deuda del negocio?",
+    options:["Caja","Ventas","Cuentas por pagar","Capital"], answer:2,
+    explanation:"Las cuentas por pagar representan obligaciones pendientes y normalmente se clasifican como pasivos."
+  },
+  tributacion:{
+    question:"¿Cuál es una función de la factura en una operación comercial?",
+    options:["Reemplazar todos los impuestos","Respaldar una transacción","Eliminar la contabilidad","Garantizar una ganancia"], answer:1,
+    explanation:"La factura es un comprobante que respalda una transacción y debe cumplir los requisitos aplicables."
+  }
+};
+const quizTopic = document.getElementById("quizTopic");
+const quizQuestion = document.getElementById("quizQuestion");
+const quizOptions = document.getElementById("quizOptions");
+const quizFeedback = document.getElementById("quizFeedback");
+const quizForm = document.getElementById("quizForm");
+function loadQuiz() {
+  const quiz = quizzes[quizTopic.value];
+  quizQuestion.textContent = quiz.question;
+  quizOptions.replaceChildren();
+  quizFeedback.hidden = true;
+  quizFeedback.textContent = "";
+  quiz.options.forEach((option,index) => {
+    const label = document.createElement("label");
+    label.className = "quiz-option";
+    const input = document.createElement("input");
+    input.type = "radio";
+    input.name = "answer";
+    input.value = String(index);
+    input.required = true;
+    const span = document.createElement("span");
+    span.textContent = option;
+    label.append(input,span);
+    quizOptions.append(label);
+  });
+}
+quizTopic.addEventListener("change", loadQuiz);
+quizForm.addEventListener("submit", event => {
+  event.preventDefault();
+  const selected = quizForm.querySelector('input[name="answer"]:checked');
+  if (!selected) return;
+  const quiz = quizzes[quizTopic.value];
+  const correct = Number(selected.value) === quiz.answer;
+  quizFeedback.textContent = (correct ? "¡Correcto! " : "Todavía no. ") + quiz.explanation;
+  quizFeedback.hidden = false;
+});
+document.querySelectorAll("[data-topic]").forEach(link => {
+  link.addEventListener("click", () => {
+    quizTopic.value = link.dataset.topic;
+    loadQuiz();
+  });
+});
 loadQuiz();
-document.getElementById("fontBtn").addEventListener("click",function(){const on=document.body.classList.toggle("large");this.setAttribute("aria-pressed",String(on))});
-document.getElementById("contrastBtn").addEventListener("click",function(){const on=document.body.classList.toggle("contrast");this.setAttribute("aria-pressed",String(on))});
+
+document.getElementById("fontBtn").addEventListener("click", function() {
+  const active = document.body.classList.toggle("large-text");
+  this.setAttribute("aria-pressed", String(active));
+});
+document.getElementById("contrastBtn").addEventListener("click", function() {
+  const active = document.body.classList.toggle("high-contrast");
+  this.setAttribute("aria-pressed", String(active));
+});
 </script>
 </body>
 </html>
