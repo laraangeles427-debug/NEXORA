@@ -1,1000 +1,498 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>NEXORA | Conectando conocimiento</title>
-
-    <style>
-        /* =========================
-           CONFIGURACIÓN GENERAL
-        ========================== */
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            background: #061225;
-            color: white;
-            line-height: 1.6;
-        }
-
-        a {
-            text-decoration: none;
-        }
-
-        /* =========================
-           BARRA DE NAVEGACIÓN
-        ========================== */
-
-        header {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-
-            padding: 18px 8%;
-
-            background: rgba(6, 18, 37, 0.96);
-            border-bottom: 1px solid rgba(255,255,255,0.10);
-        }
-
-        .logo {
-            font-size: 27px;
-            font-weight: bold;
-            letter-spacing: 3px;
-            color: white;
-        }
-
-        .logo span {
-            color: #08c8f5;
-        }
-
-        nav {
-            display: flex;
-            gap: 25px;
-        }
-
-        nav a {
-            color: #dce6f2;
-            font-size: 14px;
-            transition: 0.3s;
-        }
-
-        nav a:hover {
-            color: #08c8f5;
-        }
-
-        /* =========================
-           HERO / INICIO
-        ========================== */
-
-        .hero {
-            min-height: 88vh;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            text-align: center;
-            padding: 80px 20px;
-
-            background:
-                radial-gradient(circle at top right,
-                rgba(8,200,245,0.14),
-                transparent 35%),
-                radial-gradient(circle at bottom left,
-                rgba(8,200,245,0.08),
-                transparent 30%);
-        }
-
-        .hero-content {
-            max-width: 900px;
-        }
-
-        .hero-label {
-            display: inline-block;
-
-            padding: 7px 16px;
-            margin-bottom: 22px;
-
-            border: 1px solid rgba(8,200,245,0.45);
-            border-radius: 30px;
-
-            color: #08c8f5;
-            font-size: 13px;
-            letter-spacing: 1px;
-        }
-
-        .hero h1 {
-            font-size: clamp(55px, 10vw, 90px);
-            letter-spacing: 10px;
-            line-height: 1;
-            margin-bottom: 22px;
-        }
-
-        .hero h1 span {
-            color: #08c8f5;
-        }
-
-        .hero h2 {
-            font-size: clamp(21px, 3vw, 28px);
-            font-weight: normal;
-            color: #dce6f2;
-            margin-bottom: 22px;
-        }
-
-        .hero p {
-            max-width: 760px;
-            margin: auto;
-            color: #aebed0;
-            font-size: 17px;
-        }
-
-        /* =========================
-           BOTONES
-        ========================== */
-
-        .buttons {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap;
-
-            margin-top: 35px;
-        }
-
-        .btn {
-            display: inline-block;
-
-            padding: 14px 28px;
-
-            border-radius: 30px;
-
-            font-weight: bold;
-            transition: 0.3s;
-        }
-
-        .primary {
-            background: #08c8f5;
-            color: #061225;
-        }
-
-        .primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(8,200,245,0.25);
-        }
-
-        .secondary {
-            border: 1px solid #08c8f5;
-            color: white;
-        }
-
-        .secondary:hover {
-            background: #08c8f5;
-            color: #061225;
-        }
-
-        /* =========================
-           SECCIONES
-        ========================== */
-
-        section {
-            padding: 90px 8%;
-        }
-
-        .section-title {
-            text-align: center;
-            margin-bottom: 50px;
-        }
-
-        .section-title h2 {
-            font-size: 36px;
-            margin-bottom: 12px;
-        }
-
-        .section-title p {
-            color: #9eafc2;
-            max-width: 650px;
-            margin: auto;
-        }
-
-        /* =========================
-           ¿QUÉ ES NEXORA?
-        ========================== */
-
-        .about {
-            background: #08182d;
-        }
-
-        .about-content {
-            max-width: 950px;
-            margin: auto;
-
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 35px;
-        }
-
-        .about-box {
-            padding: 30px;
-
-            background: #0d2038;
-
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 18px;
-        }
-
-        .about-box h3 {
-            color: #08c8f5;
-            margin-bottom: 15px;
-        }
-
-        .about-box p {
-            color: #b8c5d6;
-        }
-
-        /* =========================
-           ÁREAS DE APRENDIZAJE
-        ========================== */
-
-        .modules {
-            background: #061225;
-        }
-
-        .module-container {
-            display: grid;
-
-            grid-template-columns:
-            repeat(auto-fit, minmax(230px, 1fr));
-
-            gap: 22px;
-        }
-
-        .module {
-            background: #0b1d34;
-
-            padding: 32px 25px;
-
-            border-radius: 18px;
-
-            border: 1px solid rgba(255,255,255,0.08);
-
-            transition: 0.3s;
-        }
-
-        .module:hover {
-            transform: translateY(-7px);
-            border-color: #08c8f5;
-        }
-
-        .module-icon {
-            font-size: 34px;
-            margin-bottom: 18px;
-        }
-
-        .module h3 {
-            color: #08c8f5;
-            margin-bottom: 12px;
-            font-size: 21px;
-        }
-
-        .module p {
-            color: #aebed0;
-            font-size: 15px;
-        }
-
-        .module-btn {
-            display: inline-block;
-
-            margin-top: 20px;
-
-            color: #08c8f5;
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        /* =========================
-           CÓMO FUNCIONA
-        ========================== */
-
-        .how {
-            background: #08182d;
-        }
-
-        .steps {
-            max-width: 1000px;
-            margin: auto;
-
-            display: grid;
-            grid-template-columns:
-            repeat(auto-fit, minmax(200px, 1fr));
-
-            gap: 25px;
-        }
-
-        .step {
-            text-align: center;
-            padding: 25px;
-        }
-
-        .step-number {
-            width: 55px;
-            height: 55px;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            margin: 0 auto 18px;
-
-            border-radius: 50%;
-
-            background: #08c8f5;
-            color: #061225;
-
-            font-size: 20px;
-            font-weight: bold;
-        }
-
-        .step h3 {
-            margin-bottom: 10px;
-        }
-
-        .step p {
-            color: #aebed0;
-            font-size: 14px;
-        }
-
-        /* =========================
-           APRENDE Y PRACTICA
-        ========================== */
-
-        .practice {
-            background: #061225;
-        }
-
-        .practice-box {
-            max-width: 1000px;
-            margin: auto;
-
-            padding: 45px;
-
-            border-radius: 22px;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #0d2038,
-                    #09243b
-                );
-
-            border: 1px solid rgba(8,200,245,0.18);
-
-            text-align: center;
-        }
-
-        .practice-box h2 {
-            font-size: 30px;
-            margin-bottom: 15px;
-        }
-
-        .practice-box p {
-            max-width: 700px;
-            margin: auto;
-
-            color: #b8c5d6;
-        }
-
-        /* =========================
-           ACCESIBILIDAD
-        ========================== */
-
-        .accessibility {
-            background: #08182d;
-        }
-
-        .access-grid {
-            display: grid;
-
-            grid-template-columns:
-            repeat(auto-fit, minmax(210px, 1fr));
-
-            gap: 20px;
-        }
-
-        .access-card {
-            padding: 25px;
-
-            background: #0d2038;
-
-            border-radius: 16px;
-
-            border: 1px solid rgba(255,255,255,0.08);
-        }
-
-        .access-card h3 {
-            color: #08c8f5;
-            margin-bottom: 10px;
-        }
-
-        .access-card p {
-            color: #aebed0;
-            font-size: 14px;
-        }
-
-        /* =========================
-           PROYECTO
-        ========================== */
-
-        .project {
-            background: #061225;
-            text-align: center;
-        }
-
-        .project-content {
-            max-width: 850px;
-            margin: auto;
-        }
-
-        .project-content p {
-            color: #b8c5d6;
-            margin-bottom: 18px;
-        }
-
-        .highlight {
-            color: #08c8f5;
-            font-weight: bold;
-        }
-
-        /* =========================
-           FOOTER
-        ========================== */
-
-        footer {
-            padding: 40px 8%;
-
-            background: #040c19;
-
-            border-top: 1px solid rgba(255,255,255,0.08);
-
-            text-align: center;
-        }
-
-        .footer-logo {
-            font-size: 24px;
-            font-weight: bold;
-            letter-spacing: 3px;
-            margin-bottom: 10px;
-        }
-
-        .footer-logo span {
-            color: #08c8f5;
-        }
-
-        footer p {
-            color: #7f91a6;
-            font-size: 13px;
-        }
-
-        /* =========================
-           RESPONSIVE
-        ========================== */
-
-        @media (max-width: 750px) {
-
-            header {
-                padding: 16px 5%;
-            }
-
-            nav {
-                display: none;
-            }
-
-            section {
-                padding: 70px 6%;
-            }
-
-            .hero {
-                min-height: 80vh;
-            }
-
-            .about-content {
-                grid-template-columns: 1fr;
-            }
-
-            .practice-box {
-                padding: 30px 20px;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="NEXORA: sitio web educativo de educación financiera, contabilidad y tributación.">
+<title>NEXORA | Aprende y crea oportunidades</title>
+
+<style>
+:root {
+  --bg: #061225;
+  --panel: #0d2038;
+  --panel2: #102943;
+  --cyan: #08c8f5;
+  --text: #f5f8ff;
+  --muted: #c1cede;
+  --border: rgba(255,255,255,.12);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+}
+body.high-contrast {
+  --bg: #000;
+  --panel: #000;
+  --panel2: #111;
+  --cyan: #ffed00;
+  --text: #fff;
+  --muted: #fff;
+  --border: #fff;
+}
+body.large-text { font-size: 120%; }
+a { color: inherit; }
+button, a { -webkit-tap-highlight-color: transparent; }
+button, input { font: inherit; }
+button:focus-visible, a:focus-visible, input:focus-visible {
+  outline: 3px solid var(--cyan);
+  outline-offset: 4px;
+}
+.container { width: min(1120px, 90%); margin: auto; }
+header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(6,18,37,.97);
+  border-bottom: 1px solid var(--border);
+}
+.nav {
+  min-height: 78px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.logo {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: 3px;
+  text-decoration: none;
+}
+.logo span, .accent { color: var(--cyan); }
+nav { display: flex; flex-wrap: wrap; gap: 22px; }
+nav a { text-decoration: none; color: var(--muted); font-size: 14px; }
+nav a:hover { color: var(--cyan); }
+.hero {
+  padding: 105px 0 95px;
+  text-align: center;
+  background: radial-gradient(ellipse at 80% 20%, #07334a 0%, transparent 42%);
+}
+.tag {
+  display: inline-block;
+  border: 1px solid var(--cyan);
+  border-radius: 30px;
+  padding: 5px 17px;
+  color: var(--cyan);
+  letter-spacing: 2px;
+  font-size: 12px;
+}
+.hero h1 { font-size: clamp(56px, 10vw, 100px); line-height: 1.1; letter-spacing: 10px; margin: 25px 0; }
+.hero h2 { font-size: clamp(21px, 3vw, 30px); font-weight: 400; }
+.hero p { max-width: 750px; margin: 20px auto 32px; color: var(--muted); }
+.actions { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
+.btn {
+  display: inline-block;
+  padding: 12px 24px;
+  border-radius: 30px;
+  border: 1px solid var(--cyan);
+  text-decoration: none;
+  font-weight: 700;
+  cursor: pointer;
+  transition: .2s;
+}
+.btn-primary { background: var(--cyan); color: #061225; }
+.btn-secondary { background: transparent; color: var(--text); }
+.btn:hover { transform: translateY(-2px); }
+section.content-section { padding: 75px 0; }
+.section-heading { text-align: center; margin-bottom: 38px; }
+.section-heading h2 { font-size: clamp(27px, 4vw, 38px); margin-bottom: 8px; }
+.section-heading p { color: var(--muted); max-width: 720px; margin: auto; }
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(225px, 1fr));
+  gap: 20px;
+}
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 17px;
+  padding: 25px;
+  transition: .2s;
+}
+.card:hover { transform: translateY(-4px); border-color: var(--cyan); }
+.card-icon { font-size: 30px; }
+.card h3 { margin: 10px 0; color: var(--cyan); }
+.card p { color: var(--muted); font-size: 15px; }
+.card .btn { margin-top: 8px; font-size: 14px; }
+.alt { background: #08182d; }
+.info-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap: 20px; }
+.info-box { padding: 24px; border-left: 3px solid var(--cyan); background: var(--panel); border-radius: 8px; }
+.info-box p { color: var(--muted); }
+.learning-layout { display: grid; grid-template-columns: minmax(0,1.2fr) minmax(280px,.8fr); gap: 25px; align-items: start; }
+.lesson-panel, .quiz-panel {
+  padding: 28px;
+  border-radius: 16px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+}
+.lesson-panel h3, .quiz-panel h3 { color: var(--cyan); margin-top: 0; }
+.lesson-panel ul { padding-left: 22px; }
+.quiz-option {
+  display: block;
+  margin: 10px 0;
+  padding: 12px;
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  cursor: pointer;
+}
+.quiz-option:hover { border-color: var(--cyan); }
+.quiz-option input { margin-right: 9px; }
+.feedback { margin-top: 15px; font-weight: bold; }
+.small { font-size: 13px; color: var(--muted); }
+.access-tools {
+  position: fixed;
+  right: 15px;
+  bottom: 15px;
+  z-index: 30;
+  display: flex;
+  gap: 8px;
+  padding: 10px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 0 5px 24px #0005;
+}
+.access-tools button {
+  background: var(--panel2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 11px;
+  cursor: pointer;
+}
+footer { border-top: 1px solid var(--border); padding: 30px 0 80px; text-align: center; color: var(--muted); }
+footer p { margin: 5px; }
+[hidden] { display: none !important; }
+@media(max-width:760px) {
+  .nav { padding: 15px 0; align-items: flex-start; flex-direction: column; }
+  nav { gap: 12px; }
+  .hero { padding: 75px 0; }
+  .hero h1 { letter-spacing: 5px; }
+  .learning-layout { grid-template-columns: 1fr; }
+  section.content-section { padding: 55px 0; }
+}
+@media(prefers-reduced-motion:reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition: none !important; }
+}
+</style>
 </head>
 
 <body>
-
-    <!-- =========================
-         ENCABEZADO
-    ========================== -->
-
-    <header>
-
-        <a href="#inicio" class="logo">
-            NEX<span>O</span>RA
-        </a>
-
-        <nav>
-            <a href="#inicio">Inicio</a>
-            <a href="#nosotros">NEXORA</a>
-            <a href="#modulos">Aprender</a>
-            <a href="#como-funciona">Cómo funciona</a>
-            <a href="#accesibilidad">Accesibilidad</a>
-        </nav>
-
-    </header>
-
-
-    <main>
-
-        <!-- =========================
-             INICIO
-        ========================== -->
-
-        <section class="hero" id="inicio">
-
-            <div class="hero-content">
-
-                <div class="hero-label">
-                    SITIO WEB EDUCATIVO
-                </div>
-
-                <h1>
-                    NEX<span>O</span>RA
-                </h1>
-
-                <h2>
-                    Conectando conocimiento, creando oportunidades.
-                </h2>
-
-                <p>
-                    Un sitio web educativo orientado a fortalecer los
-                    conocimientos de educación financiera, contabilidad
-                    y tributación mediante contenidos accesibles,
-                    prácticos e interactivos.
-                </p>
-
-                <div class="buttons">
-
-                    <a href="#modulos" class="btn primary">
-                        Comenzar a aprender
-                    </a>
-
-                    <a href="#nosotros" class="btn secondary">
-                        Conocer NEXORA
-                    </a>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =========================
-             ¿QUÉ ES NEXORA?
-        ========================== -->
-
-        <section class="about" id="nosotros">
-
-            <div class="section-title">
-
-                <h2>¿Qué es NEXORA?</h2>
-
-                <p>
-                    Conocimiento financiero al alcance de más personas.
-                </p>
-
-            </div>
-
-
-            <div class="about-content">
-
-                <div class="about-box">
-
-                    <h3>Nuestra propuesta</h3>
-
-                    <p>
-                        NEXORA es un sitio web educativo que busca
-                        acercar conocimientos relacionados con la
-                        educación financiera, la contabilidad y la
-                        tributación de una manera clara, práctica
-                        y accesible.
-                    </p>
-
-                </div>
-
-
-                <div class="about-box">
-
-                    <h3>Nuestro propósito</h3>
-
-                    <p>
-                        Facilitar el aprendizaje mediante recursos
-                        digitales que permitan comprender conceptos
-                        y desarrollar conocimientos aplicables a
-                        situaciones de la vida académica y cotidiana.
-                    </p>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =========================
-             ÁREAS DE APRENDIZAJE
-        ========================== -->
-
-        <section class="modules" id="modulos">
-
-            <div class="section-title">
-
-                <h2>Áreas de aprendizaje</h2>
-
-                <p>
-                    Explora las principales áreas que formarán parte
-                    del sitio web NEXORA.
-                </p>
-
-            </div>
-
-
-            <div class="module-container">
-
-
-                <div class="module">
-
-                    <div class="module-icon">💰</div>
-
-                    <h3>
-                        Educación Financiera
-                    </h3>
-
-                    <p>
-                        Aprende conceptos relacionados con ingresos,
-                        gastos, ahorro, planificación y toma de
-                        decisiones financieras.
-                    </p>
-
-                    <a href="#aprende" class="module-btn">
-                        Explorar →
-                    </a>
-
-                </div>
-
-
-                <div class="module">
-
-                    <div class="module-icon">📊</div>
-
-                    <h3>
-                        Contabilidad
-                    </h3>
-
-                    <p>
-                        Fortalece tus conocimientos contables mediante
-                        explicaciones, ejemplos y actividades prácticas.
-                    </p>
-
-                    <a href="#aprende" class="module-btn">
-                        Explorar →
-                    </a>
-
-                </div>
-
-
-                <div class="module">
-
-                    <div class="module-icon">🧾</div>
-
-                    <h3>
-                        Tributación
-                    </h3>
-
-                    <p>
-                        Comprende conceptos y obligaciones tributarias
-                        mediante contenidos explicados de forma sencilla.
-                    </p>
-
-                    <a href="#aprende" class="module-btn">
-                        Explorar →
-                    </a>
-
-                </div>
-
-
-                <div class="module">
-
-                    <div class="module-icon">♿</div>
-
-                    <h3>
-                        Accesibilidad
-                    </h3>
-
-                    <p>
-                        Un sitio diseñado para avanzar hacia una
-                        experiencia de aprendizaje más inclusiva.
-                    </p>
-
-                    <a href="#accesibilidad" class="module-btn">
-                        Conocer →
-                    </a>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =========================
-             CÓMO FUNCIONA
-        ========================== -->
-
-        <section class="how" id="como-funciona">
-
-            <div class="section-title">
-
-                <h2>¿Cómo funciona NEXORA?</h2>
-
-                <p>
-                    Una experiencia de aprendizaje pensada para
-                    avanzar paso a paso.
-                </p>
-
-            </div>
-
-
-            <div class="steps">
-
-                <div class="step">
-
-                    <div class="step-number">
-                        1
-                    </div>
-
-                    <h3>Explora</h3>
-
-                    <p>
-                        Elige el área de conocimiento que deseas
-                        aprender.
-                    </p>
-
-                </div>
-
-
-                <div class="step">
-
-                    <div class="step-number">
-                        2
-                    </div>
-
-                    <h3>Aprende</h3>
-
-                    <p>
-                        Accede a contenidos organizados de forma
-                        clara y sencilla.
-                    </p>
-
-                </div>
-
-
-                <div class="step">
-
-                    <div class="step-number">
-                        3
-                    </div>
-
-                    <h3>Practica</h3>
-
-                    <p>
-                        Refuerza tus conocimientos mediante
-                        actividades prácticas.
-                    </p>
-
-                </div>
-
-
-                <div class="step">
-
-                    <div class="step-number">
-                        4
-                    </div>
-
-                    <h3>Avanza</h3>
-
-                    <p>
-                        Continúa desarrollando tus conocimientos
-                        y habilidades.
-                    </p>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =========================
-             APRENDE Y PRACTICA
-        ========================== -->
-
-        <section class="practice" id="aprende">
-
-            <div class="practice-box">
-
-                <h2>
-                    Aprende y practica
-                </h2>
-
-                <p>
-                    NEXORA busca integrar contenidos educativos
-                    con actividades prácticas para que el aprendizaje
-                    no se limite solamente a leer información.
-                </p>
-
-                <div class="buttons">
-
-                    <a href="#modulos" class="btn primary">
-                        Ver áreas
-                    </a>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =========================
-             ACCESIBILIDAD
-        ========================== -->
-
-        <section class="accessibility" id="accesibilidad">
-
-            <div class="section-title">
-
-                <h2>Accesibilidad</h2>
-
-                <p>
-                    La inclusión forma parte de la propuesta de NEXORA.
-                </p>
-
-            </div>
-
-
-            <div class="access-grid">
-
-
-                <div class="access-card">
-
-                    <h3>Lectura clara</h3>
-
-                    <p>
-                        Contenidos organizados y redactados buscando
-                        facilitar su comprensión.
-                    </p>
-
-                </div>
-
-
-                <div class="access-card">
-
-                    <h3>Navegación sencilla</h3>
-
-                    <p>
-                        Una estructura organizada para facilitar
-                        el desplazamiento por el sitio.
-                    </p>
-
-                </div>
-
-
-                <div class="access-card">
-
-                    <h3>Diseño adaptable</h3>
-
-                    <p>
-                        El sitio está preparado para visualizarse
-                        en diferentes tamaños de pantalla.
-                    </p>
-
-                </div>
-
-
-                <div class="access-card">
-
-                    <h3>Aprendizaje inclusivo</h3>
-
-                    <p>
-                        NEXORA busca desarrollar recursos que permitan
-                        ampliar el acceso al conocimiento.
-                    </p>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =========================
-             SOBRE EL PROYECTO
-        ========================== -->
-
-        <section class="project">
-
-            <div class="project-content">
-
-                <div class="section-title">
-
-                    <h2>Un proyecto en construcción</h2>
-
-                </div>
-
-                <p>
-                    NEXORA se encuentra en proceso de desarrollo.
-                    Su objetivo es evolucionar progresivamente hasta
-                    convertirse en un sitio web educativo funcional,
-                    útil y accesible.
-                </p>
-
-                <p>
-                    Cada nueva función será desarrollada y evaluada
-                    antes de incorporarse al sitio.
-                </p>
-
-                <p class="highlight">
-                    Conectando conocimiento, creando oportunidades.
-                </p>
-
-            </div>
-
-        </section>
-
-    </main>
-
-
-    <!-- =========================
-         PIE DE PÁGINA
-    ========================== -->
-
-    <footer>
-
-        <div class="footer-logo">
-            NEX<span>O</span>RA
+<header>
+  <div class="container nav">
+    <a class="logo" href="#inicio" aria-label="NEXORA, inicio">NEX<span>O</span>RA</a>
+    <nav aria-label="Navegación principal">
+      <a href="#inicio">Inicio</a>
+      <a href="#nosotros">NEXORA</a>
+      <a href="#modulos">Aprender</a>
+      <a href="#como-funciona">Cómo funciona</a>
+      <a href="#accesibilidad">Accesibilidad</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="hero" id="inicio">
+  <div class="container">
+    <span class="tag">SITIO WEB EDUCATIVO</span>
+    <h1>NEX<span class="accent">O</span>RA</h1>
+    <h2>Conectando conocimiento, creando oportunidades.</h2>
+    <p>Un sitio web educativo orientado a fortalecer los conocimientos de educación financiera, contabilidad y tributación mediante contenidos accesibles, prácticos e interactivos.</p>
+    <div class="actions">
+      <a class="btn btn-primary" href="#modulos">Comenzar a aprender</a>
+      <a class="btn btn-secondary" href="#nosotros">Conocer NEXORA</a>
+    </div>
+  </div>
+</section>
+
+<section class="content-section" id="nosotros">
+  <div class="container">
+    <div class="section-heading">
+      <h2>Conocimiento para todos</h2>
+      <p>NEXORA busca hacer más comprensibles los conocimientos que necesitamos para estudiar, administrar recursos y tomar decisiones informadas.</p>
+    </div>
+    <div class="info-grid">
+      <article class="info-box">
+        <h3>¿Qué somos?</h3>
+        <p>Una iniciativa educativa digital que reúne contenidos de finanzas, contabilidad y tributación en un mismo sitio web.</p>
+      </article>
+      <article class="info-box">
+        <h3>¿Qué buscamos?</h3>
+        <p>Facilitar el aprendizaje con explicaciones claras, ejemplos cotidianos y ejercicios que permitan practicar.</p>
+      </article>
+      <article class="info-box">
+        <h3>¿Para quién?</h3>
+        <p>Estudiantes, emprendedores y personas interesadas en desarrollar sus conocimientos financieros y contables.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="content-section alt" id="modulos">
+  <div class="container">
+    <div class="section-heading">
+      <h2>Áreas de aprendizaje</h2>
+      <p>Elige un módulo para explorar sus contenidos y practicar lo aprendido.</p>
+    </div>
+    <div class="cards">
+      <article class="card">
+        <div class="card-icon" aria-hidden="true">💰</div>
+        <h3>Educación financiera</h3>
+        <p>Aprende a organizar ingresos, gastos, presupuestos y ahorro.</p>
+        <a class="btn btn-secondary" href="#aula" data-lesson="finanzas">Entrar al módulo</a>
+      </article>
+      <article class="card">
+        <div class="card-icon" aria-hidden="true">🧮</div>
+        <h3>Contabilidad</h3>
+        <p>Conoce las cuentas contables y la importancia de registrar operaciones.</p>
+        <a class="btn btn-secondary" href="#aula" data-lesson="contabilidad">Entrar al módulo</a>
+      </article>
+      <article class="card">
+        <div class="card-icon" aria-hidden="true">📄</div>
+        <h3>Tributación</h3>
+        <p>Comprende conceptos tributarios y la utilidad de los comprobantes.</p>
+        <a class="btn btn-secondary" href="#aula" data-lesson="tributacion">Entrar al módulo</a>
+      </article>
+      <article class="card">
+        <div class="card-icon" aria-hidden="true">♿</div>
+        <h3>Aprendizaje accesible</h3>
+        <p>Utiliza las opciones de visualización y navega con el teclado.</p>
+        <a class="btn btn-secondary" href="#accesibilidad">Ver opciones</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="content-section" id="aula">
+  <div class="container">
+    <div class="section-heading">
+      <h2>Aula práctica NEXORA</h2>
+      <p>Lee una explicación breve y comprueba lo que aprendiste con una pregunta interactiva.</p>
+    </div>
+
+    <div class="learning-layout">
+      <article class="lesson-panel" aria-live="polite">
+        <h3 id="lesson-title">Educación financiera: el presupuesto</h3>
+        <div id="lesson-content">
+          <p>Un presupuesto es un plan que permite organizar el dinero que recibimos y el que gastamos durante un periodo.</p>
+          <ul>
+            <li><strong>Ingresos:</strong> dinero que recibes.</li>
+            <li><strong>Gastos:</strong> dinero que utilizas para pagar necesidades y otras compras.</li>
+            <li><strong>Ahorro:</strong> parte del dinero que reservas para metas o imprevistos.</li>
+          </ul>
+          <p><strong>Ejemplo:</strong> si recibes $100 y gastas $70, te quedan $30. Puedes destinar una parte al ahorro.</p>
         </div>
+        <p class="small">Consejo: relaciona cada concepto con una situación de tu vida diaria.</p>
+      </article>
 
-        <p>
-            Sitio web educativo de educación financiera,
-            contabilidad y tributación.
-        </p>
+      <article class="quiz-panel">
+        <h3>Comprueba lo aprendido</h3>
+        <p id="quiz-question">Si recibes $100 y gastas $70, ¿cuánto dinero te queda?</p>
+        <form id="quiz-form">
+          <div id="quiz-options">
+            <label class="quiz-option"><input type="radio" name="answer" value="a" required> $20</label>
+            <label class="quiz-option"><input type="radio" name="answer" value="b"> $30</label>
+            <label class="quiz-option"><input type="radio" name="answer" value="c"> $70</label>
+          </div>
+          <button class="btn btn-primary" type="submit">Comprobar respuesta</button>
+        </form>
+        <p id="quiz-feedback" class="feedback" role="status" aria-live="polite"></p>
+        <p id="quiz-score" class="small">Respuestas correctas: 0</p>
+      </article>
+    </div>
+  </div>
+</section>
 
-        <p>
-            © 2026 NEXORA — Conectando conocimiento, creando oportunidades.
-        </p>
+<section class="content-section alt" id="como-funciona">
+  <div class="container">
+    <div class="section-heading">
+      <h2>¿Cómo funciona?</h2>
+      <p>Una experiencia de aprendizaje sencilla, organizada y práctica.</p>
+    </div>
+    <div class="cards">
+      <article class="card">
+        <div class="card-icon" aria-hidden="true">01</div>
+        <h3>Elige un tema</h3>
+        <p>Selecciona el área de conocimiento que quieres estudiar.</p>
+      </article>
+      <article class="card">
+        <div class="card-icon" aria-hidden="true">02</div>
+        <h3>Aprende</h3>
+        <p>Lee los conceptos y ejemplos presentados en cada lección.</p>
+      </article>
+      <article class="card">
+        <div class="card-icon" aria-hidden="true">03</div>
+        <h3>Practica</h3>
+        <p>Responde preguntas y recibe retroalimentación inmediata.</p>
+      </article>
+    </div>
+  </div>
+</section>
 
-    </footer>
+<section class="content-section" id="accesibilidad">
+  <div class="container">
+    <div class="section-heading">
+      <h2>Accesibilidad para aprender mejor</h2>
+      <p>NEXORA incorpora opciones básicas para adaptar la visualización y facilitar la navegación.</p>
+    </div>
+    <div class="info-grid">
+      <article class="info-box">
+        <h3>Texto legible</h3>
+        <p>Aumenta el tamaño del texto usando el control situado en la esquina inferior de la pantalla.</p>
+      </article>
+      <article class="info-box">
+        <h3>Contraste alto</h3>
+        <p>Activa un esquema de contraste elevado para mejorar la distinción entre texto y fondo.</p>
+      </article>
+      <article class="info-box">
+        <h3>Navegación con teclado</h3>
+        <p>Usa la tecla Tab para desplazarte entre enlaces y controles, y Enter para activarlos.</p>
+      </article>
+    </div>
+    <p class="small" style="text-align:center;margin-top:24px">Estas opciones son funciones iniciales. La accesibilidad completa requiere pruebas con diferentes usuarios y tecnologías de apoyo.</p>
+  </div>
+</section>
+</main>
 
+<div class="access-tools" aria-label="Controles de accesibilidad">
+  <button type="button" id="text-toggle" aria-pressed="false" title="Aumentar el tamaño del texto">A+</button>
+  <button type="button" id="contrast-toggle" aria-pressed="false" title="Activar o desactivar contraste alto">Contraste</button>
+</div>
 
+<footer>
+  <div class="container">
+    <a class="logo" href="#inicio">NEX<span>O</span>RA</a>
+    <p>Conectando conocimiento, creando oportunidades.</p>
+    <p class="small">Proyecto educativo en desarrollo · 2026</p>
+  </div>
+</footer>
+
+<script>
+const lessons = {
+  finanzas: {
+    title: "Educación financiera: el presupuesto",
+    content: `
+      <p>Un presupuesto organiza el dinero que recibes y gastas durante un periodo.</p>
+      <ul>
+        <li><strong>Ingresos:</strong> dinero que recibes.</li>
+        <li><strong>Gastos:</strong> dinero que utilizas.</li>
+        <li><strong>Ahorro:</strong> dinero que reservas para una meta o imprevisto.</li>
+      </ul>
+      <p><strong>Ejemplo:</strong> recibes $100 y gastas $70. Te quedan $30.</p>`,
+    question: "Si recibes $100 y gastas $70, ¿cuánto dinero te queda?",
+    options: [["$20","a"],["$30","b"],["$70","c"]],
+    correct: "b",
+    explanation: "¡Correcto! $100 − $70 = $30."
+  },
+  contabilidad: {
+    title: "Contabilidad: el registro de operaciones",
+    content: `
+      <p>La contabilidad permite registrar y organizar las operaciones económicas de una persona o negocio.</p>
+      <ul>
+        <li><strong>Activos:</strong> recursos y bienes que posee una entidad.</li>
+        <li><strong>Pasivos:</strong> obligaciones o deudas.</li>
+        <li><strong>Patrimonio:</strong> diferencia entre activos y pasivos.</li>
+      </ul>
+      <p>Los registros ayudan a comprender la situación económica y tomar decisiones.</p>`,
+    question: "¿Cuál de estos elementos representa una deuda del negocio?",
+    options: [["Un pasivo","a"],["Un ingreso","b"],["Un activo","c"]],
+    correct: "a",
+    explanation: "¡Correcto! Las deudas y obligaciones se clasifican como pasivos."
+  },
+  tributacion: {
+    title: "Tributación: ¿para qué sirven los comprobantes?",
+    content: `
+      <p>Los comprobantes de venta documentan las transacciones de bienes o servicios conforme a las normas aplicables.</p>
+      <ul>
+        <li>Registran información de la operación.</li>
+        <li>Ayudan a respaldar compras y ventas.</li>
+        <li>Facilitan el control contable y tributario.</li>
+      </ul>
+      <p>En Ecuador, los requisitos dependen del tipo de comprobante y de la normativa vigente.</p>`,
+    question: "¿Cuál es una función de un comprobante de venta?",
+    options: [["Reemplazar toda la contabilidad","a"],["Respaldar una transacción","b"],["Eliminar las obligaciones tributarias","c"]],
+    correct: "b",
+    explanation: "¡Correcto! El comprobante documenta y respalda una operación."
+  }
+};
+
+let correctAnswers = 0;
+let answered = false;
+const title = document.getElementById("lesson-title");
+const content = document.getElementById("lesson-content");
+const question = document.getElementById("quiz-question");
+const options = document.getElementById("quiz-options");
+const feedback = document.getElementById("quiz-feedback");
+const score = document.getElementById("quiz-score");
+const form = document.getElementById("quiz-form");
+
+function loadLesson(key) {
+  const lesson = lessons[key];
+  if (!lesson) return;
+  title.textContent = lesson.title;
+  content.innerHTML = lesson.content;
+  question.textContent = lesson.question;
+  options.replaceChildren();
+  lesson.options.forEach(([label, value], index) => {
+    const wrapper = document.createElement("label");
+    wrapper.className = "quiz-option";
+    const radio = document.createElement("input");
+    radio.type = "radio";
+    radio.name = "answer";
+    radio.value = value;
+    radio.required = index === 0;
+    wrapper.append(radio, document.createTextNode(" " + label));
+    options.appendChild(wrapper);
+  });
+  feedback.textContent = "";
+  answered = false;
+  form.querySelector("button[type='submit']").disabled = false;
+}
+
+document.querySelectorAll("[data-lesson]").forEach(link => {
+  link.addEventListener("click", () => loadLesson(link.dataset.lesson));
+});
+
+form.addEventListener("submit", event => {
+  event.preventDefault();
+  if (answered) return;
+  const selected = form.querySelector('input[name="answer"]:checked');
+  if (!selected) {
+    feedback.textContent = "Selecciona una respuesta.";
+    return;
+  }
+  const lesson = Object.values(lessons).find(item => item.question === question.textContent);
+  if (!lesson) return;
+  answered = true;
+  if (selected.value === lesson.correct) {
+    correctAnswers++;
+    feedback.textContent = lesson.explanation;
+    feedback.style.color = "#43e0a0";
+  } else {
+    feedback.textContent = "No es correcto. Revisa la lección e inténtalo con el siguiente módulo.";
+    feedback.style.color = "#ffb3b3";
+  }
+  score.textContent = "Respuestas correctas en esta sesión: " + correctAnswers;
+  form.querySelector("button[type='submit']").disabled = true;
+});
+
+document.getElementById("text-toggle").addEventListener("click", event => {
+  const enabled = document.body.classList.toggle("large-text");
+  event.currentTarget.setAttribute("aria-pressed", String(enabled));
+});
+
+document.getElementById("contrast-toggle").addEventListener("click", event => {
+  const enabled = document.body.classList.toggle("high-contrast");
+  event.currentTarget.setAttribute("aria-pressed", String(enabled));
+});
+</script>
 </body>
 </html>
