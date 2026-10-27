@@ -117,5 +117,218 @@ askButton.addEventListener("click",()=>askNexora(questionBox.value));questionBox
 const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;if(SpeechRecognition){listenButton.addEventListener("click",()=>{const recognition=new SpeechRecognition();recognition.lang="es-EC";recognition.interimResults=false;recognition.maxAlternatives=1;listenButton.disabled=true;voiceStatus.textContent="Te estoy escuchando…";recognition.onresult=event=>{const spokenQuestion=event.results[0][0].transcript;questionBox.value=spokenQuestion;askNexora(spokenQuestion);};recognition.onerror=()=>{voiceStatus.textContent="No pude reconocer la voz. Puedes escribir tu pregunta.";listenButton.disabled=false;};recognition.onend=()=>{listenButton.disabled=false;};try{recognition.start();}catch(error){listenButton.disabled=false;voiceStatus.textContent="No se pudo iniciar el micrófono.";}});}else{listenButton.disabled=true;listenButton.textContent="Micrófono no compatible";}
 </script>
 <script src="./voice-conversation.js" defer></script>
+<script>
+
+/* NEXORA — Modo de conversación accesible.
+   Requiere un gesto inicial para activar el micrófono; el navegador puede limitar
+   el reconocimiento continuo. Compatible cuando existe SpeechRecognition. */
+(() => {
+  "use strict";
+  const $ = id => document.getElementById(id);
+  const toggle = $("voiceModeToggle");
+  const listen = $("nexoraListen");
+  const question = $("nexoraQuestion");
+  const ask = $("nexoraAsk");
+  const answer = $("nexoraAnswer");
+  const status = $("voiceStatus");
+  if (!toggle || !listen || !question || !ask || !answer || !status) return;
+
+  const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  let active = false;
+  let listening = false;
+  let waitingAnswer = false;
+  let recognizer = null;
+  let restartTimer = null;
+  let requestId = 0;
+
+  function savedVoiceMode() {
+    try { return localStorage.getItem("nexora-voice-mode") === "on"; }
+    catch (_) { return false; }
+  }
+  function saveVoiceMode(on) {
+    try { localStorage.setItem("nexora-voice-mode", on ? "on" : "off"); }
+    catch (_) {}
+  }
+  function say(text, onEnd) {
+    if (!("speechSynthesis" in window) || !window.SpeechSynthesisUtterance) {
+      status.textContent = "La voz no está disponible en este navegador.";
+      if (onEnd) onEnd();
+      return;
+    }
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(String(text || ""));
+    utterance.lang = "es-EC";
+    utterance.rate = 0.9;
+    utterance.onend = () => { if (active && onEnd) onEnd(); };
+    utterance.onerror = () => { if (active && onEnd) onEnd(); };
+    window.speechSynthesis.speak(utterance);
+  }
+  function scheduleListening(ms = 500) {
+    clearTimeout(restartTimer);
+    if (!active || waitingAnswer || !Recognition) return;
+    restartTimer = setTimeout(startListening, ms);
+  }
+  function stopListening() {
+    clearTimeout(restartTimer);
+    active = false;
+    listening = false;
+    waitingAnswer = false;
+    if (recognizer) {
+      try { recognizer.onend = null; recognizer.stop(); } catch (_) {}
+    }
+    recognizer = null;
+    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+    listen.textContent = "🎙️ Iniciar conversación por voz";
+    listen.setAttribute("aria-pressed", "false");
+  }
+  function startListening() {
+    if (!active || waitingAnswer || listening || !Recognition) return;
+    try {
+      recognizer = new Recognition();
+      recognizer.lang = "es-EC";
+      recognizer.continuous = false;
+      recognizer.interimResults = false;
+      recognizer.maxAlternatives = 1;
+      recognizer.onstart = () => {
+        listening = true;
+        status.textContent = "NEXORA te escucha. Puedes hablar.";
+        listen.textContent = "🎙️ Conversación activa";
+        listen.setAttribute("aria-pressed", "true");
+      };
+      recognizer.onresult = event => {
+        const words = (event.results && event.results[0] && event.results[0][0]
+          ? event.results[0][0].transcript : "").trim();
+        if (!words || !active) return;
+        question.value = words;
+        waitingAnswer = true;
+        const thisRequest = ++requestId;
+        status.textContent = "Pregunta escuchada. Preparando la respuesta.";
+        listen.textContent = "Procesando tu pregunta…";
+        askQuestionByVoice(words, thisRequest);
+      };
+      recognizer.onerror = event => {
+        listening = false;
+        if (!active) return;
+        if (event.error === "not-allowed" || event.error === "service-not-allowed") {
+          stopListening();
+          status.textContent = "No tengo permiso para usar el micrófono. Autorízalo en el navegador y vuelve a activar la conversación por voz.";
+          say(status.textContent);
+        } else if (event.error !== "aborted" && event.error !== "no-speech") {
+          status.textContent = "No pude reconocer la voz. Volveré a intentarlo.";
+        }
+      };
+      recognizer.onend = () => {
+        listening = false;
+        if (active && !waitingAnswer) scheduleListening(650);
+      };
+      recognizer.start();
+    } catch (_) {
+      listening = false;
+      status.textContent = "No se pudo iniciar el micrófono. Comprueba el permiso del navegador.";
+    }
+  }
+  async function askQuestionByVoice(words, thisRequest) {
+    const original = question.value;
+    const oldAnswer = answer.textContent;
+    const askButton = ask;
+    askButton.disabled = true;
+    listen.disabled = true;
+    answer.hidden = false;
+    answer.textContent = "NEXORA está preparando tu respuesta…";
+    try {
+      const response = await fetch("https://nexora-ai-server-in49.onrender.com/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: words })
+      });
+      let data;
+      try { data = await response.json(); } catch (_) { data = {}; }
+      if (!response.ok) throw new Error(data.error || "No se pudo obtener la respuesta.");
+      const reply = String(data.answer || "No recibí una respuesta.");
+      answer.textContent = reply;
+      status.textContent = "Respuesta recibida. NEXORA te responderá hablando.";
+      if (thisRequest !== requestId || !active) return;
+      say(reply, () => {
+        waitingAnswer = false;
+        listen.disabled = false;
+        askButton.disabled = false;
+        status.textContent = "Puedes continuar hablando. NEXORA te escucha.";
+        scheduleListening(450);
+      });
+      return;
+    } catch (_) {
+      answer.hidden = false;
+      answer.textContent = "No pude conectar con NEXORA. Comprueba tu conexión e inténtalo otra vez.";
+      if (thisRequest === requestId && active) {
+        say("No pude conectar con NEXORA. Comprueba tu conexión a internet.", () => {
+          waitingAnswer = false;
+          listen.disabled = false;
+          askButton.disabled = false;
+          scheduleListening(700);
+        });
+      }
+    } finally {
+      if (thisRequest === requestId) {
+        askButton.disabled = false;
+        listen.disabled = false;
+      }
+    }
+  }
+  function startConversation() {
+    if (!Recognition) {
+      status.textContent = "Este navegador no admite reconocimiento de voz. Prueba una versión actualizada de Chrome o usa el dictado del dispositivo.";
+      say(status.textContent);
+      return;
+    }
+    active = true;
+    waitingAnswer = false;
+    status.textContent = "Activando conversación por voz.";
+    say("Hola, soy NEXORA. Ya puedes hablar después de la bienvenida. Te escucharé, responderé y volveré a escuchar.", () => scheduleListening(400));
+  }
+
+  /* Captura el primer gesto para poder solicitar acceso al micrófono. */
+  toggle.addEventListener("click", event => {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    if (savedVoiceMode()) {
+      saveVoiceMode(false);
+      stopListening();
+      toggle.textContent = "Activar modo de voz";
+      toggle.setAttribute("aria-pressed", "false");
+      status.textContent = "Modo de voz desactivado.";
+      say("Modo de voz desactivado.");
+    } else {
+      saveVoiceMode(true);
+      toggle.textContent = "Desactivar modo de voz";
+      toggle.setAttribute("aria-pressed", "true");
+      const panel = $("voicePanel");
+      if (panel) panel.hidden = false;
+      startConversation();
+    }
+  }, true);
+
+  listen.addEventListener("click", event => {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    if (active) {
+      stopListening();
+      status.textContent = "Conversación pausada.";
+      say("Conversación pausada.");
+    } else {
+      startConversation();
+    }
+  }, true);
+
+  /* El botón normal de texto sigue funcionando; este modo gestiona la consulta por voz. */
+  if (!Recognition) {
+    listen.textContent = "Micrófono no compatible";
+    status.textContent = "La conversación por voz continua necesita un navegador compatible con reconocimiento de voz.";
+  } else if (savedVoiceMode()) {
+    toggle.textContent = "Desactivar modo de voz";
+    toggle.setAttribute("aria-pressed", "true");
+    status.textContent = "Modo de voz activado anteriormente. Si el navegador no permite escuchar automáticamente, activa la conversación con el botón de voz.";
+  }
+})();
+</script>
 </body>
 </html>
