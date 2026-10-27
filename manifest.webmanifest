@@ -9,5 +9,13 @@
   "orientation": "portrait",
   "background_color": "#061225",
   "theme_color": "#061225",
-  "icons": [{"src":"./nexora-icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any"}]
+  "icons": [
+    {
+      "src": "./nexora-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
 }
+
