@@ -1,0 +1,15 @@
+{
+  "id": "./",
+  "name": "NEXORA | Conectando conocimiento",
+  "short_name": "NEXORA",
+  "description": "Aprende educación financiera, contabilidad y tributación de forma inclusiva.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#061225",
+  "theme_color": "#061225",
+  "icons": [
+    {"src":"./nexora-icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any"}
+  ]
+}
