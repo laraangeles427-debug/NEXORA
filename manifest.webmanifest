@@ -11,11 +11,10 @@
   "theme_color": "#061225",
   "icons": [
     {
-      "src": "./nexora-icon.svg",
-      "sizes": "512x512",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "src": "./Logotipo%20tecnol%C3%B3gico%20azul%20y%20blanco.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }
-
