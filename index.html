@@ -440,6 +440,29 @@ const learningLessons={
   avanzado:{title:"Introducción a la tributación",html:"<h4>1. Analiza antes de decidir</h4><p>Para evaluar una obligación tributaria, identifica la actividad, el período, el régimen aplicable y los documentos disponibles. No asumas que dos contribuyentes tienen las mismas obligaciones.</p><h4>2. Verifica la normativa vigente</h4><p>Las reglas y los plazos pueden cambiar. Confirma la información en los canales oficiales del SRI y busca apoyo profesional cuando el caso lo requiera.</p><div class='notice'><strong>Reto avanzado:</strong> una pequeña tienda detecta diferencias entre sus ventas registradas y sus comprobantes. Propón una revisión ordenada antes de presentar información tributaria; no inventes cifras ni ajustes sin evidencia.</div>",questions:[{q:"Antes de orientar a un negocio sobre una obligación tributaria, ¿qué debes verificar?",o:["Actividad, período, régimen y fuente normativa vigente","Solo el tamaño del local","Una tasa recordada sin comprobar"],a:0,why:"La obligación depende de circunstancias concretas y de las reglas vigentes; deben verificarse antes de orientar."},{q:"Encuentras diferencias entre el registro de ventas y los comprobantes. ¿Qué paso inicial es adecuado?",o:["Ajustar las cifras para que coincidan","Conciliar documentos y registros, investigar la diferencia y conservar evidencia","Eliminar los comprobantes que no coinciden"],a:1,why:"La conciliación permite encontrar la causa de la diferencia y respaldar cualquier corrección válida."},{q:"Una guía tributaria que tienes es de hace varios años. ¿Cómo la utilizas?",o:["La aplicas sin revisar","Compruebas si sigue vigente con fuentes oficiales antes de usarla","La consideras superior a la información oficial actual"],a:1,why:"La normativa puede cambiar; una guía antigua debe contrastarse con la información oficial vigente."}]}
  }
 };
+function extraPracticeQuestions(area){
+ const bank={
+  finanzas:[
+   {q:"Recibes $50 y gastas $18 en transporte. ¿Qué saldo queda?",o:["$32","$68","$18"],a:0,why:"$50 − $18 = $32. Calcula el saldo restando los gastos a los ingresos."},
+   {q:"Necesitas pagar el transporte de la semana y quieres comprar algo que puede esperar. ¿Qué decisión ayuda a cuidar tu dinero?",o:["Cubrir primero el transporte y revisar el saldo restante","Gastar todo ahora","No contar el transporte en el presupuesto"],a:0,why:"Priorizar compromisos necesarios ayuda a decidir con la información completa."},
+   {q:"¿Para qué sirve comparar tus gastos de varios meses?",o:["Para reconocer patrones y ajustar el presupuesto","Para garantizar que nunca habrá imprevistos","Para evitar registrar compras pequeñas"],a:0,why:"Comparar gastos permite detectar hábitos y planificar mejor, aunque no elimina los imprevistos."},
+   {q:"Si tus ingresos cambian cada mes, ¿cómo debería ser tu presupuesto?",o:["Flexible y actualizado según tus ingresos y gastos reales","Igual para siempre, aunque cambie tu situación","Basado solo en el mejor mes"],a:0,why:"Un presupuesto útil se revisa cuando cambian las circunstancias."}
+  ],
+  contabilidad:[
+   {q:"Una tienda tiene dinero en caja y una deuda con un proveedor. ¿Cómo se clasifican?",o:["Caja: activo; deuda: pasivo","Caja: pasivo; deuda: activo","Ambos son ingresos"],a:0,why:"El dinero disponible es un recurso; la deuda con el proveedor es una obligación."},
+   {q:"Si los activos son $600 y los pasivos $240, ¿cuál es el patrimonio?",o:["$360","$840","$240"],a:0,why:"Patrimonio = activos − pasivos = $600 − $240 = $360."},
+   {q:"Un negocio paga una deuda con dinero de caja. ¿Qué sucede normalmente?",o:["Disminuyen el efectivo y la deuda","Aumentan el efectivo y la deuda","El patrimonio aumenta automáticamente"],a:0,why:"El pago reduce el efectivo disponible y la obligación pendiente."},
+   {q:"¿Por qué se guardan facturas y comprobantes de una operación?",o:["Para respaldar y comprobar el registro","Porque sustituyen todos los registros contables","Para asegurar que no existan errores"],a:0,why:"Los documentos respaldan las operaciones y ayudan a verificar que el registro sea correcto."}
+  ],
+  tributacion:[
+   {q:"¿Qué haces si no sabes si una obligación tributaria sigue vigente?",o:["Consultar la información oficial actual del SRI","Usar un dato antiguo sin comprobarlo","Suponer que todos tienen las mismas obligaciones"],a:0,why:"La normativa puede cambiar y las obligaciones dependen de cada caso; verifica la fuente oficial."},
+   {q:"¿Qué utilidad tiene conservar los comprobantes de venta?",o:["Respaldar las operaciones y facilitar su revisión","Eliminar automáticamente los impuestos","Evitar cualquier declaración"],a:0,why:"Los comprobantes ayudan a documentar y comprobar las operaciones."},
+   {q:"Detectas una diferencia entre tus ventas registradas y las facturas. ¿Qué deberías hacer primero?",o:["Revisar y conciliar los documentos antes de corregir","Cambiar las cifras para que coincidan","Borrar los comprobantes diferentes"],a:0,why:"Primero investiga la causa con documentos; cualquier corrección debe estar justificada."},
+   {q:"¿Qué significa RUC en Ecuador?",o:["Registro Único de Contribuyentes","Registro Universal de Compras","Reporte Único Contable"],a:0,why:"RUC significa Registro Único de Contribuyentes."}
+  ]
+ };
+ return bank[area]||[];
+}
 let activePracticeQuestions=[],practiceIndex=0,practiceScore=0,practiceAnswered=false;
 const learningProgressKey="nexora-learning-progress-v1";
 function readLearningProgress(){
@@ -628,7 +651,7 @@ const subjectClassHTML={
 document.getElementById("lessonContent").innerHTML=material.html+(subjectClassHTML[selected]&&subjectClassHTML[selected][level]||"");
  renderConceptMap(selected,level);
  renderPracticalChallenge(selected,level);
- activePracticeQuestions=shuffleList(material.questions).map(randomizePracticeQuestion);
+ activePracticeQuestions=shuffleList([...material.questions,...extraPracticeQuestions(selected)]).map(randomizePracticeQuestion);
  practiceIndex=0;practiceScore=0;practiceAnswered=false;
  document.getElementById("inlineLessonQuiz").hidden=true;
  document.getElementById("inlineLessonResult").hidden=true;
