@@ -532,7 +532,7 @@ function renderLevelExamQuestion(){
 }
 document.getElementById("startLevelExam").addEventListener("click",()=>{
  const progressBeforeExam=readLearningProgress(),progressKey=topic+"-"+learningLevel,oldHistory=Array.isArray(progressBeforeExam[progressKey]?.history)?progressBeforeExam[progressKey].history:[];
- const normalizeQuestion=q=>String(q||"").normalize("NFD").replace(/\\p{M}/gu,"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
+ const normalizeQuestion=q=>String(q||"").normalize("NFD").replace(/\p{M}/gu,"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
  const practicePrompts=new Set([...(learningLessons[topic]?.[learningLevel]?.questions||[]).map(q=>q.q),...extraPracticeQuestions(topic,learningLevel).map(q=>q.q)].map(normalizeQuestion));
  const previouslyAsked=new Set(oldHistory.flatMap(h=>Array.isArray(h.questionTexts)?h.questionTexts:[]).map(normalizeQuestion));
  const allCandidates=[...(levelExamQuestions[topic]?.[learningLevel]||[]),...freshExamPool(topic,learningLevel)];
