@@ -1,9 +1,13 @@
 import express from "express";
 import cors from "cors";
 import OpenAI from "openai";
+import rateLimit from "express-rate-limit";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Render opera detrás de un proxy; permite identificar la IP del cliente para el límite de uso.
+app.set("trust proxy", 1);
 
 app.use(cors({
   origin: [
@@ -24,7 +28,17 @@ app.get("/health", (_req, res) => {
   res.json({ status: "ok", service: "NEXORA" });
 });
 
-app.post("/api/chat", async (req, res) => {
+const chatLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    error: "Has alcanzado el límite temporal de consultas a NEXORA. Espera unos minutos e inténtalo de nuevo."
+  }
+});
+
+app.post("/api/chat", chatLimiter, async (req, res) => {
   try {
     const message = req.body?.message;
 
@@ -50,7 +64,8 @@ app.post("/api/chat", async (req, res) => {
         "Cuando una consulta tributaria dependa de normas vigentes de Ecuador, " +
         "indica que deben verificarse en fuentes oficiales. " +
         "No solicites contraseñas, claves bancarias ni datos sensibles.",
-      input: message.trim()
+      input: message.trim(),
+      max_output_tokens: 700
     });
 
     res.json({
