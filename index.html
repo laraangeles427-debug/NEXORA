@@ -284,6 +284,7 @@ const nexoraCloud = window.supabase?.createClient
   : null;
 const nexoraStateKeys = ["nexora-profile-v1","nexora-profile-activity-v1","nexora-learning-progress-v1","nexora-daily-money-v1"];
 let nexoraCloudUser = null, nexoraCloudBusy = false, nexoraCloudTimer = null;
+ window.NEXORA_AUTH_STATE={get client(){return nexoraCloud;},get user(){return nexoraCloudUser;}};
 function nexoraStatus(message, type="info") {
  const status=document.getElementById("accountStatusText");
  if(status) status.textContent=message;
@@ -367,7 +368,7 @@ async function nexoraLoadCloudState(user){
  if(!profile.name&&email){profile.name=email.split("@")[0];try{localStorage.setItem("nexora-profile-v1",JSON.stringify({...profile,name:profile.name}));}catch(_){}}
  // Upload the merged state so progress recovered from this device is also available on other devices.
  await nexoraSyncNow();
- nexoraStatus("Cuenta conectada. Tus avances se sincronizan con esta cuenta cuando se guardan.");
+ nexoraStatus("Cuenta conectada. Tus avances se sincronizan con esta cuenta cuando se guardan.");window.dispatchEvent(new Event("nexora:auth-ready"));
 }
 if(!nexoraCloud){
  nexoraStatus("No se pudo cargar el servicio de cuentas. Comprueba tu conexión a internet y recarga la página.");
@@ -389,7 +390,7 @@ if(!nexoraCloud){
   else {out.textContent="¡Registro enviado! Revisa tu correo y confirma la cuenta si Supabase te lo solicita. Después vuelve e inicia sesión.";nexoraStatus("Cuenta pendiente de confirmación por correo.");}
  });
  document.getElementById("nexoraLogout").addEventListener("click",async()=>{
-  await nexoraSyncNow();const {error}=await nexoraCloud.auth.signOut();if(error){nexoraStatus("No se pudo cerrar sesión: "+error.message,"error");return;}nexoraCloudUser=null;nexoraStatus("Sesión cerrada. Tus datos en la nube permanecen asociados a tu cuenta.");showView("inicio");
+  await nexoraSyncNow();const {error}=await nexoraCloud.auth.signOut();if(error){nexoraStatus("No se pudo cerrar sesión: "+error.message,"error");return;}nexoraCloudUser=null;window.dispatchEvent(new Event("nexora:auth-ready"));nexoraStatus("Sesión cerrada. Tus datos en la nube permanecen asociados a tu cuenta.");showView("inicio");
  });
  nexoraCloud.auth.getSession().then(({data,error})=>{
   if(error){nexoraStatus("No se pudo comprobar la sesión. Recarga la página.");return;}
@@ -676,7 +677,7 @@ document.getElementById("lessonContent").innerHTML=material.html+(subjectClassHT
  resetQuiz();showView("aprender");
  requestAnimationFrame(()=>{document.getElementById("lessonTitle").focus({preventScroll:true});window.scrollTo({top:0,behavior:"auto"});});
 }
-document.querySelectorAll("[data-topic]").forEach(b=>b.addEventListener("click",()=>{const selected=b.dataset.topic;if(!lessons[selected])return;updateLearningGuide(selected,"start");document.getElementById("learningAreas").hidden=true;document.getElementById("learningIntro").hidden=true;document.getElementById("learningProgressPanel").hidden=true;document.getElementById("toggleLearningProgress").hidden=true;document.getElementById("learningLevels").hidden=false;document.getElementById("learningLevelsTitle").textContent="Niveles · "+lessons[selected].title;document.getElementById("lessonPanel").hidden=true;document.querySelectorAll("[data-level]").forEach(btn=>btn.onclick=()=>openLearningLesson(selected,btn.dataset.level));}));
+document.querySelectorAll("[data-topic]").forEach(b=>b.addEventListener("click",()=>{const selected=b.dataset.topic;if(!lessons[selected])return;updateLearningGuide(selected,"start");document.getElementById("learningAreas").hidden=true;document.getElementById("learningIntro").hidden=true;document.getElementById("learningProgressPanel").hidden=true;document.getElementById("toggleLearningProgress").hidden=true;document.getElementById("learningLevels").hidden=false;document.getElementById("learningLevelsTitle").textContent="Niveles · "+lessons[selected].title;document.getElementById("lessonPanel").hidden=true;const saved=readLearningProgress();const levelRoute={basico:selected+"-basico",intermedio:selected+"-intermedio",avanzado:selected+"-avanzado"};document.querySelectorAll("[data-level]").forEach(btn=>{const lev=btn.dataset.level,previous=lev==="basico"?null:saved[levelRoute[lev==="intermedio"?"basico":"intermedio"]],unlocked=lev==="basico"||!!(previous&&Number(previous.bestPercent)>=70);btn.disabled=!unlocked;btn.textContent=unlocked?(lev==="basico"?"Comenzar nivel básico →":lev==="intermedio"?"Comenzar nivel intermedio →":"Comenzar nivel avanzado →"):"🔒 Necesitas 70 % en el nivel anterior";btn.title=unlocked?"Nivel disponible":"Aprueba la evaluación anterior con al menos 70 % para desbloquearlo";btn.onclick=()=>{if(unlocked)openLearningLesson(selected,lev);};});}));
 document.getElementById("backToLearningSubjects").addEventListener("click",()=>{updateLearningGuide("finanzas","start");document.getElementById("learningNexoTitle").textContent="¡Hola! Soy Nexo";document.getElementById("learningNexoMessage").textContent="Te acompañaré en cada área. Elige una materia y te explicaré cómo empezar, qué observar y cómo practicar sin presión.";document.getElementById("learningNexoFace").textContent="🦊";document.getElementById("learningLevels").hidden=true;document.getElementById("learningAreas").hidden=false;document.getElementById("learningIntro").hidden=false;document.getElementById("toggleLearningProgress").hidden=false;});
 document.getElementById("toggleLearningProgress").addEventListener("click",()=>{const panel=document.getElementById("learningProgressPanel");const opening=panel.hidden;panel.hidden=!opening;document.getElementById("learningAreas").hidden=opening;document.getElementById("learningIntro").hidden=opening;document.getElementById("toggleLearningProgress").setAttribute("aria-expanded",String(opening));document.getElementById("toggleLearningProgress").textContent=opening?"← Volver a las áreas":"▥ Ver mi progreso";});
 ;document.getElementById("backToLearningAreas").addEventListener("click",()=>{document.getElementById("lessonPanel").hidden=true;document.getElementById("learningLevels").hidden=false;window.scrollTo({top:0,behavior:"auto"});});document.getElementById("lessonPractice").addEventListener("click",()=>{practiceIndex=0;practiceScore=0;practiceAnswered=false;document.getElementById("inlineLessonQuiz").hidden=false;document.getElementById("inlineLessonResult").hidden=true;showMoneyQuestion();document.getElementById("inlineLessonQuiz").scrollIntoView({behavior:"smooth",block:"start"});});document.getElementById("quizTopic").addEventListener("change",e=>{topic=e.target.value;resetQuiz();});nextEl.addEventListener("click",()=>{if(qIndex<quizQuestions.length-1){qIndex++;renderQuestion();}else{feedbackEl.textContent=`Simulacro finalizado. Resultado: ${score} de ${quizQuestions.length} respuestas correctas.`;speak(feedbackEl.textContent);nextEl.textContent="Repetir simulacro";nextEl.onclick=()=>{nextEl.onclick=null;resetQuiz();};}});document.getElementById("readQuestion").addEventListener("click",()=>{const q=quizQuestions[qIndex];speak(`${q[0]}. `+q[1].map((v,i)=>`Opción ${i+1}: ${v}`).join(". "));});document.getElementById("readQuizResult").addEventListener("click",()=>readElement("quizFeedback"));document.getElementById("readLesson").addEventListener("click",()=>readElement("lessonContent"));resetQuiz();
@@ -1000,8 +1001,8 @@ const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition
   const badgeDefs=[entries.length>0,entries.length>=3,entries.some(e=>Number(e.bestPercent)>=80),Object.keys(progress).some(k=>k.startsWith("contabilidad-")),days.length>=3,entries.length>=9, xp>=700, xp>=1900];
   return {xp,level:tier.level,streak,badges:badgeDefs.filter(Boolean).length};
  }
- function client(){return typeof nexoraCloud!=="undefined"?nexoraCloud:null}
- function user(){return typeof nexoraCloudUser!=="undefined"?nexoraCloudUser:null}
+ function client(){return window.NEXORA_AUTH_STATE?.client||null}
+ function user(){return window.NEXORA_AUTH_STATE?.user||null}
  function setStatus(msg){status.textContent=msg;}
  async function saveParticipation(enabled){
   const db=client(),u=user();
@@ -1050,8 +1051,7 @@ const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition
  document.querySelectorAll('[data-go="perfil"]').forEach(b=>b.addEventListener("click",()=>setTimeout(loadRanking,150)));
  document.getElementById("inlineFinish")?.addEventListener("click",()=>setTimeout(()=>{if(opt.checked)loadRanking();},350));
  document.getElementById("saveProfile")?.addEventListener("click",()=>setTimeout(()=>{if(opt.checked)loadRanking();},500));
- window.addEventListener("nexora:auth-ready",loadRanking);
- setTimeout(loadRanking,1200);
+ window.NEXORA_REFRESH_LEADERBOARD=loadRanking;window.addEventListener("nexora:auth-ready",loadRanking);window.addEventListener("focus",()=>{if(opt.checked)loadRanking();});setTimeout(loadRanking,1500);
 })();
 </script>
 </body>
