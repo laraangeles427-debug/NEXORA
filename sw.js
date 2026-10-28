@@ -1,4 +1,4 @@
-const CACHE_NAME = "nexora-shell-v7";
+const CACHE_NAME = "nexora-shell-v8";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -10,7 +10,7 @@ self.addEventListener("install", event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => cache.addAll(APP_SHELL))
-      .then(() => self.skipWaiting())
+      .then(() => { /* La app espera a que la persona pulse «Actualizar». */ })
   );
 });
 
@@ -57,4 +57,9 @@ self.addEventListener("fetch", event => {
       });
     })
   );
+});
+
+
+self.addEventListener("message", event => {
+  if (event.data && event.data.type === "SKIP_WAITING") self.skipWaiting();
 });
