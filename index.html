@@ -57,6 +57,17 @@ button,input,select,textarea{font:inherit}button,a,input,select,textarea{-webkit
 .concept-map-node span{font-size:.8rem;color:var(--muted);display:block}
 .concept-map-detail{margin-top:14px;padding:14px;border-radius:12px;border-left:3px solid var(--cyan);background:rgba(6,18,36,.7);min-height:68px}
 .concept-map-detail p{margin:6px 0 0}.concept-map-example-label{display:block;margin-top:12px;color:var(--cyan);font-size:.88rem}.concept-map-example{padding:10px 12px;border-radius:10px;background:rgba(8,200,245,.08);border:1px solid rgba(53,220,255,.18)}
+.practical-challenge{margin-top:18px;padding:18px;border:1px solid rgba(53,220,255,.24);border-radius:16px;background:linear-gradient(145deg,rgba(8,200,245,.08),rgba(11,38,63,.48))}
+.practical-challenge h4{margin:5px 0 8px}.practical-challenge .challenge-scenario{font-size:1rem;line-height:1.65}
+.challenge-options{display:grid;gap:9px;margin-top:14px}
+.challenge-option{display:block;width:100%;padding:12px 14px;text-align:left;border:1px solid rgba(53,220,255,.25);border-radius:12px;background:rgba(6,18,36,.72);color:var(--text);cursor:pointer}
+.challenge-option:hover,.challenge-option:focus-visible{border-color:var(--cyan);outline:2px solid transparent}
+.challenge-option:disabled{cursor:default;opacity:.92}
+.challenge-option[aria-pressed="true"]{border-color:var(--cyan);background:rgba(8,200,245,.14)}
+.challenge-feedback{margin-top:12px;padding:12px;border-radius:10px;background:rgba(8,200,245,.08);border-left:3px solid var(--cyan)}
+.challenge-feedback[hidden]{display:none}
+.challenge-badge{display:inline-block;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--cyan)}
+
 .concept-map-tip{font-size:.85rem;color:var(--muted);margin:12px 0 0}
 @media(max-width:560px){.concept-map{padding:14px}.concept-map-branches{grid-template-columns:1fr;gap:8px}.concept-map-node{min-height:0;display:flex;align-items:center;gap:12px;text-align:left}.concept-map-node strong{min-width:96px;margin:0}.concept-map-root{margin-bottom:12px}}
 @media(prefers-reduced-motion:reduce){.concept-map-node{transition:none}}
@@ -119,6 +130,7 @@ button,input,select,textarea{font:inherit}button,a,input,select,textarea{-webkit
 <p id="lessonIntro" class="muted">Comprende los conceptos básicos antes de pasar a la práctica.</p>
 <div id="lessonContent"></div>
 <div id="conceptMapMount"></div>
+<div id="practicalChallengeMount"></div>
 <div class="lesson-actions"><button class="btn ghost" id="readLesson" type="button">🔊 Escuchar clase</button><button class="btn" type="button" id="lessonPractice">Practicar y evaluar →</button></div>
 <div id="inlineLessonQuiz" class="panel" hidden><span class="eyebrow">Práctica de la clase</span><h3>Comprueba lo aprendido</h3><p id="inlineQuestion"></p><div id="inlineOptions" class="quiz-options"></div><div id="inlineFeedback" class="result" role="status" hidden></div><div class="lesson-actions"><button class="btn" id="inlineNext" type="button" disabled>Siguiente pregunta →</button><button class="btn ghost" id="inlineFinish" type="button" hidden>Terminar práctica</button></div><p id="inlineScore" class="muted" aria-live="polite"></p></div>
 <div id="inlineLessonResult" class="result" role="status" hidden></div>
@@ -265,6 +277,49 @@ const conceptMapData={
   avanzado:{root:"Análisis tributario",nodes:[["Revisar","Identifica el caso","Determina actividad, período y documentos.","Antes de orientar un caso, confirma quién realiza la actividad, de qué período se trata y qué documentos existen."],["Contrastar","Norma y evidencia","Usa información oficial vigente y verificable.","No basta con un comentario en redes: compara el documento con la norma e información oficial vigente."],["Sustentar","Registra la conclusión","Explica los pasos y reconoce cuándo pedir asesoría.","Anota qué documentos revisaste y por qué llegaste a esa conclusión; consulta a un profesional si el caso lo exige."]]}
  }
 };
+const practicalChallenges={
+ finanzas:{
+  basico:{title:"Organiza tu dinero",scenario:"Recibiste $20. Necesitas gastar $5 en transporte esta semana y quieres ahorrar para una meta. ¿Qué decisión te ayuda a organizarte?",options:[["A","Gastar los $20 hoy porque ya son tuyos."],["B","Separar primero los $5 necesarios y decidir cuánto puedes ahorrar."],["C","Ignorar el gasto de transporte y guardar los $20."]],correct:1,feedback:"Primero identifica el gasto necesario. Con los $15 restantes puedes decidir cuánto ahorrar y cuánto reservar para otros gastos."},
+  intermedio:{title:"Elige con un presupuesto",scenario:"Tienes $100 para el mes y ya planificaste $70 en gastos necesarios. Quieres comprar algo que cuesta $25. ¿Qué debes hacer primero?",options:[["A","Comparar la compra con tus prioridades y los $30 disponibles."],["B","Comprar de inmediato porque cuesta menos de $100."],["C","Pedir prestado sin revisar el presupuesto."]],correct:0,feedback:"Después de los gastos previstos quedan $30. La compra cabe en esa cantidad, pero debes considerar otros gastos y tu meta de ahorro antes de decidir."},
+  avanzado:{title:"Compara escenarios",scenario:"Tu presupuesto deja $18 libres. Un gasto imprevisto puede costar $15 y quieres comprar algo por $10. ¿Cuál es la decisión más prudente?",options:[["A","Gastar los $10 porque todavía tienes dinero."],["B","Pedir un préstamo sin comparar alternativas."],["C","Revisar la urgencia, reservar para el imprevisto y posponer lo no esencial si hace falta."]],correct:2,feedback:"Si gastas $10, solo quedarían $8, menos que el posible imprevisto. Comparar escenarios ayuda a evitar un déficit."}
+ },
+ contabilidad:{
+  basico:{title:"Clasifica los elementos",scenario:"Una pequeña tienda tiene $80 en caja, una vitrina de $120 y debe $50 a un proveedor. ¿Cuál clasificación es correcta?",options:[["A","Caja y vitrina son pasivos; la deuda es activo."],["B","Caja y vitrina son activos; la deuda es pasivo."],["C","Los tres elementos son patrimonio."]],correct:1,feedback:"El efectivo y la vitrina son recursos del negocio (activos). La cantidad pendiente con el proveedor es una obligación (pasivo). Con esos datos, el patrimonio sería $150."},
+  intermedio:{title:"Registra una compra",scenario:"El negocio compra útiles por $15 y paga en efectivo. ¿Qué efecto básico tiene la operación?",options:[["A","Aumentan los útiles y disminuye el efectivo."],["B","Aumentan los útiles y también aumenta el efectivo."],["C","Aumenta una deuda aunque se pagó al contado."]],correct:0,feedback:"Los útiles disponibles aumentan y el efectivo disminuye por el mismo importe. La operación cambia la composición de los activos."},
+  avanzado:{title:"Detecta una diferencia",scenario:"La factura de una compra muestra $60, pero el registro contable indica $90. ¿Qué deberías hacer?",options:[["A","Dejar $90 porque ya está registrado."],["B","Cambiarlo a $60 sin guardar evidencia."],["C","Contrastar factura, pago y registro; documentar la diferencia y corregir siguiendo el procedimiento."]],correct:2,feedback:"No conviene asumir ni cambiar cifras sin respaldo. Revisa los documentos, identifica el origen de la diferencia y documenta la corrección."}
+ },
+ tributacion:{
+  basico:{title:"Conserva el respaldo",scenario:"Un negocio realiza una venta y recibe un comprobante. ¿Qué acción es más adecuada?",options:[["A","Conservarlo y revisar los datos de la operación."],["B","Desecharlo si ya recibió el dinero."],["C","Cambiar los datos para que se vean más ordenados."]],correct:0,feedback:"Los comprobantes respaldan operaciones. Revisa sus datos y consérvalos de acuerdo con las obligaciones aplicables."},
+  intermedio:{title:"Ordena los documentos",scenario:"Al final del mes, los comprobantes están mezclados y hay registros que no coinciden. ¿Cuál es el mejor primer paso?",options:[["A","Presentar la información sin revisarla."],["B","Clasificar los documentos por período y tipo, y comparar importes con los registros."],["C","Eliminar los documentos que parecen repetidos sin verificarlos."]],correct:1,feedback:"Organizar y contrastar los documentos ayuda a detectar diferencias antes de tomar decisiones o realizar trámites."},
+  avanzado:{title:"Verifica antes de orientar",scenario:"Una persona pregunta qué obligación tributaria debe cumplir, pero no conoces su actividad ni el período. ¿Qué corresponde?",options:[["A","Dar una respuesta definitiva basándote en un caso parecido."],["B","Usar una fecha recordada de otro año."],["C","Aclarar los datos del caso y consultar la información oficial vigente del SRI."]],correct:2,feedback:"Las obligaciones dependen de la situación y de las normas vigentes. Primero identifica los datos relevantes y consulta fuentes oficiales; si el caso lo requiere, busca asesoría profesional."}
+ }
+};
+function renderPracticalChallenge(selected,level){
+ const mount=document.getElementById("practicalChallengeMount");if(!mount)return;
+ mount.replaceChildren();
+ const data=practicalChallenges[selected]&&practicalChallenges[selected][level];if(!data)return;
+ const section=document.createElement("section");section.className="practical-challenge";
+ const badge=document.createElement("span");badge.className="challenge-badge";badge.textContent="Reto práctico · Aprende haciendo";
+ const title=document.createElement("h4");title.textContent=data.title;
+ const scenario=document.createElement("p");scenario.className="challenge-scenario";scenario.textContent=data.scenario;
+ const prompt=document.createElement("p");prompt.textContent="Elige una opción y revisa la explicación:";
+ const options=document.createElement("div");options.className="challenge-options";
+ const feedback=document.createElement("div");feedback.className="challenge-feedback";feedback.setAttribute("role","status");feedback.hidden=true;
+ data.options.forEach((option,index)=>{
+  const button=document.createElement("button");button.type="button";button.className="challenge-option";button.textContent=option[0]+". "+option[1];
+  button.addEventListener("click",()=>{
+   [...options.children].forEach((el,i)=>{el.disabled=true;el.setAttribute("aria-pressed",i===index?"true":"false");});
+   const correct=index===data.correct;
+   feedback.replaceChildren();
+   const resultTitle=document.createElement("strong");resultTitle.textContent=correct?"¡Bien pensado!":"Revisemos la decisión";
+   const resultText=document.createElement("p");resultText.textContent=data.feedback;
+   feedback.append(resultTitle,resultText);feedback.hidden=false;
+   if(!correct){const retry=document.createElement("button");retry.type="button";retry.className="text-button";retry.textContent="Intentar de nuevo";retry.addEventListener("click",()=>{[...options.children].forEach(el=>{el.disabled=false;el.setAttribute("aria-pressed","false");});feedback.hidden=true;});feedback.appendChild(retry);}
+  });
+  options.appendChild(button);
+ });
+ section.append(badge,title,scenario,prompt,options,feedback);mount.appendChild(section);
+}
 function renderConceptMap(selected,level){
  const mount=document.getElementById("conceptMapMount");if(!mount)return;
  const data=conceptMapData[selected]&&conceptMapData[selected][level];mount.replaceChildren();if(!data)return;
@@ -329,6 +384,7 @@ const subjectClassHTML={
 };
 document.getElementById("lessonContent").innerHTML=material.html+(subjectClassHTML[selected]&&subjectClassHTML[selected][level]||"");
  renderConceptMap(selected,level);
+ renderPracticalChallenge(selected,level);
  activePracticeQuestions=material.questions;
  practiceIndex=0;practiceScore=0;practiceAnswered=false;
  document.getElementById("inlineLessonQuiz").hidden=true;
