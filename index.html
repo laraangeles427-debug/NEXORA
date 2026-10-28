@@ -99,7 +99,7 @@ button,input,select,textarea{font:inherit}button,a,input,select,textarea{-webkit
 @media(max-width:600px){.nexo-guide{align-items:flex-start;gap:12px;padding:14px}.nexo-guide-avatar{flex-basis:62px;width:62px;height:62px;font-size:2.6rem;border-radius:20px}.nexo-guide-copy h3{font-size:1.05rem}.nexo-guide-actions{align-items:flex-start;flex-direction:column;gap:7px}}
 @media(prefers-reduced-motion:reduce){.nexo-guide-avatar{animation:none}}
 
-</style>
+.leaderboard-main{flex:1;min-width:0}.leaderboard-optin{display:flex;align-items:center;gap:10px;margin:16px 0;color:var(--white);font-size:.9rem}.leaderboard-table{display:grid;gap:8px;margin:14px 0}.leaderboard-row{display:grid;grid-template-columns:42px minmax(0,1fr) auto;align-items:center;gap:10px;padding:11px 13px;border:1px solid var(--line);border-radius:12px;background:#07172a}.leaderboard-row.is-me{border-color:var(--gold);background:#302812}.leaderboard-place{font-weight:900;color:var(--gold);font-size:1.1rem}.leaderboard-user{min-width:0}.leaderboard-user strong,.leaderboard-user small{display:block;overflow-wrap:anywhere}.leaderboard-user small{color:var(--muted);font-size:.78rem}.leaderboard-xp{font-weight:800;color:var(--cyan);white-space:nowrap}.leaderboard-optin input{accent-color:var(--cyan)}@media(max-width:600px){.leaderboard-row{grid-template-columns:32px minmax(0,1fr);}.leaderboard-xp{grid-column:2}.profile-league{align-items:flex-start}}</style>
 </head>
 <body>
 <aside class="update-banner" id="appUpdateBanner" role="status" aria-live="polite" hidden>
@@ -140,7 +140,7 @@ button,input,select,textarea{font:inherit}button,a,input,select,textarea{-webkit
 <section class="panel"><div class="profile-section-heading"><div><span class="eyebrow">Tus resultados</span><h3>Gráfica de aprendizaje</h3></div><span class="profile-pill">Mejor nota</span></div><p class="muted small">Tu mejor porcentaje por área y nivel evaluado.</p><div class="profile-chart" id="profileScoreChart" role="img" aria-label="Gráfica de mejores resultados por ruta"></div><div class="chart-legend"><span><i></i> Mejor resultado (%)</span></div></section>
 </div>
 <div class="panel profile-stages"><div class="profile-section-heading"><div><span class="eyebrow">Tu camino NEXORA</span><h3>Etapas y niveles</h3></div><span class="profile-pill" id="profileStageLabel">Etapa 1 de 4</span></div><p class="muted small">Avanza aprendiendo y practicando; cada etapa abre una nueva meta.</p><div class="stage-road" id="profileStageRoad"></div></div>
-<div class="panel profile-league"><div class="league-mascot" aria-hidden="true">🦊</div><div><span class="eyebrow">Comunidad NEXORA</span><h3>Clasificación de exploradores</h3><p class="muted">La tabla mundial todavía no está activa. Para mostrar posiciones reales entre personas necesitamos conectar cuentas seguras y una base de datos compartida. Tus avances actuales son privados y se guardan en este dispositivo.</p><span class="profile-pill">Próxima etapa del proyecto</span></div></div>
+<div class="panel profile-league" id="leaderboardPanel"><div class="league-mascot" aria-hidden="true">🏆</div><div class="leaderboard-main"><span class="eyebrow">Comunidad NEXORA · Liga de aprendizaje</span><h3>Tu posición entre exploradores</h3><p class="muted">Compite aprendiendo, no memorizando. La clasificación usa tu experiencia registrada. Participar es opcional y solo se muestra tu alias, nunca tu correo.</p><label class="leaderboard-optin"><input type="checkbox" id="leaderboardOptIn" style="width:auto;min-height:0"> Quiero aparecer en la clasificación comunitaria</label><div id="leaderboardStatus" class="result" role="status">Inicia sesión para activar la clasificación compartida.</div><div id="leaderboardTable" class="leaderboard-table" aria-live="polite"></div><button class="btn secondary" id="refreshLeaderboard" type="button">Actualizar clasificación</button></div></div>
 <div class="panel profile-progress"><div class="profile-section-heading"><div><span class="eyebrow">Tu recorrido</span><h3>Así vas avanzando</h3></div><strong id="profileCompletionLabel">0%</strong></div><div class="progress-track" role="progressbar" id="profileCompletionBar" aria-label="Áreas con evaluaciones" aria-valuemin="0" aria-valuemax="9" aria-valuenow="0"><div class="progress-fill" id="profileCompletionFill"></div></div><p class="muted" id="profileProgressText">Completa una evaluación en cualquier área para empezar.</p><div id="profileAreaProgress" class="profile-area-grid"></div></div>
 <div class="panel"><div class="profile-section-heading"><div><span class="eyebrow">Colección de logros</span><h3>Tus insignias</h3></div><span class="profile-pill" id="profileBadgeCount">0 desbloqueadas</span></div><div id="profileBadges" class="profile-badges"></div></div>
 <div class="grid two profile-lower"><section class="panel"><span class="eyebrow">Personaliza</span><h3>Elige tu compañero</h3><p class="muted small">Un personaje para acompañarte mientras aprendes.</p><div class="profile-avatars" role="group" aria-label="Elegir personaje"><button type="button" data-avatar="🦊" aria-pressed="true" aria-label="Zorrito">🦊</button><button type="button" data-avatar="🐢" aria-pressed="false" aria-label="Tortuga">🐢</button><button type="button" data-avatar="🐼" aria-pressed="false" aria-label="Panda">🐼</button><button type="button" data-avatar="🦉" aria-pressed="false" aria-label="Búho">🦉</button><button type="button" data-avatar="🐬" aria-pressed="false" aria-label="Delfín">🐬</button></div><div class="field"><label for="profileNameInput">Nombre o alias</label><input id="profileNameInput" maxlength="40" placeholder="¿Cómo te llamamos?"></div><button class="btn secondary" id="saveProfile" type="button">Guardar mi perfil en este dispositivo</button><p class="muted small" id="profileSaveStatus" role="status">Tu perfil se guarda solo en este navegador.</p></section>
@@ -243,7 +243,7 @@ function writeProfile(p){try{localStorage.setItem(profileStorageKey,JSON.stringi
 function readActivity(){try{const a=JSON.parse(localStorage.getItem(profileActivityKey)||"[]");return Array.isArray(a)?a:[];}catch(_){return [];}}
 function profileDateKey(date=new Date()){const y=date.getFullYear(),m=String(date.getMonth()+1).padStart(2,"0"),d=String(date.getDate()).padStart(2,"0");return y+"-"+m+"-"+d;}
 function recordProfileActivity(){const today=profileDateKey(),days=readActivity();if(!days.includes(today))days.push(today);days.sort();try{localStorage.setItem(profileActivityKey,JSON.stringify(days.slice(-365)));}catch(_){}}
-function profileTier(xp){if(xp>=600)return {level:4,name:"Estratega experto",icon:"🏆",next:0};if(xp>=300)return {level:3,name:"Mente financiera",icon:"💎",next:600-xp};if(xp>=100)return {level:2,name:"Aprendiz constante",icon:"🚀",next:300-xp};return {level:1,name:"Explorador",icon:"🌱",next:100-xp};}
+function profileTier(xp){const tiers=[{level:1,name:"Explorador",icon:"🌱",need:0},{level:2,name:"Aprendiz",icon:"📘",need:100},{level:3,name:"Investigador",icon:"🔎",need:250},{level:4,name:"Analista",icon:"📊",need:450},{level:5,name:"Estratega",icon:"🧠",need:700},{level:6,name:"Experto",icon:"💎",need:1000},{level:7,name:"Mentor",icon:"🚀",need:1400},{level:8,name:"Leyenda NEXORA",icon:"🏆",need:1900}];let current=tiers[0];for(const t of tiers){if(xp>=t.need)current=t;}const next=tiers.find(t=>t.need>xp);return {...current,next:next?next.need-xp:0};}
 function renderProfile(){
  const p=readProfile(),progress=readLearningProgress(),entries=Object.values(progress),completed=entries.length;
  const attempts=entries.reduce((n,e)=>n+(Number(e.attempts)||0),0);
@@ -261,7 +261,7 @@ function renderProfile(){
  const week=document.getElementById("profileStreakWeek"),weekCount=document.getElementById("profileWeekCount"),weekMessage=document.getElementById("profileStreakMessage");
  if(week){week.replaceChildren();let active=0;const names=["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"],now=new Date();for(let back=6;back>=0;back--){const d=new Date(now);d.setDate(now.getDate()-back);const key=profileDateKey(d),yes=days.includes(key);if(yes)active++;const cell=document.createElement("div");cell.className="streak-day"+(yes?" is-active":"")+(key===today?" is-today":"");const mark=document.createElement("span");mark.className="streak-mark";mark.textContent=yes?"✓":"·";const label=document.createElement("small");label.textContent=names[d.getDay()];const date=document.createElement("strong");date.textContent=String(d.getDate());cell.append(mark,label,date);cell.setAttribute("aria-label",names[d.getDay()]+" "+key+(yes?", actividad registrada":", sin actividad"));week.append(cell);}if(weekCount)weekCount.textContent=active+"/7 días";if(weekMessage)weekMessage.textContent=streak>0?"¡Racha encendida! Llevas "+streak+" día"+(streak===1?"":"s")+" seguido"+(streak===1?"":"s")+". Vuelve mañana para mantenerla.":active>0?"Ya tienes actividad esta semana. Intenta completar una evaluación hoy.":"Haz una evaluación para encender tu primera llama.";}
  const chart=document.getElementById("profileScoreChart");if(chart){chart.replaceChildren();const routes=[["finanzas","Finanzas"],["contabilidad","Contabilidad"],["tributacion","Tributación"]];let hasScores=false;routes.forEach(([key,labelText])=>{const row=document.createElement("div");row.className="score-row";const title=document.createElement("span");title.textContent=labelText;const stack=document.createElement("div");stack.className="score-bars";for(const level of ["basico","intermedio","avanzado"]){const found=Object.entries(progress).find(([id])=>id.startsWith(key+"-")&&id.toLowerCase().includes(level));const value=found?Math.max(0,Math.min(100,Number(found[1].bestPercent)||0)):0;if(found)hasScores=true;const wrap=document.createElement("div");wrap.className="score-bar-wrap";const bar=document.createElement("div");bar.className="score-bar"+(found?" has-score":"");bar.style.height=Math.max(4,value)+"%";bar.title=level+": "+(found?value+"%":"sin evaluación");bar.setAttribute("aria-label",level+": "+(found?value+"%":"sin evaluación"));const lbl=document.createElement("small");lbl.textContent=level==="basico"?"Bás.":level==="intermedio"?"Inter.":"Avanz.";wrap.append(bar,lbl);stack.append(wrap);}row.append(title,stack);chart.append(row);});if(!hasScores){const empty=document.createElement("p");empty.className="chart-empty";empty.textContent="Completa una evaluación y aquí aparecerán tus resultados.";chart.append(empty);}}
- const road=document.getElementById("profileStageRoad"),stageLabel=document.getElementById("profileStageLabel");if(road){road.replaceChildren();const stages=[{name:"Semilla",icon:"🌱",need:0,desc:"Da tus primeros pasos"},{name:"Explorador",icon:"🧭",need:100,desc:"Construye tus hábitos"},{name:"Estratega",icon:"💡",need:300,desc:"Toma decisiones con criterio"},{name:"Líder financiero",icon:"🏆",need:600,desc:"Domina tu recorrido inicial"}];let current=0;stages.forEach((s,i)=>{if(xp>=s.need)current=i;});if(stageLabel)stageLabel.textContent="Etapa "+(current+1)+" de "+stages.length;stages.forEach((s,i)=>{const card=document.createElement("div");card.className="stage-step"+(i===current?" current":"")+(xp>=s.need?" reached":"");const icon=document.createElement("span");icon.className="stage-icon";icon.textContent=xp>=s.need?"✓":s.icon;const name=document.createElement("strong");name.textContent=s.name;const desc=document.createElement("small");desc.textContent=s.desc;const req=document.createElement("small");req.className="stage-requirement";req.textContent=xp>=s.need?(i===current?"Estás aquí":"Desbloqueada"):s.need+" XP";card.append(icon,name,desc,req);road.append(card);});}
+ const road=document.getElementById("profileStageRoad"),stageLabel=document.getElementById("profileStageLabel");if(road){road.replaceChildren();const stages=[{name:"Explorador",icon:"🌱",need:0,desc:"Empieza a aprender"},{name:"Aprendiz",icon:"📘",need:100,desc:"Construye tus bases"},{name:"Investigador",icon:"🔎",need:250,desc:"Pregunta y analiza"},{name:"Analista",icon:"📊",need:450,desc:"Interpreta información"},{name:"Estratega",icon:"🧠",need:700,desc:"Resuelve casos reales"},{name:"Experto",icon:"💎",need:1000,desc:"Aplica lo aprendido"},{name:"Mentor",icon:"🚀",need:1400,desc:"Comparte tu criterio"},{name:"Leyenda NEXORA",icon:"🏆",need:1900,desc:"Alcanza la cima"}];let current=0;stages.forEach((s,i)=>{if(xp>=s.need)current=i;});if(stageLabel)stageLabel.textContent="Etapa "+(current+1)+" de "+stages.length;stages.forEach((s,i)=>{const card=document.createElement("div");card.className="stage-step"+(i===current?" current":"")+(xp>=s.need?" reached":"");const icon=document.createElement("span");icon.className="stage-icon";icon.textContent=xp>=s.need?"✓":s.icon;const name=document.createElement("strong");name.textContent=s.name;const desc=document.createElement("small");desc.textContent=s.desc;const req=document.createElement("small");req.className="stage-requirement";req.textContent=xp>=s.need?(i===current?"Estás aquí":"Desbloqueada"):s.need+" XP";card.append(icon,name,desc,req);road.append(card);});}
  const badgeDefs=[["🚀","Primer paso","Completa tu primera evaluación",attempts>=1],["🧠","Mente activa","Realiza 5 evaluaciones",attempts>=5],["🎯","Buen resultado","Consigue 80 % o más",entries.some(e=>Number(e.bestPercent)>=80)],["📊","Finanzas en marcha","Explora Educación financiera",Object.keys(progress).some(k=>k.startsWith("finanzas-"))],["📘","Contabilidad al día","Completa una evaluación contable",Object.keys(progress).some(k=>k.startsWith("contabilidad-"))],["🧾","Tributación sin miedo","Completa una evaluación tributaria",Object.keys(progress).some(k=>k.startsWith("tributacion-"))],["🔥","Constancia","Aprende 3 días distintos",days.length>=3],["🌟","Explorador completo","Prueba las 9 rutas",completed>=9],["🏆","Gran estratega","Alcanza 600 XP",xp>=600]];
  const badges=document.getElementById("profileBadges");let unlocked=0;if(badges){badges.replaceChildren();badgeDefs.forEach(([icon,name,desc,yes])=>{if(yes)unlocked++;const box=document.createElement("div");box.className="profile-badge"+(yes?" unlocked":"");const ico=document.createElement("span");ico.className="badge-icon";ico.textContent=icon;const title=document.createElement("strong");title.textContent=name;const small=document.createElement("small");small.textContent=yes?"¡Desbloqueada!":desc;box.append(ico,title,small);badges.append(box);});}const badgeCount=document.getElementById("profileBadgeCount");if(badgeCount)badgeCount.textContent=unlocked+" de "+badgeDefs.length+" desbloqueadas";
  const messages=attempts===0?["¡Hola! Soy Nexo. ¿Listo para convertir lo que aprendes en decisiones útiles?","Tu primera misión es sencilla: entra a Aprender y prueba una evaluación. ¡Yo te acompaño!"]:entries.some(e=>Number(e.lastPercent)>=80)?["¡Eso estuvo genial! Tu esfuerzo está dando resultados. ¿Qué tal si pruebas otra ruta?","¡Mira ese progreso! Sigue practicando: cada decisión informada cuenta."]:["¡Bien hecho por intentarlo! Los errores también enseñan. Revisa la explicación y vuelve a probar.","Un paso a la vez. Elige una materia y practica con situaciones de la vida real."];
@@ -964,6 +964,77 @@ const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition
     toggle.setAttribute("aria-pressed", "true");
     status.textContent = "Modo de voz activado anteriormente. Si el navegador no permite escuchar automáticamente, activa la conversación con el botón de voz.";
   }
+})();
+</script>
+<script>
+/* NEXORA League: ranking opt-in, alias-only, shared through Supabase Auth. */
+(function(){
+ const $=id=>document.getElementById(id), opt=$("leaderboardOptIn"), status=$("leaderboardStatus"), table=$("leaderboardTable"), refresh=$("refreshLeaderboard");
+ if(!opt||!status||!table||!refresh)return;
+ let loading=false;
+ function stats(){
+  const progress=typeof readLearningProgress==="function"?readLearningProgress():{};
+  const entries=Object.values(progress),xp=entries.reduce((n,e)=>n+Math.max(0,Number(e.bestPercent)||0)+Math.max(0,(Number(e.attempts)||0)-1)*5,0);
+  const days=typeof readActivity==="function"?readActivity():[];
+  let streak=0,day=new Date(),today=typeof profileDateKey==="function"?profileDateKey():"";
+  if(!days.includes(today))day.setDate(day.getDate()-1);
+  for(let i=days.length-1;i>=0;i--){const expected=profileDateKey(day);if(days[i]===expected){streak++;day.setDate(day.getDate()-1);}else if(days[i]<expected)break;}
+  const tier=profileTier(xp);
+  const badgeDefs=[entries.length>0,entries.length>=3,entries.some(e=>Number(e.bestPercent)>=80),Object.keys(progress).some(k=>k.startsWith("contabilidad-")),days.length>=3,entries.length>=9, xp>=700, xp>=1900];
+  return {xp,level:tier.level,streak,badges:badgeDefs.filter(Boolean).length};
+ }
+ function client(){return typeof nexoraCloud!=="undefined"?nexoraCloud:null}
+ function user(){return typeof nexoraCloudUser!=="undefined"?nexoraCloudUser:null}
+ function setStatus(msg){status.textContent=msg;}
+ async function saveParticipation(enabled){
+  const db=client(),u=user();
+  if(!db||!u){setStatus("Inicia sesión primero. Tu avance personal sigue guardándose en este dispositivo.");opt.checked=false;return;}
+  if(!enabled){
+   const {error}=await db.from("nexora_leaderboard").delete().eq("user_id",u.id);
+   if(error){setStatus("No pude quitarte de la clasificación. Inténtalo de nuevo.");opt.checked=true;return;}
+   table.replaceChildren();setStatus("Has salido de la clasificación. Tu progreso personal no se borra.");return;
+  }
+  const p=typeof readProfile==="function"?readProfile():{};
+  const s=stats(),name=String(p.name||u.email?.split("@")[0]||"Explorador").trim().slice(0,40)||"Explorador";
+  const {error}=await db.from("nexora_leaderboard").upsert({user_id:u.id,display_name:name,xp:s.xp,level:s.level,streak:s.streak,badges:s.badges,opted_in:true,updated_at:new Date().toISOString()},{onConflict:"user_id"});
+  if(error){setStatus("No se pudo activar la clasificación. Comprueba que tu cuenta esté iniciada e inténtalo otra vez.");console.error("NEXORA leaderboard",error);return;}
+  setStatus("¡Ya participas! Se muestra tu alias y tus puntos, no tu correo.");
+  await loadRanking();
+ }
+ async function loadRanking(){
+  if(loading)return;loading=true;
+  try{
+   const db=client(),u=user();
+   if(!db||!u){setStatus("Inicia sesión para participar en la clasificación comunitaria.");table.replaceChildren();opt.checked=false;return;}
+   const {data:mine}=await db.from("nexora_leaderboard").select("opted_in").eq("user_id",u.id).maybeSingle();
+   opt.checked=!!mine?.opted_in;
+   if(!opt.checked){setStatus("Activa la casilla si deseas aparecer. Es opcional.");table.replaceChildren();return;}
+   const s=stats(),p=typeof readProfile==="function"?readProfile():{},name=String(p.name||u.email?.split("@")[0]||"Explorador").trim().slice(0,40)||"Explorador";
+   const {error:upErr}=await db.from("nexora_leaderboard").upsert({user_id:u.id,display_name:name,xp:s.xp,level:s.level,streak:s.streak,badges:s.badges,opted_in:true,updated_at:new Date().toISOString()},{onConflict:"user_id"});
+   if(upErr)throw upErr;
+   const {data,error}=await db.from("nexora_leaderboard").select("user_id,display_name,xp,level,streak,badges").eq("opted_in",true).order("xp",{ascending:false}).order("updated_at",{ascending:true}).limit(50);
+   if(error)throw error;
+   table.replaceChildren();
+   if(!data||!data.length){setStatus("Todavía no hay exploradores en la liga. ¡Puedes ser de los primeros!");return;}
+   const position=data.findIndex(row=>row.user_id===u.id)+1;
+   setStatus("Tu posición: "+(position||"—")+" de "+data.length+" participantes · Top 50. La liga crecerá a medida que se unan más personas.");
+   data.forEach((row,i)=>{
+    const line=document.createElement("div");line.className="leaderboard-row"+(row.user_id===u.id?" is-me":"");
+    const place=document.createElement("span");place.className="leaderboard-place";place.textContent=i===0?"🥇":i===1?"🥈":i===2?"🥉":"#"+(i+1);
+    const who=document.createElement("div");who.className="leaderboard-user";const title=document.createElement("strong");title.textContent=row.display_name+(row.user_id===u.id?" · Tú":"");const sub=document.createElement("small");sub.textContent="Nivel "+row.level+" · 🔥 "+row.streak+" días · 🏅 "+row.badges+" insignias";who.append(title,sub);
+    const points=document.createElement("span");points.className="leaderboard-xp";points.textContent=Number(row.xp||0)+" XP";line.append(place,who,points);table.append(line);
+   });
+  }catch(e){console.error("NEXORA ranking",e);setStatus("No pude cargar la clasificación. Comprueba tu conexión e inténtalo de nuevo.");}
+  finally{loading=false;}
+ }
+ opt.addEventListener("change",()=>saveParticipation(opt.checked));
+ refresh.addEventListener("click",loadRanking);
+ document.querySelectorAll('[data-view="perfil"]').forEach(b=>b.addEventListener("click",()=>setTimeout(loadRanking,150)));
+ document.querySelectorAll('[data-go="perfil"]').forEach(b=>b.addEventListener("click",()=>setTimeout(loadRanking,150)));
+ document.getElementById("inlineFinish")?.addEventListener("click",()=>setTimeout(()=>{if(opt.checked)loadRanking();},350));
+ document.getElementById("saveProfile")?.addEventListener("click",()=>setTimeout(()=>{if(opt.checked)loadRanking();},500));
+ window.addEventListener("nexora:auth-ready",loadRanking);
+ setTimeout(loadRanking,1200);
 })();
 </script>
 </body>
