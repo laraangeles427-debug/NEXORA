@@ -129,9 +129,9 @@ button,input,select,textarea{font:inherit}button,a,input,select,textarea{-webkit
 
 <section class="view" id="view-nexora"><div class="container page"><span class="eyebrow">Nuestra identidad</span><h2 class="page-title">Conocimiento que abre <span class="accent">oportunidades</span></h2><p class="intro">NEXORA es una propuesta de plataforma web educativa que busca facilitar el aprendizaje financiero, contable y tributario mediante herramientas prácticas, accesibles y colaborativas.</p><div class="grid two">
 <article class="card"><div class="card-icon">◎</div><h3>Misión</h3><p>Acercar conocimientos útiles a más personas con contenidos comprensibles y experiencias prácticas.</p></article><article class="card"><div class="card-icon">↗</div><h3>Visión</h3><p>Contribuir a una comunidad que aprende, comparte conocimientos y desarrolla habilidades para tomar decisiones informadas.</p></article><article class="card"><div class="card-icon">◇</div><h3>Aprendizaje inclusivo</h3><p>Ofrecer distintas formas de acceder a la información, incluyendo lectura por voz y opciones visuales adaptables.</p></article><article class="card"><div class="card-icon">♧</div><h3>Comunidad</h3><p>Promover el intercambio de experiencias, preguntas y aprendizaje entre compañeros.</p></article></div><p class="notice">NEXORA es un prototipo en desarrollo. Las cuentas reales, la mensajería y el almacenamiento en la nube necesitan servicios seguros de backend.</p></div></section>
-<section class="view" id="view-cuenta"><div class="container page"><span class="eyebrow">Tu espacio personal</span><h2 class="page-title">Únete a <span class="accent">NEXORA</span></h2><p class="intro">Esta pantalla es una demostración visual. No introduzcas contraseñas reales: el registro aún no está conectado a un servicio seguro.</p><div class="grid two">
-<form class="panel" id="demoLogin"><h3>Ingresar</h3><div class="field"><label for="loginEmail">Correo electrónico de demostración</label><input id="loginEmail" type="email" placeholder="usuario@ejemplo.com" required></div><button class="btn" type="submit">Probar acceso de demostración</button><div id="loginMessage" class="result" role="status" hidden></div></form>
-<form class="panel" id="demoRegister"><h3>Crear perfil de demostración</h3><div class="field"><label for="displayName">Nombre para mostrar</label><input id="displayName" maxlength="40" required placeholder="Tu nombre o alias"></div><div class="field"><label for="interest">Área de interés</label><select id="interest"><option>Educación financiera</option><option>Contabilidad</option><option>Tributación</option></select></div><button class="btn secondary" type="submit">Crear vista previa del perfil</button><div id="registerMessage" class="result" role="status" hidden></div></form></div><p class="notice">La demostración no guarda cuentas reales ni autentica identidades.</p></div></section>
+<section class="view" id="view-cuenta"><div class="container page"><span class="eyebrow">Tu espacio personal</span><h2 class="page-title">Tu cuenta <span class="accent">NEXORA</span></h2><p class="intro">Crea tu cuenta una sola vez. Después podrás volver a entrar y continuar tu aprendizaje desde tu perfil.</p><div class="grid two">
+<form class="panel" id="nexoraLogin"><h3>Ya tengo cuenta</h3><div class="field"><label for="loginEmail">Correo electrónico</label><input id="loginEmail" type="email" autocomplete="email" placeholder="tu@correo.com" required></div><div class="field"><label for="loginPassword">Contraseña</label><input id="loginPassword" type="password" autocomplete="current-password" minlength="6" required></div><button class="btn" type="submit">Iniciar sesión</button><div id="loginMessage" class="result" role="status" hidden></div></form>
+<form class="panel" id="nexoraRegister"><h3>Crear cuenta</h3><div class="field"><label for="displayName">Nombre para mostrar</label><input id="displayName" maxlength="40" autocomplete="name" required placeholder="Tu nombre o alias"></div><div class="field"><label for="registerEmail">Correo electrónico</label><input id="registerEmail" type="email" autocomplete="email" required placeholder="tu@correo.com"></div><div class="field"><label for="registerPassword">Crea una contraseña</label><input id="registerPassword" type="password" autocomplete="new-password" minlength="6" required placeholder="Mínimo 6 caracteres"></div><div class="field"><label for="interest">Área de interés</label><select id="interest"><option>Educación financiera</option><option>Contabilidad</option><option>Tributación</option></select></div><button class="btn secondary" type="submit">Crear mi cuenta</button><div id="registerMessage" class="result" role="status" hidden></div></form></div><div class="panel" id="accountStatus" role="status" style="margin-top:1rem"><strong>Estado de cuenta:</strong> <span id="accountStatusText">Comprobando conexión segura…</span><button class="btn secondary" id="nexoraLogout" type="button" hidden style="margin-left:.5rem">Cerrar sesión</button></div><p class="notice">Utiliza un correo al que puedas acceder. Nunca compartas tu contraseña. Los datos de cada cuenta deben quedar protegidos por las políticas de seguridad de NEXORA.</p></div></section>
 <section class="view" id="view-perfil"><div class="container page">
 <span class="eyebrow">Tu espacio personal</span><h2 class="page-title">Mi perfil <span class="accent">NEXORA</span></h2><p class="intro">Tu recorrido, tus logros y el siguiente paso. Cada pequeño avance cuenta.</p>
 <div class="profile-hero panel"><div class="profile-avatar" id="profileAvatarBig" aria-hidden="true">🦊</div><div class="profile-identity"><span class="eyebrow">¡Hola, explorador/a!</span><h3 id="profileGreeting">Tu aventura empieza aquí</h3><p class="muted" id="profileMascotLine" aria-live="polite">Soy Nexo. Aprendamos algo útil para tu vida, paso a paso.</p><div class="profile-rank" id="profileRank">🌱 Nivel 1 · Explorador</div></div></div>
@@ -198,6 +198,7 @@ button,input,select,textarea{font:inherit}button,a,input,select,textarea{-webkit
 <div class="voice-settings"><label for="voiceSpeed">Velocidad de lectura</label><select id="voiceSpeed"><option value=".98">Natural</option><option value="1.08">Alegre</option><option value="1.16" selected>Enérgica</option><option value="1.24">Impactante</option></select><label for="voiceChoice">Voz disponible</label><select id="voiceChoice"><option value="">Voz predeterminada</option></select><button type="button" id="voicePreview">▶ Probar esta voz</button></div><p class="voice-help">Ajustamos la lectura para dar más intención a las frases, marcar mejor las preguntas y exclamaciones y dejar pausas cortas entre ideas. Elige Alegre, Enérgica o Impactante y prueba cómo suena. La expresividad final depende de la voz disponible en tu dispositivo.</p></aside>
 <div class="toolbar" aria-label="Controles rápidos de accesibilidad"><button id="quickTextDown" aria-label="Reducir texto" title="Reducir texto">A−</button><button id="quickTextUp" aria-label="Aumentar texto" title="Aumentar texto">A+</button><button id="quickContrast" aria-label="Cambiar contraste" title="Cambiar contraste">◐</button></div>
 <footer class="footer"><div class="container footer-inner"><span><strong class="accent">NEXORA</strong> · Conectando conocimiento, creando oportunidades.</span><span>Prototipo educativo en desarrollo</span></div></footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const viewNames=["inicio","nexora","cuenta","perfil","aprender","asesoria","simulacros","comunidad","accesibilidad"];
 const views=[...document.querySelectorAll(".view")],navButtons=[...document.querySelectorAll("[data-view]")],navlinks=document.getElementById("navlinks"),menuToggle=document.getElementById("menuToggle");
@@ -271,8 +272,102 @@ document.getElementById("saveProfile").addEventListener("click",()=>{const p=rea
 document.getElementById("profileEncourage").addEventListener("click",()=>{const messages=["¡Tú puedes! No necesitas saberlo todo hoy; solo dar el siguiente paso.","Cada dólar que aprendes a administrar puede convertirse en una mejor decisión.","¡Vamos con todo! Tu constancia vale más que hacerlo perfecto a la primera.","Lo que aprendes aquí puede ayudarte en casa, en tus estudios y en un emprendimiento."];const msg=messages[Math.floor(Math.random()*messages.length)];document.getElementById("mascotBubble").textContent=msg;document.getElementById("profileMascotLine").textContent=msg;});
 document.getElementById("profileNextStep").addEventListener("click",()=>{const progress=readLearningProgress(),next=[["finanzas","finanzas-basico"],["contabilidad","contabilidad-basico"],["tributacion","tributacion-basico"]].find(([key,id])=>!progress[id]);document.getElementById("mascotBubble").textContent=next?"Tu siguiente misión: entra en Aprender y explora "+(next[0]==="finanzas"?"Educación financiera":next[0]==="contabilidad"?"Contabilidad":"Tributación")+" en nivel básico. Después, completa la evaluación para ganar XP.":"¡Ya exploraste las rutas iniciales! Elige un nivel intermedio o avanzado y sigue ampliando tus habilidades.";});
 document.getElementById("profileSpeak").addEventListener("click",()=>{const msg=document.getElementById("mascotBubble").textContent;if(typeof speak==="function")speak(msg);else document.getElementById("profileSaveStatus").textContent=msg;});
-document.getElementById("demoLogin").addEventListener("submit",e=>{e.preventDefault();const out=document.getElementById("loginMessage");out.hidden=false;out.textContent="Esta es una vista de demostración. El inicio de sesión real requiere autenticación segura.";});
-document.getElementById("demoRegister").addEventListener("submit",e=>{e.preventDefault();const name=document.getElementById("displayName").value.trim(),interest=document.getElementById("interest").value,out=document.getElementById("registerMessage");out.hidden=false;out.textContent=`Vista previa del perfil: ${name}. Área de interés: ${interest}. Este perfil no se ha guardado.`;});
+
+// NEXORA Cloud Auth + sincronización personal mediante Supabase.
+const NEXORA_SUPABASE_URL = "https://hkwvbwtllcwmvppzhckw.supabase.co";
+const NEXORA_SUPABASE_PUBLIC_KEY = "sb_publishable_eAqulp909-RrVmhAynHoTA_s1JKKbJ5";
+const nexoraCloud = window.supabase?.createClient
+  ? window.supabase.createClient(NEXORA_SUPABASE_URL, NEXORA_SUPABASE_PUBLIC_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } })
+  : null;
+const nexoraStateKeys = ["nexora-profile-v1","nexora-profile-activity-v1","nexora-learning-progress-v1","nexora-daily-money-v1"];
+let nexoraCloudUser = null, nexoraCloudBusy = false, nexoraCloudTimer = null;
+function nexoraStatus(message, type="info") {
+ const status=document.getElementById("accountStatusText");
+ if(status) status.textContent=message;
+ const login=document.getElementById("loginMessage");
+ if(login && type==="error"){login.hidden=false;login.textContent=message;}
+}
+function nexoraLocalState(){
+ const state={};
+ nexoraStateKeys.forEach(key=>{try{const raw=localStorage.getItem(key);if(raw!==null)state[key]=JSON.parse(raw);}catch(_){}});
+ return state;
+}
+function nexoraApplyState(state){
+ nexoraCloudBusy=true;
+ try {
+  nexoraStateKeys.forEach(key=>{if(Object.prototype.hasOwnProperty.call(state||{},key))localStorage.setItem(key,JSON.stringify(state[key]));});
+ } catch(_) {}
+ nexoraCloudBusy=false;
+ try { if(typeof renderProfile==="function")renderProfile(); } catch(_) {}
+ try { if(typeof renderLearningProgress==="function")renderLearningProgress(); } catch(_) {}
+ try { if(typeof renderDailyMoney==="function")renderDailyMoney(); } catch(_) {}
+}
+async function nexoraSyncNow(){
+ if(!nexoraCloud||!nexoraCloudUser||nexoraCloudBusy)return;
+ const payload={user_id:nexoraCloudUser.id,state:nexoraLocalState(),updated_at:new Date().toISOString()};
+ const {error}=await nexoraCloud.from("nexora_user_state").upsert(payload,{onConflict:"user_id"});
+ if(error){nexoraStatus("Sesión activa, pero no se pudieron sincronizar los datos. Revisa las políticas de seguridad de Supabase.","error");console.error("NEXORA sync:",error.message);}
+}
+function nexoraQueueSync(){
+ if(!nexoraCloudUser||nexoraCloudBusy)return;
+ clearTimeout(nexoraCloudTimer);
+ nexoraCloudTimer=setTimeout(()=>nexoraSyncNow(),900);
+}
+const nexoraOriginalSetItem=Storage.prototype.setItem;
+Storage.prototype.setItem=function(key,value){nexoraOriginalSetItem.call(this,key,value);if(this===localStorage&&nexoraStateKeys.includes(String(key)))nexoraQueueSync();};
+const nexoraOriginalRemoveItem=Storage.prototype.removeItem;
+Storage.prototype.removeItem=function(key){nexoraOriginalRemoveItem.call(this,key);if(this===localStorage&&nexoraStateKeys.includes(String(key)))nexoraQueueSync();};
+async function nexoraLoadCloudState(user){
+ nexoraCloudUser=user;
+ const logout=document.getElementById("nexoraLogout");
+ if(logout)logout.hidden=!user;
+ if(!user){nexoraStatus("No has iniciado sesión. Tus datos siguen guardados solo en este dispositivo hasta que entres en tu cuenta.");return;}
+ nexoraStatus("Sesión iniciada. Cargando tus avances…");
+ const {data,error}=await nexoraCloud.from("nexora_user_state").select("state").eq("user_id",user.id).maybeSingle();
+ if(error){nexoraStatus("Iniciaste sesión, pero la sincronización está pendiente de revisar los permisos de la tabla.","error");console.error("NEXORA load:",error.message);return;}
+ if(data&&data.state&&typeof data.state==="object"){
+  nexoraApplyState(data.state);
+ } else {
+  await nexoraSyncNow();
+ }
+ const {data:profileData}=await nexoraCloud.auth.getUser();
+ const email=profileData?.user?.email||user.email||"";
+ const profile=nexoraLocalState()["nexora-profile-v1"]||{};
+ if(!profile.name&&email){profile.name=email.split("@")[0];try{localStorage.setItem("nexora-profile-v1",JSON.stringify({...profile,name:profile.name}));}catch(_){}}
+ nexoraStatus("Cuenta conectada. Tus avances se sincronizan con esta cuenta cuando se guardan.");
+}
+if(!nexoraCloud){
+ nexoraStatus("No se pudo cargar el servicio de cuentas. Comprueba tu conexión a internet y recarga la página.");
+} else {
+ nexoraStatus("Conexión preparada. Puedes crear una cuenta o iniciar sesión.");
+ document.getElementById("nexoraLogin").addEventListener("submit",async e=>{
+  e.preventDefault();const out=document.getElementById("loginMessage");out.hidden=false;out.textContent="Iniciando sesión…";
+  const email=document.getElementById("loginEmail").value.trim(),password=document.getElementById("loginPassword").value;
+  const {data,error}=await nexoraCloud.auth.signInWithPassword({email,password});
+  if(error){out.textContent="No se pudo iniciar sesión: "+error.message;return;}
+  out.textContent="Sesión iniciada.";await nexoraLoadCloudState(data.user);showView("perfil");
+ });
+ document.getElementById("nexoraRegister").addEventListener("submit",async e=>{
+  e.preventDefault();const out=document.getElementById("registerMessage");out.hidden=false;out.textContent="Creando cuenta…";
+  const name=document.getElementById("displayName").value.trim(),email=document.getElementById("registerEmail").value.trim(),password=document.getElementById("registerPassword").value,interest=document.getElementById("interest").value;
+  const {data,error}=await nexoraCloud.auth.signUp({email,password,options:{data:{display_name:name,interest}}});
+  if(error){out.textContent="No se pudo crear la cuenta: "+error.message;return;}
+  if(data.session&&data.user){out.textContent="¡Cuenta creada! Guardando tu perfil…";nexoraCloudUser=data.user;try{localStorage.setItem("nexora-profile-v1",JSON.stringify({name,interest,createdAt:new Date().toISOString()}));}catch(_){}await nexoraSyncNow();await nexoraLoadCloudState(data.user);showView("perfil");}
+  else {out.textContent="¡Registro enviado! Revisa tu correo y confirma la cuenta si Supabase te lo solicita. Después vuelve e inicia sesión.";nexoraStatus("Cuenta pendiente de confirmación por correo.");}
+ });
+ document.getElementById("nexoraLogout").addEventListener("click",async()=>{
+  await nexoraSyncNow();const {error}=await nexoraCloud.auth.signOut();if(error){nexoraStatus("No se pudo cerrar sesión: "+error.message,"error");return;}nexoraCloudUser=null;nexoraStatus("Sesión cerrada. Tus datos en la nube permanecen asociados a tu cuenta.");showView("inicio");
+ });
+ nexoraCloud.auth.getSession().then(({data,error})=>{
+  if(error){nexoraStatus("No se pudo comprobar la sesión. Recarga la página.");return;}
+  if(data.session)nexoraLoadCloudState(data.session.user);
+  else nexoraStatus("Conexión preparada. Crea una cuenta o inicia sesión para guardar tus avances en la nube.");
+ });
+ nexoraCloud.auth.onAuthStateChange((event,session)=>{
+  if(event==="SIGNED_IN"&&session?.user&&nexoraCloudUser?.id!==session.user.id)setTimeout(()=>nexoraLoadCloudState(session.user),0);
+ });
+}
+
 // Registro cotidiano local: no envía información a servidores.
 const dailyMoneyKey="nexora-daily-money-v1",dailyMoneyForm=document.getElementById("dailyMoneyForm"),dailyMoneyList=document.getElementById("dailyMoneyList"),dailyMoneyFeedback=document.getElementById("dailyMoneyFeedback");
 const dailyMoneyCurrency=n=>n.toLocaleString("es-EC",{style:"currency",currency:"USD"});
