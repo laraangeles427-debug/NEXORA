@@ -298,15 +298,26 @@ function nexoraApplyState(state){
   nexoraStateKeys.forEach(key=>{
    if(!Object.prototype.hasOwnProperty.call(state||{},key))return;
    const incoming=state[key];
-   // Merge the profile so an empty/stale cloud field cannot erase a name or avatar already saved locally.
+   let local=null;try{const raw=localStorage.getItem(key);local=raw===null?null:JSON.parse(raw);}catch(_){}
    if(key==="nexora-profile-v1"&&incoming&&typeof incoming==="object"){
-    let local={};try{local=JSON.parse(localStorage.getItem(key)||"{}")||{};}catch(_){}
+    local=local&&typeof local==="object"?local:{};
     localStorage.setItem(key,JSON.stringify({...incoming,...local,name:local.name||incoming.name||"",avatar:local.avatar||incoming.avatar||"🦊"}));
+   }else if(key==="nexora-learning-progress-v1"&&incoming&&typeof incoming==="object"){
+    const cloudProgress=incoming,localProgress=local&&typeof local==="object"?local:{},merged={...cloudProgress};
+    Object.keys(localProgress).forEach(id=>{
+     const a=cloudProgress[id]||{},b=localProgress[id]||{};
+     const at=Date.parse(a.updatedAt||"")||0,bt=Date.parse(b.updatedAt||"")||0;
+     merged[id]={...(at>bt?a:b),attempts:Math.max(Number(a.attempts)||0,Number(b.attempts)||0),bestPercent:Math.max(Number(a.bestPercent)||0,Number(b.bestPercent)||0),lastPercent:bt>=at?(b.lastPercent??a.lastPercent):(a.lastPercent??b.lastPercent),updatedAt:bt>=at?(b.updatedAt||a.updatedAt):(a.updatedAt||b.updatedAt)};
+    });
+    localStorage.setItem(key,JSON.stringify(merged));
+   }else if(key==="nexora-profile-activity-v1"&&Array.isArray(incoming)){
+    localStorage.setItem(key,JSON.stringify([...new Set([...(Array.isArray(local)?local:[]),...incoming])].sort().slice(-365)));
    }else{
-    localStorage.setItem(key,JSON.stringify(incoming));
+    // Keep an existing local value when the cloud row has an older or empty value.
+    localStorage.setItem(key,JSON.stringify(local!==null&&local!==undefined?local:incoming));
    }
   });
- } catch(_) {}
+ } catch(err) { console.error("NEXORA apply state:",err); }
  nexoraCloudBusy=false;
  try { if(typeof renderProfile==="function")renderProfile(); } catch(_) {}
  try { if(typeof renderLearningProgress==="function")renderLearningProgress(); } catch(_) {}
