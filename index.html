@@ -102,6 +102,9 @@ button,input,select,textarea{font:inherit}button,a,input,select,textarea{-webkit
 .leaderboard-main{flex:1;min-width:0}.leaderboard-optin{display:flex;align-items:center;gap:10px;margin:16px 0;color:var(--white);font-size:.9rem}.leaderboard-table{display:grid;gap:8px;margin:14px 0}.leaderboard-row{display:grid;grid-template-columns:42px minmax(0,1fr) auto;align-items:center;gap:10px;padding:11px 13px;border:1px solid var(--line);border-radius:12px;background:#07172a}.leaderboard-row.is-me{border-color:var(--gold);background:#302812}.leaderboard-place{font-weight:900;color:var(--gold);font-size:1.1rem}.leaderboard-user{min-width:0}.leaderboard-user strong,.leaderboard-user small{display:block;overflow-wrap:anywhere}.leaderboard-user small{color:var(--muted);font-size:.78rem}.leaderboard-xp{font-weight:800;color:var(--cyan);white-space:nowrap}.leaderboard-optin input{accent-color:var(--cyan)}@media(max-width:600px){.leaderboard-row{grid-template-columns:32px minmax(0,1fr);}.leaderboard-xp{grid-column:2}.profile-league{align-items:flex-start}}.profile-avatars{display:grid;grid-template-columns:repeat(auto-fit,minmax(44px,1fr));gap:9px}.profile-avatars button{min-width:0;min-height:48px;font-size:1.55rem}.profile-avatars button[aria-pressed="true"]{outline:2px solid var(--cyan);outline-offset:2px}button:disabled{opacity:.55;cursor:not-allowed;filter:saturate(.65)}#nextLevelCTA{margin-top:14px}#profileHistoryChart text{font-family:inherit}
 /* Laboratorio NEXORA: simulador educativo */
 .lab-results{margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}.lab-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:14px 0}.lab-metric{min-width:0;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--bg)}.lab-metric span{display:block;color:var(--muted);font-size:.84rem}.lab-metric strong{display:block;margin-top:5px;font-size:clamp(1.05rem,2.5vw,1.45rem);overflow-wrap:anywhere;color:var(--cyan)}#labExplanation{margin-top:14px}#labBusinessForm small{display:block;margin-top:5px}@media(max-width:640px){.lab-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* Laboratorio NEXORA: aprendizaje visual e interactivo */
+.lab-quick-scenarios{margin:20px 0;padding:16px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(135deg,rgba(8,200,245,.07),rgba(8,200,245,.015))}.lab-scenario-buttons{display:flex;flex-wrap:wrap;gap:9px;margin:10px 0}.lab-scenario{font-size:.9rem}.lab-visual-board{margin:20px 0;padding:clamp(14px,2.5vw,22px);border:1px solid var(--line);border-radius:18px;background:var(--bg)}.lab-visual-heading,.lab-chart-title{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.lab-visual-heading h4,.lab-chart-title h4{margin:4px 0 0}.lab-live-tag{display:inline-flex;align-items:center;gap:7px;font-size:.78rem;color:var(--muted)}.lab-live-tag span{width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 4px rgba(34,197,94,.12)}.lab-money-flow{margin:18px 0}.lab-flow-node{display:flex;flex-direction:column;align-items:center;text-align:center;gap:5px;padding:15px 10px;border:1px solid var(--line);border-radius:14px;min-width:0;background:rgba(8,200,245,.035)}.lab-flow-node small{font-size:.82rem;color:var(--muted)}.lab-flow-node strong{font-size:clamp(1rem,2.5vw,1.25rem);overflow-wrap:anywhere}.lab-flow-icon{font-size:1.5rem}.lab-flow-node.sales{max-width:290px;margin:auto;border-color:rgba(8,200,245,.45)}.lab-flow-arrow{text-align:center;font-size:1.6rem;color:var(--cyan);padding:4px}.lab-flow-splits{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.lab-flow-node.costs{border-top:3px solid #f59e0b}.lab-flow-node.fixed{border-top:3px solid #a78bfa}.lab-flow-node.outcome{border-top:3px solid #22c55e}.lab-chart-card{padding:16px;border:1px solid var(--line);border-radius:15px;background:rgba(127,127,127,.025)}.lab-bar-chart{display:grid;gap:15px;margin:20px 0 12px}.lab-bar-row{display:grid;grid-template-columns:88px minmax(40px,1fr) minmax(66px,auto);align-items:center;gap:10px;font-size:.88rem}.lab-bar-row>span{color:var(--muted)}.lab-bar-row>strong{text-align:right;font-variant-numeric:tabular-nums}.lab-bar-track{height:14px;background:rgba(127,127,127,.13);border-radius:99px;overflow:hidden}.lab-bar-fill{height:100%;width:0;border-radius:99px;transition:width .35s ease}.lab-bar-fill.revenue{background:#06b6d4}.lab-bar-fill.variable{background:#f59e0b}.lab-bar-fill.expenses{background:#a78bfa}.lab-chart-footnote{font-size:.8rem;color:var(--muted);margin:0}.lab-decision-card{display:flex;gap:13px;align-items:flex-start;margin-top:14px;padding:15px;border-radius:14px;border:1px solid rgba(8,200,245,.28);background:rgba(8,200,245,.06)}.lab-decision-icon{font-size:1.6rem}.lab-decision-card strong{display:block}.lab-decision-card p{margin:5px 0 0;color:var(--muted)}@media(max-width:560px){.lab-flow-splits{grid-template-columns:1fr}.lab-flow-node.sales{max-width:none}.lab-bar-row{grid-template-columns:76px minmax(30px,1fr) 60px;gap:7px}.lab-scenario-buttons .btn{flex:1 1 100%}}
 </style>
 </head>
 <body>
@@ -207,8 +210,37 @@ button,input,select,textarea{font:inherit}button,a,input,select,textarea{-webkit
 </div>
 <div class="lesson-actions"><button class="btn" type="submit">Calcular mi negocio</button><button class="btn secondary" type="reset" id="labReset">Restablecer ejemplo</button></div>
 </form>
+<div class="lab-quick-scenarios" aria-label="Prueba escenarios rápidos">
+<span class="eyebrow">Prueba una decisión</span>
+<div class="lab-scenario-buttons">
+<button type="button" class="btn secondary lab-scenario" data-scenario="base">🌱 Empezar estable</button>
+<button type="button" class="btn secondary lab-scenario" data-scenario="more">📈 Vender más</button>
+<button type="button" class="btn secondary lab-scenario" data-scenario="cost">🧾 Suben los costos</button>
+<button type="button" class="btn secondary lab-scenario" data-scenario="price">🏷️ Bajar el precio</button>
+</div>
+<p class="muted small">Los escenarios cambian los datos del formulario para que compares decisiones. Puedes editarlos después.</p>
+</div>
 <div id="labBusinessResults" class="lab-results" aria-live="polite" role="status" hidden>
 <h3>Resultados del período</h3>
+<div class="lab-visual-board" id="labVisualBoard">
+<div class="lab-visual-heading"><div><span class="eyebrow">Vista rápida</span><h4>¿A dónde va el dinero?</h4></div><span class="lab-live-tag"><span></span> Se actualiza con tus datos</span></div>
+<div class="lab-money-flow" aria-label="Flujo ilustrativo del dinero">
+<div class="lab-flow-node sales"><span class="lab-flow-icon">🛍️</span><small>Ingresos por ventas</small><strong id="labFlowRevenue">$0,00</strong></div>
+<div class="lab-flow-arrow" aria-hidden="true">↓</div>
+<div class="lab-flow-splits">
+<div class="lab-flow-node costs"><span class="lab-flow-icon">📦</span><small>Costo de productos</small><strong id="labFlowCosts">$0,00</strong></div>
+<div class="lab-flow-node fixed"><span class="lab-flow-icon">🏠</span><small>Gastos fijos</small><strong id="labFlowFixed">$0,00</strong></div>
+<div class="lab-flow-node outcome"><span class="lab-flow-icon">💰</span><small>Resultado estimado</small><strong id="labFlowNet">$0,00</strong></div>
+</div>
+</div>
+<div class="lab-chart-card"><div class="lab-chart-title"><div><span class="eyebrow">Comparación visual</span><h4>Ventas frente a costos</h4></div><span class="muted small">USD ($)</span></div>
+<div class="lab-bar-chart" role="img" aria-label="Gráfico de barras comparativo de ventas, costos variables y gastos fijos">
+<div class="lab-bar-row"><span>Ventas</span><div class="lab-bar-track"><div class="lab-bar-fill revenue" id="labBarRevenue"></div></div><strong id="labBarRevenueValue">$0</strong></div>
+<div class="lab-bar-row"><span>Costos</span><div class="lab-bar-track"><div class="lab-bar-fill variable" id="labBarCost"></div></div><strong id="labBarCostValue">$0</strong></div>
+<div class="lab-bar-row"><span>Gastos fijos</span><div class="lab-bar-track"><div class="lab-bar-fill expenses" id="labBarFixed"></div></div><strong id="labBarFixedValue">$0</strong></div>
+</div><p class="lab-chart-footnote">Las barras usan la misma escala para que compares qué cantidad es mayor.</p></div>
+<div class="lab-decision-card" id="labDecisionCard"><span class="lab-decision-icon">🧭</span><div><strong id="labDecisionTitle">Tu decisión empieza aquí</strong><p id="labDecisionText">Calcula el negocio para ver una recomendación educativa basada en tus datos.</p></div></div>
+</div>
 <div class="lab-metrics">
 <div class="lab-metric"><span>Ventas totales</span><strong id="labRevenue">$0,00</strong></div>
 <div class="lab-metric"><span>Costo de unidades vendidas</span><strong id="labCostTotal">$0,00</strong></div>
@@ -1113,8 +1145,16 @@ const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition
   const extra=contribution<=0?" El precio de venta no supera el costo por unidad, por eso vender más no permite cubrir los gastos fijos.":breakEven===0?" No hay gastos fijos; en este modelo no necesitas ventas para cubrirlos.":" Para cubrir los gastos fijos necesitas vender al menos "+number(breakEven)+" unidades, suponiendo que el precio y el costo por unidad no cambian.";
   byId("labExplanation").textContent=explanation+extra;
   byId("labCashNote").textContent="Dinero final ilustrativo: "+money(capital+net)+". Es una estimación simplificada del capital inicial más el resultado del período; no representa un estado de flujo de efectivo ni incluye impuestos, deudas o compras de inventario no vendido.";
+  byId("labFlowRevenue").textContent=money(revenue);byId("labFlowCosts").textContent=money(costTotal);byId("labFlowFixed").textContent=money(fixed);byId("labFlowNet").textContent=money(net);
+  const scale=Math.max(revenue,costTotal,fixed,1);const setBar=(id,value)=>{byId(id).style.width=Math.max(0,Math.min(100,(value/scale)*100))+"%";};
+  setBar("labBarRevenue",revenue);setBar("labBarCost",costTotal);setBar("labBarFixed",fixed);
+  byId("labBarRevenueValue").textContent=money(revenue);byId("labBarCostValue").textContent=money(costTotal);byId("labBarFixedValue").textContent=money(fixed);
+  byId("labDecisionTitle").textContent=net>0?"Vas por buen camino: revisa tu margen":net<0?"Alerta de negocio: revisa los costos":"Estás en el punto de equilibrio";
+  byId("labDecisionText").textContent=contribution<=0?"Cada unidad deja una contribución nula o negativa antes de gastos fijos. Busca un precio superior al costo por unidad o reduce ese costo.":net<0?"Con estos datos, los ingresos no alcanzan para cubrir costos y gastos. Prueba otro escenario antes de decidir.":net===0?"Tus ventas cubren los costos y gastos fijos estimados, pero no dejan ganancia en este modelo.":"El resultado es positivo en este ejemplo. Comprueba también los imprevistos y obligaciones que el simulador no incluye.";
   byId("labBusinessResults").hidden=false;
  }
+ const scenarioValues={base:{capital:200,price:5,units:80,unitCost:2.25,fixedCosts:120},more:{capital:200,price:5,units:120,unitCost:2.25,fixedCosts:120},cost:{capital:200,price:5,units:80,unitCost:3.5,fixedCosts:150},price:{capital:200,price:3.5,units:80,unitCost:2.25,fixedCosts:120}};
+ document.querySelectorAll(".lab-scenario").forEach(button=>button.addEventListener("click",()=>{const values=scenarioValues[button.dataset.scenario];if(!values)return;Object.entries(values).forEach(([key,value])=>{const input=form.elements.namedItem(key);if(input)input.value=value;});calculate();byId("labBusinessResults").scrollIntoView({behavior:"smooth",block:"nearest"});}));
  form.addEventListener("submit",calculate);
  form.addEventListener("reset",()=>{setTimeout(()=>{byId("labBusinessResults").hidden=true;},0);});
  form.addEventListener("input",()=>{if(!byId("labBusinessResults").hidden)calculate();});
