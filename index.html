@@ -36,6 +36,23 @@ button,input,select,textarea{font:inherit}button,a,input,select,textarea{-webkit
 #learningProgressPanel .progress-pill{display:inline-flex;align-items:center;gap:5px;font-size:.76rem;padding:4px 8px;border:1px solid var(--line);border-radius:999px;color:var(--cyan)}
 #learningProgressPanel .progress-open{margin-top:12px}
 @media(prefers-reduced-motion:reduce){#learningProgressPanel .progress-fill{transition:none}}
+
+/* Mapas conceptuales interactivos de las aulas */
+.concept-map{margin:24px 0;padding:20px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,rgba(8,200,245,.08),rgba(6,18,36,.88));}
+.concept-map-head{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:16px}
+.concept-map-head h4{margin:0}
+.concept-map-head p{margin:5px 0 0;color:var(--muted);font-size:.92rem}
+.concept-map-root{max-width:340px;margin:0 auto 20px;padding:14px 18px;text-align:center;font-weight:800;border-radius:14px;color:#061225;background:linear-gradient(100deg,#35dcff,#8defff);box-shadow:0 8px 26px rgba(0,190,245,.14)}
+.concept-map-branches{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;position:relative}
+.concept-map-node{width:100%;height:100%;min-height:76px;text-align:center;padding:12px 9px;border:1px solid rgba(53,220,255,.35);border-radius:13px;background:rgba(11,38,63,.8);color:var(--text);cursor:pointer;transition:transform .18s,border-color .18s,background .18s}
+.concept-map-node:hover,.concept-map-node:focus-visible,.concept-map-node[aria-pressed="true"]{transform:translateY(-2px);border-color:var(--cyan);background:rgba(8,200,245,.15);outline:none}
+.concept-map-node strong{display:block;color:var(--cyan);margin-bottom:5px}
+.concept-map-node span{font-size:.8rem;color:var(--muted);display:block}
+.concept-map-detail{margin-top:14px;padding:14px;border-radius:12px;border-left:3px solid var(--cyan);background:rgba(6,18,36,.7);min-height:68px}
+.concept-map-detail p{margin:6px 0 0}
+.concept-map-tip{font-size:.85rem;color:var(--muted);margin:12px 0 0}
+@media(max-width:560px){.concept-map{padding:14px}.concept-map-branches{grid-template-columns:1fr;gap:8px}.concept-map-node{min-height:0;display:flex;align-items:center;gap:12px;text-align:left}.concept-map-node strong{min-width:96px;margin:0}.concept-map-root{margin-bottom:12px}}
+@media(prefers-reduced-motion:reduce){.concept-map-node{transition:none}}
 </style>
 </head>
 <body>
@@ -93,6 +110,7 @@ button,input,select,textarea{font:inherit}button,a,input,select,textarea{-webkit
 <h3 id="lessonTitle" tabindex="-1">Mi dinero con propósito</h3>
 <p id="lessonIntro" class="muted">Comprende los conceptos básicos antes de pasar a la práctica.</p>
 <div id="lessonContent"></div>
+<div id="conceptMapMount"></div>
 <div class="lesson-actions"><button class="btn ghost" id="readLesson" type="button">🔊 Escuchar clase</button><button class="btn" type="button" id="lessonPractice">Practicar y evaluar →</button></div>
 <div id="inlineLessonQuiz" class="panel" hidden><span class="eyebrow">Práctica de la clase</span><h3>Comprueba lo aprendido</h3><p id="inlineQuestion"></p><div id="inlineOptions" class="quiz-options"></div><div id="inlineFeedback" class="result" role="status" hidden></div><div class="lesson-actions"><button class="btn" id="inlineNext" type="button" disabled>Siguiente pregunta →</button><button class="btn ghost" id="inlineFinish" type="button" hidden>Terminar práctica</button></div><p id="inlineScore" class="muted" aria-live="polite"></p></div>
 <div id="inlineLessonResult" class="result" role="status" hidden></div>
@@ -222,6 +240,47 @@ document.getElementById("clearLearningProgress").addEventListener("click",()=>{
  renderLearningProgress();
 });
 renderLearningProgress();
+const conceptMapData={
+ finanzas:{
+  basico:{root:"Mi dinero",nodes:[["Ingresos","Lo que recibes","Mesada, salario o venta."],["Gastos","Lo que pagas","Transporte, comida o servicios."],["Ahorro","Lo que reservas","Dinero para una meta o imprevisto."]]},
+  intermedio:{root:"Decisiones financieras",nodes:[["Presupuesto","Plan de dinero","Organiza ingresos y gastos antes de decidir."],["Prioridades","Necesidad o deseo","Cubre compromisos importantes primero."],["Meta","Ahorro planificado","Divide la cantidad objetivo en aportes posibles."]]},
+  avanzado:{root:"Plan financiero",nodes:[["Diagnóstico","Analiza los datos","Revisa saldo, deudas y gastos próximos."],["Escenarios","Compara opciones","Calcula qué ocurre si un gasto sube o baja."],["Decisión","Justifica el plan","Elige una opción sostenible y revisable."]]}
+ },
+ contabilidad:{
+  basico:{root:"Situación del negocio",nodes:[["Activo","Lo que posee o controla","Caja, equipos, mercadería."],["Pasivo","Lo que debe","Deudas con proveedores o préstamos."],["Patrimonio","Parte residual","Activos menos pasivos."]]},
+  intermedio:{root:"Operaciones contables",nodes:[["Identificar","¿Qué ocurrió?","Lee la factura, recibo u otro respaldo."],["Clasificar","¿Qué cuentas cambian?","Determina qué aumenta o disminuye."],["Comprobar","¿Cuadra el registro?","Verifica importes y ecuación contable."]]},
+  avanzado:{root:"Análisis contable",nodes:[["Evidencia","Documento fuente","Contrasta factura, pago y registro."],["Registro","Cuentas e importes","Explica por qué cada cuenta se afecta."],["Control","Revisión y corrección","Documenta diferencias y sigue el procedimiento."]]}
+ },
+ tributacion:{
+  basico:{root:"Obligaciones tributarias",nodes:[["Tributos","Aportes establecidos","Se aplican según la ley y cada caso."],["Comprobantes","Respaldo de operaciones","Revisa datos y conserva los documentos."],["SRI","Administración tributaria","Consulta fuentes oficiales de Ecuador."]]},
+  intermedio:{root:"Organización tributaria",nodes:[["Ordenar","Archiva documentos","Clasifica comprobantes por fecha y tipo."],["Comparar","Busca diferencias","Contrasta ventas, compras y registros."],["Verificar","Consulta lo vigente","Revisa obligaciones y plazos en el SRI."]]},
+  avanzado:{root:"Análisis tributario",nodes:[["Revisar","Identifica el caso","Determina actividad, período y documentos."],["Contrastar","Norma y evidencia","Usa información oficial vigente y verificable."],["Sustentar","Registra la conclusión","Explica los pasos y reconoce cuándo pedir asesoría."]]}
+ }
+};
+function renderConceptMap(selected,level){
+ const mount=document.getElementById("conceptMapMount");if(!mount)return;
+ const data=conceptMapData[selected]&&conceptMapData[selected][level];mount.replaceChildren();if(!data)return;
+ const section=document.createElement("section");section.className="concept-map";
+ const head=document.createElement("div");head.className="concept-map-head";
+ const heading=document.createElement("div");const title=document.createElement("h4");title.textContent="🧠 Mapa conceptual interactivo";const desc=document.createElement("p");desc.textContent="Pulsa cada idea para descubrir cómo se conecta con el tema.";heading.append(title,desc);head.appendChild(heading);section.appendChild(head);
+ const root=document.createElement("div");root.className="concept-map-root";root.textContent=data.root;section.appendChild(root);
+ const branches=document.createElement("div");branches.className="concept-map-branches";branches.setAttribute("role","group");branches.setAttribute("aria-label","Ideas principales del mapa");
+ const detail=document.createElement("div");detail.className="concept-map-detail";detail.setAttribute("aria-live","polite");
+ const detailTitle=document.createElement("strong");const detailText=document.createElement("p");detail.append(detailTitle,detailText);
+ data.nodes.forEach((node,index)=>{
+  const button=document.createElement("button");button.type="button";button.className="concept-map-node";button.setAttribute("aria-pressed",index===0?"true":"false");
+  const strong=document.createElement("strong");strong.textContent=node[0];const span=document.createElement("span");span.textContent=node[1];button.append(strong,span);
+  button.addEventListener("click",()=>{
+   [...branches.children].forEach((el,i)=>el.setAttribute("aria-pressed",i===index?"true":"false"));
+   detailTitle.textContent=node[0]+" · "+node[1];detailText.textContent=node[2];
+  });
+  branches.appendChild(button);
+ });
+ section.appendChild(branches);
+ detailTitle.textContent=data.nodes[0][0]+" · "+data.nodes[0][1];detailText.textContent=data.nodes[0][2];section.appendChild(detail);
+ const tip=document.createElement("p");tip.className="concept-map-tip";tip.textContent="Truco de estudio: intenta explicar el mapa con tus propias palabras antes de hacer la evaluación.";section.appendChild(tip);
+ mount.appendChild(section);
+}
 function openLearningLesson(selected,level){
  if(!lessons[selected]||!learningLessons[selected]||!learningLessons[selected][level])return;
  topic=selected;learningLevel=level;
@@ -258,6 +317,7 @@ const subjectClassHTML={
  }
 };
 document.getElementById("lessonContent").innerHTML=material.html+(subjectClassHTML[selected]&&subjectClassHTML[selected][level]||"");
+ renderConceptMap(selected,level);
  activePracticeQuestions=material.questions;
  practiceIndex=0;practiceScore=0;practiceAnswered=false;
  document.getElementById("inlineLessonQuiz").hidden=true;
