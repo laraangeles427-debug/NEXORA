@@ -1104,7 +1104,7 @@ const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition
  const byId=id=>document.getElementById(id);
  const money=value=>new Intl.NumberFormat("es-EC",{style:"currency",currency:"USD",minimumFractionDigits:2,maximumFractionDigits:2}).format(value);
  const number=value=>new Intl.NumberFormat("es-EC",{maximumFractionDigits:0}).format(value);
- function calculate(event){if(event)event.preventDefault();if(!form.reportValidity())return;
+ function calculate(event){if(event)event.preventDefault();if(!form.checkValidity()){if(event)form.reportValidity();return;}
   const capital=Number(byId("labCapital").value),price=Number(byId("labPrice").value),units=Number(byId("labUnits").value),unitCost=Number(byId("labUnitCost").value),fixed=Number(byId("labFixedCosts").value);
   if(![capital,price,units,unitCost,fixed].every(Number.isFinite)||capital<0||price<=0||units<0||unitCost<0||fixed<0){return;}
   const revenue=price*units,costTotal=unitCost*units,gross=revenue-costTotal,net=gross-fixed,margin=revenue>0?(net/revenue)*100:null,contribution=price-unitCost,breakEven=contribution>0?Math.ceil(fixed/contribution):null;
