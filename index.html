@@ -266,6 +266,21 @@ button,input,select,textarea{font:inherit}button,a,input,select,textarea{-webkit
 <article class="card"><div class="card-icon">◎</div><h3>¿Qué debes observar?</h3><p>Vender mucho no siempre significa ganar mucho. Compara el precio de venta con el costo por unidad y recuerda que también existen gastos fijos.</p></article>
 <article class="card"><div class="card-icon">↗</div><h3>Reto de aprendizaje</h3><p>Prueba bajar el precio, aumentar el costo por unidad o vender menos productos. ¿Qué cambio ayuda a mejorar el resultado? Calcula varias veces y compara.</p></article>
 </div>
+
+<div class="panel accounting-challenge" id="accountingChallenge">
+<div class="progress-top"><div><span class="eyebrow">Laboratorio NEXORA · Reto práctico 02</span><h3>Organiza las cuentas de tu negocio</h3></div><span class="progress-pill">Aprender haciendo</span></div>
+<p class="muted">Ahora eres responsable de los registros de una pequeña tienda. Lee cada situación y clasifica la cuenta destacada. Al terminar, NEXORA te mostrará tus aciertos y qué concepto conviene repasar. Usa los casos ficticios; no ingreses información real de tu negocio.</p>
+<form id="accountingChallengeForm">
+<div id="accountingChallengeList" class="accounting-challenge-list"></div>
+<div class="lesson-actions"><button class="btn" type="submit">Revisar mis respuestas</button><button class="btn secondary" type="button" id="accountingShuffle">Mezclar casos y volver a intentar</button></div>
+</form>
+<div id="accountingChallengeReport" class="accounting-challenge-report" role="status" aria-live="polite" hidden></div>
+<p class="muted small">Guía educativa: las clasificaciones se presentan de forma simplificada. En la práctica, el registro contable depende de la operación completa y del contexto.</p>
+</div>
+<style>
+.accounting-challenge{margin-top:24px}.accounting-challenge-list{display:grid;gap:12px;margin:18px 0}.accounting-case{display:grid;grid-template-columns:minmax(0,1fr) minmax(180px,.42fr);gap:14px;align-items:center;padding:15px;border:1px solid var(--line);border-radius:14px;background:var(--bg)}.accounting-case p{margin:4px 0 0}.accounting-case label{display:block;font-size:.85rem;color:var(--muted);margin-bottom:6px}.accounting-case select{width:100%;min-height:44px;border:1px solid var(--line);border-radius:10px;padding:9px;background:var(--panel);color:var(--text)}.accounting-case.correct{border-color:#2aaf83}.accounting-case.incorrect{border-color:#d97777}.accounting-case-feedback{grid-column:1/-1;margin:0!important;font-size:.92rem}.accounting-challenge-report{margin-top:18px;padding:16px;border:1px solid var(--line);border-radius:14px;background:var(--bg)}.accounting-challenge-report h4{margin-top:0}.accounting-skill-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:9px;margin:12px 0}.accounting-skill{padding:11px;border:1px solid var(--line);border-radius:10px}.accounting-skill strong{display:block;color:var(--cyan)}@media(max-width:640px){.accounting-case{grid-template-columns:1fr;gap:9px}.accounting-case-feedback{grid-column:auto}}
+</style>
+
 <p class="notice">Modelo educativo simplificado: supone que todas las unidades indicadas se venden y que los cobros y pagos se realizan dentro del período. No incluye impuestos, deudas, inventario no vendido, depreciación ni otros movimientos. No sustituye una contabilidad real ni asesoría profesional.</p>
 </div>
 </section>
@@ -1416,5 +1431,63 @@ const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition
  form.addEventListener("input",()=>{if(!byId("labBusinessResults").hidden)calculate();});
 })();
 </script>
+
+<script>
+(function(){
+ const form=document.getElementById("accountingChallengeForm");
+ if(!form)return;
+ const list=document.getElementById("accountingChallengeList");
+ const report=document.getElementById("accountingChallengeReport");
+ const categories=[["activo","Activo"],["pasivo","Pasivo"],["patrimonio","Patrimonio"],["ingreso","Ingreso"],["gasto","Gasto"]];
+ const cases=[
+  {id:"cash",account:"Caja",scenario:"Dinero en efectivo que la tienda tiene disponible para pagar sus operaciones.",answer:"activo",skill:"Activos",why:"Caja es un activo: representa dinero que el negocio controla y puede utilizar."},
+  {id:"inventory",account:"Inventario de mercadería",scenario:"Productos comprados que todavía están en la bodega y esperan ser vendidos.",answer:"activo",skill:"Activos",why:"La mercadería disponible para la venta es un activo mientras permanece en inventario."},
+  {id:"receivable",account:"Cuentas por cobrar",scenario:"Un cliente recibió productos a crédito y todavía debe pagarle a la tienda.",answer:"activo",skill:"Activos",why:"Es un derecho de cobro del negocio, por eso se clasifica como activo."},
+  {id:"supplier",account:"Cuentas por pagar a proveedores",scenario:"La tienda recibió mercadería a crédito y aún no cancela la factura del proveedor.",answer:"pasivo",skill:"Pasivos",why:"La obligación pendiente con el proveedor es un pasivo."},
+  {id:"loan",account:"Préstamo bancario por pagar",scenario:"El banco entregó dinero al negocio y la tienda debe devolverlo según el acuerdo.",answer:"pasivo",skill:"Pasivos",why:"El dinero recibido genera una obligación de devolución; la deuda es un pasivo."},
+  {id:"capital",account:"Capital aportado por la propietaria",scenario:"La propietaria entrega dinero propio para iniciar y financiar el negocio.",answer:"patrimonio",skill:"Patrimonio",why:"El aporte de la propietaria forma parte del patrimonio del negocio."},
+  {id:"sales",account:"Ingresos por ventas",scenario:"La tienda vende productos a sus clientes y reconoce el valor de esas ventas.",answer:"ingreso",skill:"Ingresos",why:"Las ventas generadas por la actividad del negocio son ingresos."},
+  {id:"rent",account:"Gasto de arriendo",scenario:"La tienda reconoce el costo mensual por utilizar el local comercial.",answer:"gasto",skill:"Gastos",why:"El arriendo consumido durante el período es un gasto de operación."}
+ ];
+ let current=[];
+ const shuffle=arr=>{const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+ function render(){
+  current=shuffle(cases);report.hidden=true;report.replaceChildren();list.replaceChildren();
+  current.forEach((item,index)=>{
+   const card=document.createElement("article");card.className="accounting-case";card.dataset.caseId=item.id;
+   const copy=document.createElement("div");const number=document.createElement("span");number.className="eyebrow";number.textContent="Caso "+(index+1);
+   const title=document.createElement("strong");title.textContent="Cuenta: "+item.account;
+   const scenario=document.createElement("p");scenario.textContent=item.scenario;copy.append(number,title,scenario);
+   const field=document.createElement("div");const label=document.createElement("label");label.htmlFor="accountingAnswer"+item.id;label.textContent="¿Cómo se clasifica?";
+   const select=document.createElement("select");select.id="accountingAnswer"+item.id;select.name=item.id;select.required=true;
+   const placeholder=document.createElement("option");placeholder.value="";placeholder.textContent="Selecciona una categoría";select.appendChild(placeholder);
+   categories.forEach(([value,text])=>{const option=document.createElement("option");option.value=value;option.textContent=text;select.appendChild(option);});
+   field.append(label,select);card.append(copy,field);list.appendChild(card);
+  });
+ }
+ form.addEventListener("submit",function(event){
+  event.preventDefault();
+  if(!form.reportValidity())return;
+  const results=current.map(item=>({item,chosen:form.elements.namedItem(item.id).value,correct:form.elements.namedItem(item.id).value===item.answer}));
+  const score=results.filter(r=>r.correct).length,percent=Math.round(score/results.length*100),skills={};
+  results.forEach(({item,correct})=>{if(!skills[item.skill])skills[item.skill]={correct:0,total:0};skills[item.skill].total++;if(correct)skills[item.skill].correct++;});
+  list.querySelectorAll(".accounting-case").forEach(card=>{
+   const result=results.find(r=>r.item.id===card.dataset.caseId);card.classList.toggle("correct",result.correct);card.classList.toggle("incorrect",!result.correct);
+   let fb=card.querySelector(".accounting-case-feedback");if(!fb){fb=document.createElement("p");fb.className="accounting-case-feedback";card.appendChild(fb);}
+   fb.textContent=(result.correct?"✓ Correcto. ":"↻ Repasa: ")+result.item.why;
+  });
+  report.replaceChildren();const heading=document.createElement("h4");heading.textContent="Tu diagnóstico: "+score+" de "+results.length+" respuestas correctas ("+percent+"%)";
+  const summary=document.createElement("p");summary.textContent=percent>=88?"¡Excelente! Clasificaste las cuentas con seguridad. Prueba explicar por qué cada cuenta pertenece a esa categoría.":percent>=70?"¡Buen avance! Ya tienes una base útil. Revisa las explicaciones de los casos incorrectos para afianzar los conceptos.":"Este intento te muestra qué repasar. Lee cada explicación y vuelve a intentarlo; equivocarse también es parte del aprendizaje.";
+  const skillHeading=document.createElement("p");skillHeading.textContent="Resultado por concepto:";
+  const skillGrid=document.createElement("div");skillGrid.className="accounting-skill-grid";
+  Object.entries(skills).forEach(([name,v])=>{const el=document.createElement("div");el.className="accounting-skill";const strong=document.createElement("strong");strong.textContent=name;const small=document.createElement("span");small.textContent=v.correct+" de "+v.total+" correctas";el.append(strong,small);skillGrid.appendChild(el);});
+  const next=document.createElement("p");next.textContent="Siguiente paso: intenta explicar cómo se relacionan los activos, pasivos y patrimonio. Recuerda la ecuación contable: Activos = Pasivos + Patrimonio.";
+  report.append(heading,summary,skillHeading,skillGrid,next);report.hidden=false;report.scrollIntoView({behavior:"smooth",block:"nearest"});
+ });
+ document.getElementById("accountingShuffle").addEventListener("click",render);
+ render();
+})();
+</script>
+
 </body>
 </html>
