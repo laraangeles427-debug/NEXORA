@@ -122,8 +122,8 @@ function showMoneyQuestion(){
  if(moneyQ===moneyLessonQuestions.length-1){document.getElementById("inlineNext").hidden=true;document.getElementById("inlineFinish").hidden=false;}
  });options.appendChild(b);});
 }
-document.getElementById("openMoneyLesson").addEventListener("click",()=>{document.getElementById("lessonPanel").scrollIntoView({behavior:"smooth",block:"start"});document.getElementById("lessonTitle").focus({preventScroll:true});});
-document.getElementById("lessonPractice").addEventListener("click",()=>{moneyQ=0;moneyScore=0;document.getElementById("inlineLessonQuiz").hidden=false;document.getElementById("inlineLessonResult").hidden=true;showMoneyQuestion();document.getElementById("inlineLessonQuiz").scrollIntoView({behavior:"smooth",block:"nearest"});});
+
+
 document.getElementById("inlineNext").addEventListener("click",()=>{if(moneyQ<moneyLessonQuestions.length-1){moneyQ++;showMoneyQuestion();}});
 document.getElementById("inlineFinish").addEventListener("click",()=>{const out=document.getElementById("inlineLessonResult");out.hidden=false;out.textContent="Resultado: "+moneyScore+" de "+moneyLessonQuestions.length+". "+(moneyScore===3?"¡Excelente! Puedes avanzar a la calculadora de presupuesto.":moneyScore===2?"Buen trabajo. Repasa la explicación y vuelve a practicar cuando quieras.":"Te recomendamos escuchar y releer la lección antes de intentarlo de nuevo.");document.getElementById("inlineLessonQuiz").scrollIntoView({behavior:"smooth",block:"nearest"});});
 
