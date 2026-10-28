@@ -56,7 +56,7 @@ button,input,select,textarea{font:inherit}button,a,input,select,textarea{-webkit
 .concept-map-node strong{display:block;color:var(--cyan);margin-bottom:5px}
 .concept-map-node span{font-size:.8rem;color:var(--muted);display:block}
 .concept-map-detail{margin-top:14px;padding:14px;border-radius:12px;border-left:3px solid var(--cyan);background:rgba(6,18,36,.7);min-height:68px}
-.concept-map-detail p{margin:6px 0 0}
+.concept-map-detail p{margin:6px 0 0}.concept-map-example-label{display:block;margin-top:12px;color:var(--cyan);font-size:.88rem}.concept-map-example{padding:10px 12px;border-radius:10px;background:rgba(8,200,245,.08);border:1px solid rgba(53,220,255,.18)}
 .concept-map-tip{font-size:.85rem;color:var(--muted);margin:12px 0 0}
 @media(max-width:560px){.concept-map{padding:14px}.concept-map-branches{grid-template-columns:1fr;gap:8px}.concept-map-node{min-height:0;display:flex;align-items:center;gap:12px;text-align:left}.concept-map-node strong{min-width:96px;margin:0}.concept-map-root{margin-bottom:12px}}
 @media(prefers-reduced-motion:reduce){.concept-map-node{transition:none}}
@@ -250,19 +250,19 @@ document.getElementById("clearLearningProgress").addEventListener("click",()=>{
 renderLearningProgress();
 const conceptMapData={
  finanzas:{
-  basico:{root:"Mi dinero",nodes:[["Ingresos","Lo que recibes","Mesada, salario o venta."],["Gastos","Lo que pagas","Transporte, comida o servicios."],["Ahorro","Lo que reservas","Dinero para una meta o imprevisto."]]},
-  intermedio:{root:"Decisiones financieras",nodes:[["Presupuesto","Plan de dinero","Organiza ingresos y gastos antes de decidir."],["Prioridades","Necesidad o deseo","Cubre compromisos importantes primero."],["Meta","Ahorro planificado","Divide la cantidad objetivo en aportes posibles."]]},
-  avanzado:{root:"Plan financiero",nodes:[["Diagnóstico","Analiza los datos","Revisa saldo, deudas y gastos próximos."],["Escenarios","Compara opciones","Calcula qué ocurre si un gasto sube o baja."],["Decisión","Justifica el plan","Elige una opción sostenible y revisable."]]}
+  basico:{root:"Mi dinero",nodes:[["Ingresos","Lo que recibes","Mesada, salario o venta.","Si recibes $20 por ayudar en casa, esos $20 son un ingreso."],["Gastos","Lo que pagas","Transporte, comida o servicios.","Si gastas $3 en transporte, tu dinero disponible baja $3."],["Ahorro","Lo que reservas","Dinero para una meta o imprevisto.","Si guardas $2 cada semana, al cabo de 5 semanas tendrás $10."]]},
+  intermedio:{root:"Decisiones financieras",nodes:[["Presupuesto","Plan de dinero","Organiza ingresos y gastos antes de decidir.","Con $100 de ingreso y $70 de gastos previstos, puedes planificar qué hacer con los $30 restantes."],["Prioridades","Necesidad o deseo","Cubre compromisos importantes primero.","Antes de comprar un accesorio, aparta el dinero para transporte y alimentación."],["Meta","Ahorro planificado","Divide la cantidad objetivo en aportes posibles.","Para reunir $24 en 6 semanas, intenta reservar $4 cada semana."]]},
+  avanzado:{root:"Plan financiero",nodes:[["Diagnóstico","Analiza los datos","Revisa saldo, deudas y gastos próximos.","Antes de decidir una compra, suma el dinero disponible y los pagos que vencen este mes."],["Escenarios","Compara opciones","Calcula qué ocurre si un gasto sube o baja.","Compara cuánto te quedaría si el transporte cuesta $20 o si sube a $25."],["Decisión","Justifica el plan","Elige una opción sostenible y revisable.","Si una compra deja tu presupuesto en negativo, posponerla puede ser la opción más segura."]]}
  },
  contabilidad:{
-  basico:{root:"Situación del negocio",nodes:[["Activo","Lo que posee o controla","Caja, equipos, mercadería."],["Pasivo","Lo que debe","Deudas con proveedores o préstamos."],["Patrimonio","Parte residual","Activos menos pasivos."]]},
-  intermedio:{root:"Operaciones contables",nodes:[["Identificar","¿Qué ocurrió?","Lee la factura, recibo u otro respaldo."],["Clasificar","¿Qué cuentas cambian?","Determina qué aumenta o disminuye."],["Comprobar","¿Cuadra el registro?","Verifica importes y ecuación contable."]]},
-  avanzado:{root:"Análisis contable",nodes:[["Evidencia","Documento fuente","Contrasta factura, pago y registro."],["Registro","Cuentas e importes","Explica por qué cada cuenta se afecta."],["Control","Revisión y corrección","Documenta diferencias y sigue el procedimiento."]]}
+  basico:{root:"Situación del negocio",nodes:[["Activo","Lo que posee o controla","Caja, equipos, mercadería.","Una tienda tiene $80 en caja y una vitrina de $120: ambos son activos del negocio."],["Pasivo","Lo que debe","Deudas con proveedores o préstamos.","Si la tienda debe $50 a un proveedor por mercadería, registra una obligación pendiente."],["Patrimonio","Parte residual","Activos menos pasivos.","Si los activos suman $200 y las deudas $50, el patrimonio es $150."]]},
+  intermedio:{root:"Operaciones contables",nodes:[["Identificar","¿Qué ocurrió?","Lee la factura, recibo u otro respaldo.","Una factura muestra que la tienda compró útiles por $15; ese documento ayuda a identificar la operación."],["Clasificar","¿Qué cuentas cambian?","Determina qué aumenta o disminuye.","Al comprar útiles al contado, aumenta el material disponible y disminuye el efectivo."],["Comprobar","¿Cuadra el registro?","Verifica importes y ecuación contable.","Compara el valor del comprobante con el registro: ambos deben coincidir y estar bien clasificados."]]},
+  avanzado:{root:"Análisis contable",nodes:[["Evidencia","Documento fuente","Contrasta factura, pago y registro.","Si una compra figura por $45, revisa factura y pago para confirmar el importe real."],["Registro","Cuentas e importes","Explica por qué cada cuenta se afecta.","Al pagar una deuda, disminuye el efectivo y también la obligación pendiente."],["Control","Revisión y corrección","Documenta diferencias y sigue el procedimiento.","Si el registro dice $90 y el documento $60, detén la validación y revisa la diferencia antes de corregir."]]}
  },
  tributacion:{
-  basico:{root:"Obligaciones tributarias",nodes:[["Tributos","Aportes establecidos","Se aplican según la ley y cada caso."],["Comprobantes","Respaldo de operaciones","Revisa datos y conserva los documentos."],["SRI","Administración tributaria","Consulta fuentes oficiales de Ecuador."]]},
-  intermedio:{root:"Organización tributaria",nodes:[["Ordenar","Archiva documentos","Clasifica comprobantes por fecha y tipo."],["Comparar","Busca diferencias","Contrasta ventas, compras y registros."],["Verificar","Consulta lo vigente","Revisa obligaciones y plazos en el SRI."]]},
-  avanzado:{root:"Análisis tributario",nodes:[["Revisar","Identifica el caso","Determina actividad, período y documentos."],["Contrastar","Norma y evidencia","Usa información oficial vigente y verificable."],["Sustentar","Registra la conclusión","Explica los pasos y reconoce cuándo pedir asesoría."]]}
+  basico:{root:"Obligaciones tributarias",nodes:[["Tributos","Aportes establecidos","Se aplican según la ley y cada caso.","Una actividad económica puede generar obligaciones tributarias distintas según la normativa y la situación del contribuyente."],["Comprobantes","Respaldo de operaciones","Revisa datos y conserva los documentos.","Después de una compra, conserva el comprobante para consultar la fecha, el valor y los datos de la operación."],["SRI","Administración tributaria","Consulta fuentes oficiales de Ecuador.","Si tienes dudas sobre un trámite, revisa la información publicada en los canales oficiales del SRI."]]},
+  intermedio:{root:"Organización tributaria",nodes:[["Ordenar","Archiva documentos","Clasifica comprobantes por fecha y tipo.","Guarda los comprobantes de ventas en carpetas por mes para encontrarlos cuando los necesites."],["Comparar","Busca diferencias","Contrasta ventas, compras y registros.","Si el registro de ventas suma $250 pero los comprobantes suman $230, identifica la diferencia antes de presentar información."],["Verificar","Consulta lo vigente","Revisa obligaciones y plazos en el SRI.","Antes de realizar una declaración, confirma el plazo y los requisitos aplicables en la fuente oficial."]]},
+  avanzado:{root:"Análisis tributario",nodes:[["Revisar","Identifica el caso","Determina actividad, período y documentos.","Antes de orientar un caso, confirma quién realiza la actividad, de qué período se trata y qué documentos existen."],["Contrastar","Norma y evidencia","Usa información oficial vigente y verificable.","No basta con un comentario en redes: compara el documento con la norma e información oficial vigente."],["Sustentar","Registra la conclusión","Explica los pasos y reconoce cuándo pedir asesoría.","Anota qué documentos revisaste y por qué llegaste a esa conclusión; consulta a un profesional si el caso lo exige."]]}
  }
 };
 function renderConceptMap(selected,level){
@@ -274,18 +274,21 @@ function renderConceptMap(selected,level){
  const root=document.createElement("div");root.className="concept-map-root";root.textContent=data.root;section.appendChild(root);
  const branches=document.createElement("div");branches.className="concept-map-branches";branches.setAttribute("role","group");branches.setAttribute("aria-label","Ideas principales del mapa");
  const detail=document.createElement("div");detail.className="concept-map-detail concept-map-window";detail.setAttribute("aria-live","polite");
- const detailTitle=document.createElement("strong");const detailText=document.createElement("p");detail.append(detailTitle,detailText);
+ const detailTitle=document.createElement("strong");const detailText=document.createElement("p");
+ const exampleLabel=document.createElement("strong");exampleLabel.className="concept-map-example-label";exampleLabel.textContent="Ejemplo cotidiano";
+ const exampleText=document.createElement("p");exampleText.className="concept-map-example";
+ detail.append(detailTitle,detailText,exampleLabel,exampleText);
  data.nodes.forEach((node,index)=>{
   const button=document.createElement("button");button.type="button";button.className="concept-map-node";button.setAttribute("aria-pressed",index===0?"true":"false");
   const strong=document.createElement("strong");strong.textContent=node[0];const span=document.createElement("span");span.textContent=node[1];button.append(strong,span);
   button.addEventListener("click",()=>{
    [...branches.children].forEach((el,i)=>el.setAttribute("aria-pressed",i===index?"true":"false"));
-   detailTitle.textContent=node[0]+" · "+node[1];detailText.textContent=node[2];
+   detailTitle.textContent=node[0]+" · "+node[1];detailText.textContent=node[2];exampleText.textContent=node[3]||"Relaciona este concepto con una situación de tu vida diaria.";
   });
   branches.appendChild(button);
  });
  section.appendChild(branches);
- detailTitle.textContent=data.nodes[0][0]+" · "+data.nodes[0][1];detailText.textContent=data.nodes[0][2];section.appendChild(detail);
+ detailTitle.textContent=data.nodes[0][0]+" · "+data.nodes[0][1];detailText.textContent=data.nodes[0][2];exampleText.textContent=data.nodes[0][3]||"Relaciona este concepto con una situación de tu vida diaria.";section.appendChild(detail);
  const tip=document.createElement("p");tip.className="concept-map-tip";tip.textContent="Truco de estudio: intenta explicar el mapa con tus propias palabras antes de hacer la evaluación.";section.appendChild(tip);
  mount.appendChild(section);
 }
