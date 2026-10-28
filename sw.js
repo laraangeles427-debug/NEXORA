@@ -1,8 +1,12 @@
-const CACHE_NAME = "nexora-shell-v8";
+const CACHE_NAME = "nexora-shell-v9";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
+  "./voice-conversation.js",
+  "./nexora-icon.svg",
+  "./aula.html",
+  "./clase-finanzas.html",
   "./Logotipo%20tecnol%C3%B3gico%20azul%20y%20blanco.png?v=2"
 ];
 
@@ -38,7 +42,7 @@ self.addEventListener("fetch", event => {
           }
           return response;
         })
-        .catch(async () => (await caches.match(request)) || (await caches.match("./index.html"))
+        .catch(async () => (await caches.match(request)) || Response.error())
       )
     );
     return;
