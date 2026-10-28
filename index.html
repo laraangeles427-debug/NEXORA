@@ -155,6 +155,18 @@ button,input,select,textarea{font:inherit}button,a,input,select,textarea{-webkit
 <div class="panel"><div class="profile-section-heading"><div><span class="eyebrow">Colección de logros</span><h3>Tus insignias</h3></div><span class="profile-pill" id="profileBadgeCount">0 desbloqueadas</span></div><div id="profileBadges" class="profile-badges"></div></div>
 <div class="grid two profile-lower"><section class="panel"><span class="eyebrow">Personaliza</span><h3>Elige tu compañero</h3><p class="muted small">Un personaje para acompañarte mientras aprendes.</p><div class="profile-avatars" role="group" aria-label="Elegir personaje"><button type="button" data-avatar="🦊" aria-pressed="true" aria-label="Zorrito">🦊</button><button type="button" data-avatar="🐢" aria-pressed="false" aria-label="Tortuga">🐢</button><button type="button" data-avatar="🐼" aria-pressed="false" aria-label="Panda">🐼</button><button type="button" data-avatar="🦉" aria-pressed="false" aria-label="Búho">🦉</button><button type="button" data-avatar="🐬" aria-pressed="false" aria-label="Delfín">🐬</button><button type="button" data-avatar="🐱" aria-pressed="false" aria-label="Gato">🐱</button><button type="button" data-avatar="🐶" aria-pressed="false" aria-label="Perro">🐶</button><button type="button" data-avatar="🦁" aria-pressed="false" aria-label="León">🦁</button><button type="button" data-avatar="🐸" aria-pressed="false" aria-label="Rana">🐸</button><button type="button" data-avatar="🐧" aria-pressed="false" aria-label="Pingüino">🐧</button><button type="button" data-avatar="🦋" aria-pressed="false" aria-label="Mariposa">🦋</button><button type="button" data-avatar="🐙" aria-pressed="false" aria-label="Pulpo">🐙</button><button type="button" data-avatar="🦄" aria-pressed="false" aria-label="Unicornio">🦄</button><button type="button" data-avatar="🐝" aria-pressed="false" aria-label="Abeja">🐝</button><button type="button" data-avatar="🐨" aria-pressed="false" aria-label="Koala">🐨</button></div><div class="field"><label for="profileNameInput">Nombre o alias</label><input id="profileNameInput" maxlength="40" placeholder="¿Cómo te llamamos?"></div><button class="btn secondary" id="saveProfile" type="button">Guardar mi perfil en este dispositivo</button><p class="muted small" id="profileSaveStatus" role="status">Tu perfil se guarda solo en este navegador.</p></section>
 <section class="panel profile-coach"><span class="eyebrow">Un empujoncito</span><h3>Habla con Nexo</h3><div class="mascot-bubble" id="mascotBubble" aria-live="polite">¡Hola! Soy Nexo. ¿Listo para convertir lo que aprendes en decisiones útiles?</div><div class="profile-coach-actions"><button class="btn" type="button" id="profileEncourage">Dame ánimo ✨</button><button class="text-button" type="button" id="profileNextStep">¿Qué hago ahora?</button><button class="text-button" type="button" id="profileExplain">Ayúdame a entender un error 🧠</button><button class="text-button" type="button" id="profileChallenge">Dame un mini reto 🎯</button><button class="text-button" type="button" id="profilePlan">Mi misión de hoy 📅</button><button class="text-button" type="button" id="profileSpeak">🔊 Escuchar mensaje</button></div></section></div>
+
+<section class="panel certificate-center" aria-labelledby="certificateCenterTitle">
+ <span class="eyebrow">Logros de aprendizaje · NEXORA</span>
+ <h3 id="certificateCenterTitle">Mis constancias de aprendizaje</h3>
+ <p class="muted">Cada constancia se obtiene al aprobar la evaluación del nivel correspondiente con al menos 70 %. Para recibir una de nivel superior, primero debes aprobar los niveles anteriores de esa materia.</p>
+ <div class="certificate-level-guide"><div><strong>Nivel 1 · Fundamentos</strong><span>Comprender los conceptos esenciales.</span></div><div><strong>Nivel 2 · Aplicación</strong><span>Usar lo aprendido en situaciones prácticas.</span></div><div><strong>Nivel 3 · Análisis</strong><span>Resolver casos de mayor complejidad.</span></div></div>
+ <div id="certificateList" class="certificate-list" aria-live="polite"></div>
+ <p class="muted small">En esta versión se generan constancias educativas imprimibles desde el navegador. No son títulos oficiales ni acreditaciones profesionales. La verificación pública de autenticidad todavía no está implementada.</p>
+</section>
+<style>
+.certificate-center{margin:22px 0}.certificate-level-guide{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:16px 0}.certificate-level-guide>div{padding:13px;border:1px solid var(--line);border-radius:12px;background:var(--bg)}.certificate-level-guide strong,.certificate-level-guide span{display:block}.certificate-level-guide strong{font-size:.92rem}.certificate-level-guide span{font-size:.84rem;color:var(--muted);margin-top:5px}.certificate-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(235px,1fr));gap:12px;margin:16px 0}.certificate-item{padding:15px;border:1px solid var(--line);border-radius:13px;background:var(--bg);display:flex;flex-direction:column;gap:9px}.certificate-item h4{margin:0}.certificate-item p{margin:0;font-size:.88rem;color:var(--muted)}.certificate-item .certificate-status{font-size:.8rem;font-weight:750}.certificate-item.available{border-color:var(--cyan)}.certificate-item.locked{opacity:.8}.certificate-item button{align-self:flex-start;margin-top:auto}.certificate-status.ready{color:var(--cyan)}
+</style>
 <p class="notice">Tu perfil y tus avances se guardan en este dispositivo. Si inicias sesión en tu cuenta NEXORA, la web intenta sincronizarlos de forma privada con la nube. La liga comunitaria es opcional y requiere una cuenta iniciada. Tus resultados personales siguen siendo tuyos.</p></div></section>
 <section class="view" id="view-aprender"><div class="container page">
 <span class="eyebrow">Aula virtual</span><h2 class="page-title">Áreas de <span class="accent">aprendizaje</span></h2>
@@ -1577,6 +1589,59 @@ const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition
  });
  byId("ledgerReset").addEventListener("click",reset);
  reset();
+})();
+</script>
+
+
+<script>
+(function(){
+ const list=document.getElementById("certificateList");
+ if(!list)return;
+ const subjects=[
+  {id:"finanzas",name:"Educación financiera",skills:["Presupuesto y decisiones financieras","Organización de ingresos y gastos","Análisis de situaciones financieras"]},
+  {id:"contabilidad",name:"Contabilidad",skills:["Conceptos contables fundamentales","Registro y clasificación de operaciones","Análisis de operaciones contables"]},
+  {id:"tributacion",name:"Tributación",skills:["Conceptos tributarios esenciales","Aplicación responsable de conceptos tributarios","Análisis de casos y consulta de fuentes oficiales"]}
+ ];
+ const levels=[
+  {id:"basico",name:"Nivel 1 · Fundamentos",number:1},
+  {id:"intermedio",name:"Nivel 2 · Aplicación",number:2},
+  {id:"avanzado",name:"Nivel 3 · Análisis",number:3}
+ ];
+ function progressData(){try{const p=JSON.parse(localStorage.getItem("nexora-learning-progress-v1")||"{}");return p&&typeof p==="object"?p:{}}catch(_){return {}}}
+ function profileData(){try{const p=JSON.parse(localStorage.getItem("nexora-profile-v1")||"{}");return p&&typeof p==="object"?p:{}}catch(_){return {}}}
+ function esc(value){return String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));}
+ function certificateDocument(name,subject,level,score,skill){
+  const date=new Intl.DateTimeFormat("es-EC",{day:"numeric",month:"long",year:"numeric"}).format(new Date());
+  const safeName=esc(name||"Estudiante NEXORA"),safeSubject=esc(subject),safeLevel=esc(level),safeSkill=esc(skill);
+  const win=window.open("","_blank");
+  if(!win){alert("Tu navegador bloqueó la ventana de la constancia. Permite las ventanas emergentes para este sitio e inténtalo otra vez.");return;}
+  win.document.open();
+  win.document.write('<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Constancia de aprendizaje · NEXORA</title><style>*{box-sizing:border-box}body{margin:0;padding:24px;background:#eef3f8;color:#10213b;font-family:Arial,Helvetica,sans-serif}.certificate{position:relative;max-width:1000px;min-height:680px;margin:0 auto;background:#fff;border:12px solid #10213b;outline:2px solid #0bbbe8;outline-offset:-22px;padding:70px 65px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center}.brand{font-size:18px;letter-spacing:8px;font-weight:800;color:#10213b}.line{width:110px;height:4px;background:#08bfe8;margin:24px auto}.eyebrow{font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#52708a}.title{font-family:Georgia,serif;font-size:42px;margin:16px 0 8px;color:#10213b}.subtitle{font-size:17px;line-height:1.6;max-width:680px}.name{font-family:Georgia,serif;font-size:36px;color:#087c9f;border-bottom:1px solid #b7c6d4;padding:8px 25px 14px;margin:14px 0 22px;max-width:100%;overflow-wrap:anywhere}.level{font-size:20px;font-weight:800;margin:4px 0}.subject{font-size:18px;font-weight:700;margin:8px 0}.detail{font-size:14px;line-height:1.7;max-width:700px;color:#40556b}.score{margin-top:10px;font-size:13px}.footer{display:flex;justify-content:space-between;gap:30px;width:100%;margin-top:45px;text-align:left;font-size:12px;color:#52657a}.footer div{border-top:1px solid #9eafbd;padding-top:8px;flex:1}.disclaimer{font-size:10px;color:#65778a;max-width:650px;margin-top:24px}.print{display:block;margin:18px auto;padding:12px 20px;background:#10213b;color:white;border:0;border-radius:8px;font-weight:700;cursor:pointer}@media(max-width:650px){.certificate{padding:48px 26px;min-height:0}.title{font-size:32px}.name{font-size:28px}.footer{flex-direction:column;margin-top:28px}}@page{size:landscape;margin:10mm}@media print{body{padding:0;background:white}.certificate{max-width:none;min-height:175mm;break-inside:avoid}.print{display:none}}</style></head><body><main class="certificate"><div class="brand">NEXORA</div><div class="line"></div><div class="eyebrow">Constancia de logro educativo</div><h1 class="title">Reconocimiento de aprendizaje</h1><p class="subtitle">NEXORA deja constancia de que</p><div class="name">'+safeName+'</div><p class="subtitle">ha completado satisfactoriamente la evaluación de aprendizaje correspondiente a:</p><div class="level">'+safeLevel+'</div><div class="subject">'+safeSubject+'</div><p class="detail">Enfoque de aprendizaje: '+safeSkill+'. La evaluación fue aprobada con un resultado registrado de <strong>'+Number(score)+'%</strong>, alcanzando el requisito mínimo del 70 % establecido para esta ruta educativa.</p><div class="footer"><div><strong>'+esc(date)+'</strong><br>Fecha de emisión local</div><div><strong>Plataforma educativa NEXORA</strong><br>Conectando conocimiento, creando oportunidades.</div></div><p class="disclaimer">Constancia generada por el prototipo educativo NEXORA. No equivale a un título oficial, certificación profesional ni acreditación emitida por una institución autorizada. La validación pública de autenticidad no está disponible en esta versión.</p></main><button class="print" onclick="window.print()">Imprimir o guardar como PDF</button></body></html>');
+  win.document.close();
+ }
+ function render(){
+  const progress=progressData(),profile=profileData(),cards=[];
+  subjects.forEach(subject=>{
+   levels.forEach((level,index)=>{
+    const key=subject.id+"-"+level.id,record=progress[key]||{},prerequisites=levels.slice(0,index).every(previous=>progress[subject.id+"-"+previous.id]?.examPassed===true),earned=record.examPassed===true&&prerequisites;
+    const card=document.createElement("article");card.className="certificate-item "+(earned?"available":"locked");
+    const heading=document.createElement("h4");heading.textContent=subject.name;
+    const title=document.createElement("p");title.textContent=level.name;
+    const status=document.createElement("div");status.className="certificate-status "+(earned?"ready":"");status.textContent=earned?"✓ Constancia disponible · Mejor resultado: "+(Number(record.bestPercent)||Number(record.examPercent)||0)+"%":"🔒 "+(prerequisites?"Aprueba este examen con al menos 70 %":"Completa primero los niveles anteriores");
+    card.append(heading,title,status);
+    if(earned){
+     const button=document.createElement("button");button.type="button";button.className="btn secondary";button.textContent="Ver / imprimir constancia";
+     button.addEventListener("click",()=>certificateDocument(profile.name||"Estudiante NEXORA",subject.name,level.name,Number(record.bestPercent)||Number(record.examPercent)||0,subject.skills[index]));
+     card.appendChild(button);
+    }
+    cards.push(card);
+   });
+  });
+  list.replaceChildren(...cards);
+ }
+ window.NEXORA_RENDER_CERTIFICATES=render;
+ render();
+ window.addEventListener("storage",event=>{if(event.key==="nexora-learning-progress-v1"||event.key==="nexora-profile-v1")render();});
 })();
 </script>
 
