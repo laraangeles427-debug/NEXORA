@@ -59,6 +59,7 @@ button,input,select,textarea{font:inherit}button,a,input,select,textarea{-webkit
 <section class="view" id="view-aprender"><div class="container page">
 <span class="eyebrow">Aula virtual</span><h2 class="page-title">Áreas de <span class="accent">aprendizaje</span></h2>
 <p class="intro" id="learningIntro">Elige un área para entrar a sus clases, ejercicios y evaluaciones. Cada tema está organizado en su propia sección.</p>
+<div class="panel" id="learningProgressPanel" aria-live="polite"><h3>Tu progreso de aprendizaje</h3><p id="learningProgressSummary" class="muted">Cuando completes una evaluación, aquí podrás ver tu avance. Tus resultados se guardan en este dispositivo.</p><div id="learningProgressDetails" class="grid"></div><button type="button" class="text-button" id="clearLearningProgress">Reiniciar mi progreso</button></div>
 <div class="grid" id="learningAreas">
 <article class="card"><div class="card-icon">◈</div><h3>Educación financiera</h3><p>Ingresos, gastos, ahorro y presupuesto.</p><button class="text-button" data-topic="finanzas">Estudiar →</button></article>
 <article class="card"><div class="card-icon">▤</div><h3>Contabilidad</h3><p>Activos, pasivos, patrimonio y ecuación contable.</p><button class="text-button" data-topic="contabilidad">Estudiar →</button></article>
@@ -130,6 +131,10 @@ document.getElementById("inlineFinish").addEventListener("click",()=>{
  const out=document.getElementById("inlineLessonResult");out.hidden=false;
  const total=activePracticeQuestions.length,percent=Math.round(practiceScore/total*100);
  out.textContent="Evaluación final: "+practiceScore+" de "+total+" ("+percent+"%). "+(percent===100?"¡Excelente dominio de esta clase!":percent>=67?"Buen trabajo. Revisa las explicaciones de las preguntas que fallaste y refuerza lo aprendido.":"Vuelve a leer la clase y escucha la explicación antes de repetir la evaluación.");
+ const progress=readLearningProgress(),progressId=topic+"-"+learningLevel,previous=progress[progressId]||{attempts:0,bestPercent:0};
+ progress[progressId]={attempts:(Number(previous.attempts)||0)+1,bestPercent:Math.max(Number(previous.bestPercent)||0,percent),lastPercent:percent,updatedAt:new Date().toISOString()};
+ try{localStorage.setItem(learningProgressKey,JSON.stringify(progress));}catch(_){}
+ renderLearningProgress();
  document.getElementById("inlineLessonQuiz").scrollIntoView({behavior:"smooth",block:"nearest"});
 });
 document.getElementById("demoLogin").addEventListener("submit",e=>{e.preventDefault();const out=document.getElementById("loginMessage");out.hidden=false;out.textContent="Esta es una vista de demostración. El inicio de sesión real requiere autenticación segura.";});
@@ -165,6 +170,36 @@ const learningLessons={
  }
 };
 let activePracticeQuestions=[],practiceIndex=0,practiceScore=0,practiceAnswered=false;
+const learningProgressKey="nexora-learning-progress-v1";
+function readLearningProgress(){
+ try { const value=JSON.parse(localStorage.getItem(learningProgressKey)||"{}"); return value&&typeof value==="object"?value:{}; }
+ catch(_){ return {}; }
+}
+function renderLearningProgress(){
+ const progress=readLearningProgress(),summary=document.getElementById("learningProgressSummary"),details=document.getElementById("learningProgressDetails");
+ if(!summary||!details)return;
+ const entries=Object.values(progress),completed=entries.length;
+ summary.textContent=completed
+  ? "Has completado "+completed+" de 9 evaluaciones disponibles. Tu mejor resultado se conserva en este dispositivo."
+  : "Aún no tienes evaluaciones completadas. Elige una materia, estudia una clase y responde las preguntas para registrar tu avance.";
+ details.replaceChildren();
+ const subjects=[["finanzas","Educación financiera"],["contabilidad","Contabilidad"],["tributacion","Tributación"]];
+ subjects.forEach(([key,label])=>{
+  const subjectEntries=Object.entries(progress).filter(([id])=>id.startsWith(key+"-"));
+  const card=document.createElement("article");card.className="card";
+  const h=document.createElement("h4");h.textContent=label;card.appendChild(h);
+  const p=document.createElement("p");p.textContent=subjectEntries.length+" de 3 niveles completados";card.appendChild(p);
+  const best=subjectEntries.length?Math.max(...subjectEntries.map(([,v])=>Number(v.bestPercent)||0)):0;
+  const score=document.createElement("p");score.className="muted";score.textContent=subjectEntries.length?"Mejor resultado: "+best+"%":"Completa una evaluación para ver tu resultado.";card.appendChild(score);
+  details.appendChild(card);
+ });
+}
+document.getElementById("clearLearningProgress").addEventListener("click",()=>{
+ if(!window.confirm("¿Quieres borrar los resultados guardados de este dispositivo?"))return;
+ try{localStorage.removeItem(learningProgressKey);}catch(_){}
+ renderLearningProgress();
+});
+renderLearningProgress();
 function openLearningLesson(selected,level){
  if(!lessons[selected]||!learningLessons[selected]||!learningLessons[selected][level])return;
  topic=selected;learningLevel=level;
