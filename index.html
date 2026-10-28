@@ -23,6 +23,19 @@ button,input,select,textarea{font:inherit}button,a,input,select,textarea{-webkit
 @media(max-width:900px){.menu-toggle{display:block}.navlinks{display:none;position:absolute;left:0;right:0;top:100%;padding:12px 5%;background:#030b19;border-bottom:1px solid var(--line);flex-direction:column;align-items:stretch}.navlinks.open{display:flex}.navlinks button{text-align:left;padding:12px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){.grid,.grid.two,.formgrid{grid-template-columns:1fr}.hero{min-height:calc(100vh - 70px);padding:35px 0 60px}.trio{gap:0;margin:26px auto}.trio-item{padding:8px 5px}.trio-item p{font-size:.75rem}.page{padding-top:38px}.card,.panel{padding:18px}.voice{left:10px;bottom:72px;width:calc(100vw - 20px);max-height:65vh;padding:12px}.voice-toggle{left:10px;bottom:10px}.toolbar{right:8px;bottom:8px}.toolbar button{width:37px;height:37px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
+
+/* Seguimiento dinámico del aprendizaje */
+#learningProgressPanel{position:relative;overflow:hidden;background:linear-gradient(125deg,rgba(8,200,245,.10),rgba(6,18,36,.96) 55%);}
+#learningProgressPanel .progress-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+#learningProgressPanel .progress-total{font-size:1.65rem;font-weight:800;color:var(--cyan);letter-spacing:-.04em}
+#learningProgressPanel .progress-track{height:9px;border-radius:999px;background:rgba(130,160,190,.18);overflow:hidden;margin:12px 0 8px}
+#learningProgressPanel .progress-fill{height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,#087dff,#00d9f5);transition:width .7s cubic-bezier(.2,.7,.2,1)}
+#learningProgressPanel .progress-subject{padding:17px;border-radius:13px;background:rgba(12,34,58,.62);border:1px solid var(--line);}
+#learningProgressPanel .progress-subject h4{margin:0 0 8px}
+#learningProgressPanel .progress-meta{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:.84rem;color:var(--muted)}
+#learningProgressPanel .progress-pill{display:inline-flex;align-items:center;gap:5px;font-size:.76rem;padding:4px 8px;border:1px solid var(--line);border-radius:999px;color:var(--cyan)}
+#learningProgressPanel .progress-open{margin-top:12px}
+@media(prefers-reduced-motion:reduce){#learningProgressPanel .progress-fill{transition:none}}
 </style>
 </head>
 <body>
@@ -59,7 +72,7 @@ button,input,select,textarea{font:inherit}button,a,input,select,textarea{-webkit
 <section class="view" id="view-aprender"><div class="container page">
 <span class="eyebrow">Aula virtual</span><h2 class="page-title">Áreas de <span class="accent">aprendizaje</span></h2>
 <p class="intro" id="learningIntro">Elige un área para entrar a sus clases, ejercicios y evaluaciones. Cada tema está organizado en su propia sección.</p>
-<div class="panel" id="learningProgressPanel" aria-live="polite"><h3>Tu progreso de aprendizaje</h3><p id="learningProgressSummary" class="muted">Cuando completes una evaluación, aquí podrás ver tu avance. Tus resultados se guardan en este dispositivo.</p><div id="learningProgressDetails" class="grid"></div><button type="button" class="text-button" id="clearLearningProgress">Reiniciar mi progreso</button></div>
+<div class="panel" id="learningProgressPanel"><div class="progress-top"><div><span class="eyebrow">Tu recorrido</span><h3>Tu progreso de aprendizaje</h3></div><span class="progress-pill" id="learningProgressBadge">✦ A tu ritmo</span></div><p id="learningProgressSummary" class="muted">Completa una evaluación y observa cómo avanza tu recorrido.</p><div class="progress-top"><span class="muted">Evaluaciones completadas</span><strong class="progress-total" id="learningProgressCount">0/9</strong></div><div class="progress-track" role="progressbar" id="learningProgressBar" aria-label="Progreso total" aria-valuemin="0" aria-valuemax="9" aria-valuenow="0"><div class="progress-fill" id="learningProgressFill"></div></div><div id="learningProgressDetails" class="grid"></div><button type="button" class="text-button" id="clearLearningProgress">Reiniciar mi progreso</button></div>
 <div class="grid" id="learningAreas">
 <article class="card"><div class="card-icon">◈</div><h3>Educación financiera</h3><p>Ingresos, gastos, ahorro y presupuesto.</p><button class="text-button" data-topic="finanzas">Estudiar →</button></article>
 <article class="card"><div class="card-icon">▤</div><h3>Contabilidad</h3><p>Activos, pasivos, patrimonio y ecuación contable.</p><button class="text-button" data-topic="contabilidad">Estudiar →</button></article>
@@ -178,20 +191,29 @@ function readLearningProgress(){
 function renderLearningProgress(){
  const progress=readLearningProgress(),summary=document.getElementById("learningProgressSummary"),details=document.getElementById("learningProgressDetails");
  if(!summary||!details)return;
- const entries=Object.values(progress),completed=entries.length;
+ const entries=Object.values(progress),completed=entries.length,total=9,percent=Math.round(completed/total*100);
+ const count=document.getElementById("learningProgressCount"),bar=document.getElementById("learningProgressBar"),fill=document.getElementById("learningProgressFill"),badge=document.getElementById("learningProgressBadge");
+ if(count)count.textContent=completed+"/"+total;
+ if(bar)bar.setAttribute("aria-valuenow",String(completed));
+ if(fill)requestAnimationFrame(()=>{fill.style.width=percent+"%";});
+ if(badge)badge.textContent=completed===9?"✦ Ruta completada":completed>=5?"✦ Vas muy bien":"✦ A tu ritmo";
  summary.textContent=completed
-  ? "Has completado "+completed+" de 9 evaluaciones disponibles. Tu mejor resultado se conserva en este dispositivo."
-  : "Aún no tienes evaluaciones completadas. Elige una materia, estudia una clase y responde las preguntas para registrar tu avance.";
+  ? "¡Vas avanzando! Has completado "+completed+" de 9 evaluaciones ("+percent+"%). Tus mejores resultados se conservan en este dispositivo."
+  : "Tu aventura empieza aquí. Elige una materia, completa una evaluación y verás cómo crece tu progreso.";
  details.replaceChildren();
  const subjects=[["finanzas","Educación financiera"],["contabilidad","Contabilidad"],["tributacion","Tributación"]];
  subjects.forEach(([key,label])=>{
   const subjectEntries=Object.entries(progress).filter(([id])=>id.startsWith(key+"-"));
-  const card=document.createElement("article");card.className="card";
+  const card=document.createElement("article");card.className="progress-subject";
   const h=document.createElement("h4");h.textContent=label;card.appendChild(h);
-  const p=document.createElement("p");p.textContent=subjectEntries.length+" de 3 niveles completados";card.appendChild(p);
+  const p=document.createElement("div");p.className="progress-meta";p.innerHTML="<span>"+subjectEntries.length+" de 3 niveles</span><strong>"+Math.round(subjectEntries.length/3*100)+"%</strong>";card.appendChild(p);
+  const track=document.createElement("div");track.className="progress-track";track.setAttribute("role","progressbar");track.setAttribute("aria-label","Progreso de "+label);track.setAttribute("aria-valuemin","0");track.setAttribute("aria-valuemax","3");track.setAttribute("aria-valuenow",String(subjectEntries.length));
+  const barFill=document.createElement("div");barFill.className="progress-fill";track.appendChild(barFill);card.appendChild(track);
   const best=subjectEntries.length?Math.max(...subjectEntries.map(([,v])=>Number(v.bestPercent)||0)):0;
-  const score=document.createElement("p");score.className="muted";score.textContent=subjectEntries.length?"Mejor resultado: "+best+"%":"Completa una evaluación para ver tu resultado.";card.appendChild(score);
+  const score=document.createElement("p");score.className="muted";score.textContent=subjectEntries.length?"Mejor resultado: "+best+"%":"Empieza con una clase y completa el reto.";card.appendChild(score);
+  const button=document.createElement("button");button.type="button";button.className="text-button progress-open";button.textContent=subjectEntries.length?"Seguir aprendiendo →":"Explorar materia →";button.addEventListener("click",()=>{const target=document.querySelector('[data-topic="'+key+'"]');if(target)target.click();});card.appendChild(button);
   details.appendChild(card);
+  requestAnimationFrame(()=>{barFill.style.width=(subjectEntries.length/3*100)+"%";});
  });
 }
 document.getElementById("clearLearningProgress").addEventListener("click",()=>{
