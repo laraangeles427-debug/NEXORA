@@ -312,6 +312,13 @@ function nexoraApplyState(state){
     localStorage.setItem(key,JSON.stringify(merged));
    }else if(key==="nexora-profile-activity-v1"&&Array.isArray(incoming)){
     localStorage.setItem(key,JSON.stringify([...new Set([...(Array.isArray(local)?local:[]),...incoming])].sort().slice(-365)));
+   }else if(key==="nexora-daily-money-v1"&&Array.isArray(incoming)){
+    // Merge movements by ID so a fresh device can recover cloud records without losing unsynced local entries.
+    const cloudItems=incoming.filter(item=>item&&typeof item.id==="string");
+    const localItems=Array.isArray(local)?local.filter(item=>item&&typeof item.id==="string"):[];
+    const mergedItems=new Map();
+    [...cloudItems,...localItems].forEach(item=>mergedItems.set(item.id,item));
+    localStorage.setItem(key,JSON.stringify([...mergedItems.values()].sort((a,b)=>(Date.parse(a.date||"")||0)-(Date.parse(b.date||"")||0))));
    }else{
     // Keep an existing local value when the cloud row has an older or empty value.
     localStorage.setItem(key,JSON.stringify(local!==null&&local!==undefined?local:incoming));
