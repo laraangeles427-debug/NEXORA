@@ -281,6 +281,34 @@ button,input,select,textarea{font:inherit}button,a,input,select,textarea{-webkit
 .accounting-challenge{margin-top:24px}.accounting-challenge-list{display:grid;gap:12px;margin:18px 0}.accounting-case{display:grid;grid-template-columns:minmax(0,1fr) minmax(180px,.42fr);gap:14px;align-items:center;padding:15px;border:1px solid var(--line);border-radius:14px;background:var(--bg)}.accounting-case p{margin:4px 0 0}.accounting-case label{display:block;font-size:.85rem;color:var(--muted);margin-bottom:6px}.accounting-case select{width:100%;min-height:44px;border:1px solid var(--line);border-radius:10px;padding:9px;background:var(--panel);color:var(--text)}.accounting-case.correct{border-color:#2aaf83}.accounting-case.incorrect{border-color:#d97777}.accounting-case-feedback{grid-column:1/-1;margin:0!important;font-size:.92rem}.accounting-challenge-report{margin-top:18px;padding:16px;border:1px solid var(--line);border-radius:14px;background:var(--bg)}.accounting-challenge-report h4{margin-top:0}.accounting-skill-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:9px;margin:12px 0}.accounting-skill{padding:11px;border:1px solid var(--line);border-radius:10px}.accounting-skill strong{display:block;color:var(--cyan)}@media(max-width:640px){.accounting-case{grid-template-columns:1fr;gap:9px}.accounting-case-feedback{grid-column:auto}}
 </style>
 
+
+<div class="panel ledger-lab" id="ledgerLab">
+  <div class="progress-top"><div><span class="eyebrow">Laboratorio NEXORA · Reto práctico 03</span><h3>Del hecho económico al registro contable</h3></div><span class="progress-pill">Aprende haciendo</span></div>
+  <p class="muted">Registra seis operaciones de una empresa ficticia. Después de cada paso verás qué cuentas cambian y cómo se mantiene la ecuación contable. No necesitas experiencia previa.</p>
+  <div class="ledger-progress-wrap"><div class="ledger-progress-label"><strong id="ledgerStepLabel">Operación 1 de 6</strong><span id="ledgerStepPercent">0 % completado</span></div><div class="ledger-progress-track" role="progressbar" aria-label="Progreso de la práctica contable" aria-valuemin="0" aria-valuemax="6" aria-valuenow="0" id="ledgerProgress"><span id="ledgerProgressBar"></span></div></div>
+  <div class="ledger-operation" aria-live="polite"><span class="eyebrow">Siguiente operación</span><h4 id="ledgerOperationTitle">Aporte inicial de la propietaria</h4><p id="ledgerOperationDescription">La propietaria inicia el negocio aportando $500 en efectivo.</p><p class="muted small" id="ledgerOperationHint">Piensa: ¿qué recurso recibe el negocio y de dónde proviene?</p></div>
+  <div class="ledger-actions"><button class="btn" type="button" id="ledgerApply">Registrar operación</button><button class="btn secondary" type="button" id="ledgerReset">Reiniciar práctica</button></div>
+  <div id="ledgerFeedback" class="ledger-feedback" role="status" aria-live="polite" hidden></div>
+  <div class="ledger-balance">
+    <div class="progress-top"><div><span class="eyebrow">Estado del negocio</span><h4>Así quedan las cuentas</h4></div><span class="progress-pill" id="ledgerBalanceStatus">Esperando el primer registro</span></div>
+    <div class="ledger-account-grid">
+      <div class="ledger-account"><span>Dinero en caja</span><strong id="ledgerCash">$0,00</strong></div>
+      <div class="ledger-account"><span>Inventario</span><strong id="ledgerInventory">$0,00</strong></div>
+      <div class="ledger-account"><span>Suministros</span><strong id="ledgerSupplies">$0,00</strong></div>
+      <div class="ledger-account"><span>Deuda con proveedores</span><strong id="ledgerPayables">$0,00</strong></div>
+      <div class="ledger-account"><span>Capital aportado</span><strong id="ledgerCapital">$0,00</strong></div>
+      <div class="ledger-account"><span>Ingresos acumulados</span><strong id="ledgerIncome">$0,00</strong></div>
+      <div class="ledger-account"><span>Gastos acumulados</span><strong id="ledgerExpenses">$0,00</strong></div>
+      <div class="ledger-account ledger-result-account"><span>Resultado del período</span><strong id="ledgerNet">$0,00</strong></div>
+    </div>
+    <div class="ledger-equation"><span>Activos</span><strong id="ledgerAssets">$0,00</strong><span class="ledger-equals">=</span><span>Pasivos + patrimonio</span><strong id="ledgerRightSide">$0,00</strong></div>
+    <p class="muted small" id="ledgerEquationNote">La ecuación contable debe mantenerse equilibrada: Activos = Pasivos + Patrimonio. El patrimonio incluye el capital y el resultado acumulado del período.</p>
+  </div>
+  <p class="notice">Caso ficticio con fines educativos. Se omiten impuestos, costo de ventas y otros ajustes para practicar la lógica básica de las cuentas. No es un sistema contable real ni asesoría profesional.</p>
+</div>
+<style>
+.ledger-lab{margin-top:24px}.ledger-progress-wrap{margin:18px 0}.ledger-progress-label{display:flex;justify-content:space-between;gap:10px;font-size:.9rem;margin-bottom:8px}.ledger-progress-track{height:9px;background:var(--line);border-radius:99px;overflow:hidden}.ledger-progress-track span{display:block;height:100%;width:0;background:var(--cyan);transition:width .25s ease}.ledger-operation{padding:18px;border:1px solid var(--line);border-radius:14px;background:var(--bg)}.ledger-operation h4{margin:6px 0}.ledger-operation p{margin:7px 0}.ledger-actions{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}.ledger-feedback{padding:16px;margin:14px 0;border:1px solid var(--line);border-radius:14px;background:var(--bg)}.ledger-feedback h4{margin:0 0 8px}.ledger-journal{display:grid;gap:7px;margin-top:12px}.ledger-journal-row{display:flex;justify-content:space-between;gap:12px;padding:9px 11px;border-radius:9px;background:var(--panel)}.ledger-balance{margin-top:20px;padding-top:18px;border-top:1px solid var(--line)}.ledger-account-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px;margin:14px 0}.ledger-account{padding:13px;border:1px solid var(--line);border-radius:12px;background:var(--bg)}.ledger-account span{display:block;font-size:.83rem;color:var(--muted)}.ledger-account strong{display:block;margin-top:7px;font-size:1.15rem;font-variant-numeric:tabular-nums}.ledger-result-account{border-color:var(--cyan)}.ledger-equation{display:grid;grid-template-columns:1fr auto auto auto;align-items:center;gap:12px;padding:15px;border:1px solid var(--line);border-radius:12px}.ledger-equation strong{font-size:1.1rem;font-variant-numeric:tabular-nums}.ledger-equals{font-size:1.4rem;color:var(--cyan)}@media(max-width:560px){.ledger-equation{grid-template-columns:1fr auto}.ledger-equation .ledger-equals{display:none}.ledger-equation span:nth-of-type(2){grid-column:1}.ledger-actions button{width:100%}}
+</style>
 <p class="notice">Modelo educativo simplificado: supone que todas las unidades indicadas se venden y que los cobros y pagos se realizan dentro del período. No incluye impuestos, deudas, inventario no vendido, depreciación ni otros movimientos. No sustituye una contabilidad real ni asesoría profesional.</p>
 </div>
 </section>
@@ -1486,6 +1514,69 @@ const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition
  });
  document.getElementById("accountingShuffle").addEventListener("click",render);
  render();
+})();
+</script>
+
+
+<script>
+(function(){
+ const root=document.getElementById("ledgerLab");
+ if(!root)return;
+ const byId=id=>document.getElementById(id);
+ const operations=[
+  {title:"Aporte inicial de la propietaria",description:"La propietaria inicia el negocio aportando $500 en efectivo.",hint:"El negocio recibe dinero y aumenta el capital aportado.",debit:"Caja",credit:"Capital",amount:500,explain:"Aumenta Caja porque entra dinero; aumenta Capital porque es un aporte de la propietaria.",apply:s=>{s.cash+=500;s.capital+=500;}},
+  {title:"Compra de mercadería al contado",description:"El negocio compra $120 de mercadería y paga en efectivo.",hint:"Cambia la composición de los activos: entra inventario y sale dinero.",debit:"Inventario de mercadería",credit:"Caja",amount:120,explain:"El inventario aumenta $120 y Caja disminuye $120. En esta operación, el total de activos no cambia.",apply:s=>{s.cash-=120;s.inventory+=120;}},
+  {title:"Compra de suministros a crédito",description:"El negocio recibe suministros por $80 y acuerda pagar después al proveedor.",hint:"El negocio recibe un recurso, pero también asume una obligación.",debit:"Suministros",credit:"Cuentas por pagar",amount:80,explain:"Suministros aumenta $80 y la deuda con el proveedor aumenta $80.",apply:s=>{s.supplies+=80;s.payables+=80;}},
+  {title:"Cobro por un servicio",description:"El negocio realiza un servicio y cobra $150 en efectivo.",hint:"Entra dinero y se reconoce un ingreso.",debit:"Caja",credit:"Ingresos por servicios",amount:150,explain:"Caja aumenta $150 y se reconoce un ingreso por servicios del mismo valor; esto incrementa el resultado del período.",apply:s=>{s.cash+=150;s.income+=150;}},
+  {title:"Pago del arriendo",description:"El negocio paga $50 en efectivo por el arriendo del local.",hint:"Sale dinero y se reconoce un gasto del período.",debit:"Gasto de arriendo",credit:"Caja",amount:50,explain:"El gasto de arriendo aumenta $50 y Caja disminuye $50. El gasto reduce el resultado del período y, por tanto, el patrimonio.",apply:s=>{s.cash-=50;s.expenses+=50;}},
+  {title:"Abono al proveedor",description:"El negocio paga $30 de la deuda pendiente con su proveedor.",hint:"Disminuyen tanto el dinero disponible como la obligación.",debit:"Cuentas por pagar",credit:"Caja",amount:30,explain:"La deuda con el proveedor baja $30 y Caja disminuye $30. Pagar una deuda no crea un gasto nuevo por sí mismo.",apply:s=>{s.cash-=30;s.payables-=30;}}
+ ];
+ let step=0;
+ let state;
+ function freshState(){return {cash:0,inventory:0,supplies:0,payables:0,capital:0,income:0,expenses:0};}
+ function money(n){return new Intl.NumberFormat("es-EC",{style:"currency",currency:"USD"}).format(n);}
+ function renderBalances(){
+  const assets=state.cash+state.inventory+state.supplies;
+  const net=state.income-state.expenses;
+  const right=state.payables+state.capital+net;
+  [["ledgerCash",state.cash],["ledgerInventory",state.inventory],["ledgerSupplies",state.supplies],["ledgerPayables",state.payables],["ledgerCapital",state.capital],["ledgerIncome",state.income],["ledgerExpenses",state.expenses],["ledgerNet",net],["ledgerAssets",assets],["ledgerRightSide",right]].forEach(([id,value])=>byId(id).textContent=money(value));
+  const balanced=Math.abs(assets-right)<0.001;
+  byId("ledgerBalanceStatus").textContent=step===0?"Esperando el primer registro":balanced?"Ecuación equilibrada":"Revisar ecuación";
+  byId("ledgerEquationNote").textContent=balanced?"¡Correcto! Activos = Pasivos + Capital + resultado acumulado. La ecuación se mantiene equilibrada.":"Hay una diferencia en la ecuación; revisa los registros.";
+  byId("ledgerProgress").setAttribute("aria-valuenow",String(step));
+  byId("ledgerProgressBar").style.width=(step/operations.length*100)+"%";
+  byId("ledgerStepLabel").textContent=step===operations.length?"Práctica completada":("Operación "+(step+1)+" de "+operations.length);
+  byId("ledgerStepPercent").textContent=Math.round(step/operations.length*100)+" % completado";
+ }
+ function renderOperation(){
+  const done=step>=operations.length;
+  byId("ledgerOperationTitle").textContent=done?"¡Has completado las seis operaciones!":"Operación "+(step+1)+": "+operations[step].title;
+  byId("ledgerOperationDescription").textContent=done?"Ya puedes revisar el estado final del negocio o reiniciar para practicar de nuevo.":" "+operations[step].description;
+  byId("ledgerOperationHint").textContent=done?"Observa cómo cada operación afectó las cuentas y la ecuación contable.":operations[step].hint;
+  byId("ledgerApply").disabled=done;
+  byId("ledgerApply").textContent=done?"Práctica completada":"Registrar operación";
+  if(done&&!byId("ledgerFeedback").hidden){
+   byId("ledgerFeedback").innerHTML="<h4>Resumen final</h4><p>Has registrado seis operaciones. Los activos finales son "+money(state.cash+state.inventory+state.supplies)+", los pasivos son "+money(state.payables)+" y el patrimonio (capital más resultado) es "+money(state.capital+state.income-state.expenses)+".</p><p>Recuerda: pagar una deuda reduce la obligación; no equivale automáticamente a registrar un gasto.</p>";
+  }
+  renderBalances();
+ }
+ function reset(){
+  step=0;state=freshState();byId("ledgerFeedback").hidden=true;byId("ledgerFeedback").replaceChildren();renderOperation();
+ }
+ byId("ledgerApply").addEventListener("click",()=>{
+  if(step>=operations.length)return;
+  const op=operations[step];op.apply(state);step++;
+  const feedback=byId("ledgerFeedback");
+  const heading=document.createElement("h4");heading.textContent="Registro "+step+": "+op.title;
+  const explanation=document.createElement("p");explanation.textContent=op.explain;
+  const journal=document.createElement("div");journal.className="ledger-journal";
+  [[ "Debe · "+op.debit,op.amount ],["Haber · "+op.credit,op.amount ]].forEach(([label,value])=>{const row=document.createElement("div");row.className="ledger-journal-row";const name=document.createElement("span");name.textContent=label;const amount=document.createElement("strong");amount.textContent=money(value);row.append(name,amount);journal.appendChild(row);});
+  feedback.replaceChildren(heading,explanation,journal);feedback.hidden=false;
+  renderOperation();
+  feedback.scrollIntoView({behavior:"smooth",block:"nearest"});
+ });
+ byId("ledgerReset").addEventListener("click",reset);
+ reset();
 })();
 </script>
 
