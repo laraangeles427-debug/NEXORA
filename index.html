@@ -268,7 +268,7 @@ function renderProfile(){
  if(line)line.textContent=messages[0];const input=document.getElementById("profileNameInput");if(input&&document.activeElement!==input)input.value=p.name||"";document.querySelectorAll("[data-avatar]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.avatar===p.avatar)));
 }
 document.querySelectorAll("[data-avatar]").forEach(b=>b.addEventListener("click",()=>{const p=readProfile();p.avatar=b.dataset.avatar;writeProfile(p);renderProfile();document.getElementById("profileSaveStatus").textContent="Personaje actualizado."; }));
-document.getElementById("saveProfile").addEventListener("click",()=>{const p=readProfile();p.name=document.getElementById("profileNameInput").value.trim().slice(0,40);if(writeProfile(p)){document.getElementById("profileSaveStatus").textContent="¡Perfil guardado en este dispositivo!";renderProfile();}else document.getElementById("profileSaveStatus").textContent="No se pudo guardar. Revisa el espacio disponible del navegador.";});
+document.getElementById("saveProfile").addEventListener("click",async()=>{const p=readProfile();p.name=document.getElementById("profileNameInput").value.trim().slice(0,40);if(writeProfile(p)){renderProfile();const status=document.getElementById("profileSaveStatus");status.textContent=nexoraCloudUser?"Guardando tu perfil en tu cuenta…":"¡Perfil guardado en este dispositivo!";if(nexoraCloudUser){await nexoraSyncNow();status.textContent="¡Perfil guardado y sincronizado con tu cuenta NEXORA!";}}else document.getElementById("profileSaveStatus").textContent="No se pudo guardar. Revisa el espacio disponible del navegador.";});
 document.getElementById("profileEncourage").addEventListener("click",()=>{const messages=["¡Tú puedes! No necesitas saberlo todo hoy; solo dar el siguiente paso.","Cada dólar que aprendes a administrar puede convertirse en una mejor decisión.","¡Vamos con todo! Tu constancia vale más que hacerlo perfecto a la primera.","Lo que aprendes aquí puede ayudarte en casa, en tus estudios y en un emprendimiento."];const msg=messages[Math.floor(Math.random()*messages.length)];document.getElementById("mascotBubble").textContent=msg;document.getElementById("profileMascotLine").textContent=msg;});
 document.getElementById("profileNextStep").addEventListener("click",()=>{const progress=readLearningProgress(),next=[["finanzas","finanzas-basico"],["contabilidad","contabilidad-basico"],["tributacion","tributacion-basico"]].find(([key,id])=>!progress[id]);document.getElementById("mascotBubble").textContent=next?"Tu siguiente misión: entra en Aprender y explora "+(next[0]==="finanzas"?"Educación financiera":next[0]==="contabilidad"?"Contabilidad":"Tributación")+" en nivel básico. Después, completa la evaluación para ganar XP.":"¡Ya exploraste las rutas iniciales! Elige un nivel intermedio o avanzado y sigue ampliando tus habilidades.";});
 document.getElementById("profileSpeak").addEventListener("click",()=>{const msg=document.getElementById("mascotBubble").textContent;if(typeof speak==="function")speak(msg);else document.getElementById("profileSaveStatus").textContent=msg;});
@@ -295,7 +295,17 @@ function nexoraLocalState(){
 function nexoraApplyState(state){
  nexoraCloudBusy=true;
  try {
-  nexoraStateKeys.forEach(key=>{if(Object.prototype.hasOwnProperty.call(state||{},key))localStorage.setItem(key,JSON.stringify(state[key]));});
+  nexoraStateKeys.forEach(key=>{
+   if(!Object.prototype.hasOwnProperty.call(state||{},key))return;
+   const incoming=state[key];
+   // Merge the profile so an empty/stale cloud field cannot erase a name or avatar already saved locally.
+   if(key==="nexora-profile-v1"&&incoming&&typeof incoming==="object"){
+    let local={};try{local=JSON.parse(localStorage.getItem(key)||"{}")||{};}catch(_){}
+    localStorage.setItem(key,JSON.stringify({...incoming,...local,name:local.name||incoming.name||"",avatar:local.avatar||incoming.avatar||"🦊"}));
+   }else{
+    localStorage.setItem(key,JSON.stringify(incoming));
+   }
+  });
  } catch(_) {}
  nexoraCloudBusy=false;
  try { if(typeof renderProfile==="function")renderProfile(); } catch(_) {}
