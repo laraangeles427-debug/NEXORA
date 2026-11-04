@@ -867,7 +867,7 @@ document.getElementById("startLevelExam").addEventListener("click",async()=>{
   const practicePrompts=[...(learningLessons[topic]?.[learningLevel]?.questions||[]).map(q=>q.q),...extraPracticeQuestions(topic,learningLevel).map(q=>q.q)];
   const previouslyAsked=oldHistory.flatMap(h=>Array.isArray(h.questionTexts)?h.questionTexts:[]);
   const requestId=crypto.randomUUID();
-  const data=await invokeNexoraAssessment({action:"start",area:topic,level:learningLevel,request_id:requestId,exclude_prompts:[...practicePrompts,...previouslyAsked].map(normalizeQuestion)});
+  const data=await invokeNexoraAssessment({action:"start",area:topic,level:learningLevel,request_id:requestId,exclude_prompts:practicePrompts.map(normalizeQuestion),previous_prompts:previouslyAsked.map(normalizeQuestion)});
   levelExamSessionId=data.session_id;
   activeLevelExam=(data.questions||[]).map(q=>({id:q.id,q:q.prompt,o:q.options,skill:q.skill||"Aplicación",userCorrect:false,userAnswer:null}));
   if(activeLevelExam.length!==4)throw new Error("El servidor no devolvió las cuatro preguntas necesarias.");
