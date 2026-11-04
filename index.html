@@ -182,8 +182,7 @@ body:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;bac
 .visual-orbit{position:absolute;border:1px solid rgba(48,190,245,.18);border-radius:50%;transform:rotate(-24deg)}
 .orbit-one{width:480px;height:290px}.orbit-two{width:390px;height:430px;transform:rotate(48deg);border-color:rgba(26,120,255,.22)}
 .visual-core{width:220px;height:220px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 34% 25%,#173d66,#07172c 60%,#030b17);border:1px solid rgba(105,220,255,.55);box-shadow:0 0 0 12px rgba(8,200,245,.025),0 0 55px rgba(0,164,255,.26),inset 0 0 35px rgba(8,200,245,.12);z-index:1}
-.core-mark{font-size:5.3rem;line-height:1;font-weight:900;letter-spacing:-.1em;background:linear-gradient(145deg,#fff,#08c8f5 60%,#1677ff);color:transparent;background-clip:text}.core-mark span{color:#08c8f5}
-.core-name{font-size:.95rem;letter-spacing:.32em;font-weight:850;margin:5px 0 2px}.core-caption{font-size:.5rem;letter-spacing:.25em;color:#77b6d4}
+.core-logo{width:118px;height:118px;object-fit:contain;display:block;filter:drop-shadow(0 8px 18px rgba(0,160,255,.22))}.core-tagline{margin-top:10px;max-width:170px;text-align:center;font-size:.61rem;line-height:1.55;letter-spacing:.055em;font-weight:750;color:#c7e7f7}
 .float-card{position:absolute;z-index:2;padding:15px 17px;border:1px solid rgba(102,200,245,.25);border-radius:15px;background:linear-gradient(145deg,rgba(13,37,65,.94),rgba(5,17,34,.94));box-shadow:0 18px 45px rgba(0,0,0,.3);backdrop-filter:blur(16px)}
 .float-label{display:flex;align-items:center;gap:8px;color:#8faecb;font-size:.64rem;font-weight:800;letter-spacing:.13em}.mini-icon{display:grid;place-items:center;width:24px;height:24px;border-radius:8px;color:#08c8f5;background:rgba(8,200,245,.12);font-size:1rem}
 .float-progress{left:-1%;top:14%;width:220px}.float-progress>strong{display:block;font-size:1.04rem;margin:8px 0}.progress-mini{height:5px;background:#1a3551;border-radius:99px;overflow:hidden}.progress-mini span{display:block;width:76%;height:100%;background:linear-gradient(90deg,#1677ff,#08c8f5);border-radius:99px}.float-card small{display:block;color:#90a6c0;font-size:.68rem;margin-top:8px}
@@ -235,7 +234,7 @@ body:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;bac
     <div class="hero-visual" aria-label="Vista ilustrativa de las herramientas de NEXORA">
       <div class="visual-orbit orbit-one"></div><div class="visual-orbit orbit-two"></div>
       <div class="visual-glow"></div>
-      <div class="visual-core"><div class="core-mark">N<span>.</span></div><div class="core-name">NEXORA</div><div class="core-caption">KNOWLEDGE IN MOTION</div></div>
+      <div class="visual-core"><img class="core-logo" src="./Logotipo%20tecnol%C3%B3gico%20azul%20y%20blanco.png?v=2" alt="Logotipo oficial de NEXORA"><div class="core-tagline">Conectando conocimiento,<br>creando oportunidades.</div></div>
       <div class="float-card float-progress"><div class="float-label"><span class="mini-icon">↗</span> TU PROGRESO</div><strong>Aprende. Avanza.</strong><div class="progress-mini"><span></span></div><small>Un paso más hacia tus metas</small></div>
       <div class="float-card float-finance"><div class="float-label"><span class="mini-icon">◈</span> FINANZAS</div><div class="finance-bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><strong>Decisiones con propósito</strong></div>
       <div class="float-card float-areas"><div class="area-dot"></div><div><strong>3 áreas</strong><small>Un universo de conocimiento</small></div></div>
@@ -752,7 +751,7 @@ document.getElementById("levelExamFinish").addEventListener("click",()=>{
  const progress=readLearningProgress(),id=topic+"-"+learningLevel,prev=progress[id]||{attempts:0,bestPercent:0},date=new Date().toISOString(),history=Array.isArray(prev.history)?prev.history:[];history.push({date,percent,score:levelExamScore,total,topic,level:learningLevel,type:"exam",skills,questionTexts:activeLevelExam.map(q=>q.q)});
  progress[id]={...prev,attempts:(Number(prev.attempts)||0)+1,bestPercent:Math.max(Number(prev.bestPercent)||0,percent),lastPercent:percent,examPercent:percent,examPassed:prev.examPassed===true||passed,updatedAt:date,history:history.slice(-60),lastExamSkills:skills};
  try{localStorage.setItem(learningProgressKey,JSON.stringify(progress));}catch(_){}
- recordProfileActivity();renderLearningProgress();renderProfile();if(typeof nexoraQueueSync==="function")nexoraQueueSync();if(window.NEXORA_REFRESH_LEADERBOARD)window.NEXORA_REFRESH_LEADERBOARD();
+ recordProfileActivity();renderLearningProgress();renderProfile();if(typeof refreshLearningLevelLocks==="function")refreshLearningLevelLocks(topic);if(typeof nexoraQueueSync==="function")nexoraQueueSync();if(window.NEXORA_REFRESH_LEADERBOARD)window.NEXORA_REFRESH_LEADERBOARD();
  const next=document.getElementById("nextLevelCTA"),nextName=learningLevel==="basico"?"intermedio":learningLevel==="intermedio"?"avanzado":null;
  if(next){next.hidden=!(progress[id].examPassed&&nextName);next.textContent=nextName?"¡Examen aprobado! Desbloquear nivel "+nextName+" →":"¡Ruta avanzada completada! Explora otra materia";next.onclick=()=>{if(nextName)openLearningLesson(topic,nextName);else document.querySelector('[data-topic="'+topic+'"]')?.click();};}
  document.getElementById("levelExamProgressFill").style.width="100%";report.scrollIntoView({behavior:"smooth",block:"nearest"});
@@ -1176,8 +1175,25 @@ document.getElementById("learningNexoSpeak")?.addEventListener("click",()=>{
  else if("speechSynthesis" in window){window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang="es-EC";window.speechSynthesis.speak(u);}
 });
 
+function refreshLearningLevelLocks(selected){
+ const saved=readLearningProgress();
+ const basic=saved[selected+"-basico"]?.examPassed===true;
+ const intermediate=saved[selected+"-intermedio"]?.examPassed===true;
+ const unlocked={basico:true,intermedio:basic,avanzado:basic&&intermediate};
+ document.querySelectorAll("[data-level]").forEach(btn=>{
+  const lev=btn.dataset.level,open=!!unlocked[lev];
+  btn.disabled=!open;
+  btn.textContent=open?(lev==="basico"?"Comenzar nivel básico →":lev==="intermedio"?"Comenzar nivel intermedio →":"Comenzar nivel avanzado →"):(lev==="intermedio"?"🔒 Completa y aprueba el nivel 1":"🔒 Completa y aprueba el nivel 2");
+  btn.title=open?"Nivel disponible":lev==="intermedio"?"Aprueba el nivel 1 con al menos 70 % para desbloquearlo":"Aprueba primero los niveles 1 y 2 con al menos 70 % cada uno";
+  btn.setAttribute("aria-label",open?"Abrir "+lev:"Bloqueado: "+btn.title);
+  btn.classList.toggle("level-locked",!open);
+ });
+ return unlocked;
+}
 function openLearningLesson(selected,level){
  if(!lessons[selected]||!learningLessons[selected]||!learningLessons[selected][level])return;
+ const unlocked=refreshLearningLevelLocks(selected);
+ if(!unlocked[level])return;
  topic=selected;learningLevel=level;updateLearningGuide(selected,level);
  const names={basico:"Básico",intermedio:"Intermedio",avanzado:"Avanzado"};
  const material=learningLessons[selected][level];
@@ -1223,7 +1239,7 @@ document.getElementById("lessonContent").innerHTML=material.html+(subjectClassHT
  resetQuiz();showView("aprender");
  requestAnimationFrame(()=>{document.getElementById("lessonTitle").focus({preventScroll:true});window.scrollTo({top:0,behavior:"auto"});});
 }
-document.querySelectorAll("[data-topic]").forEach(b=>b.addEventListener("click",()=>{const selected=b.dataset.topic;if(!lessons[selected])return;updateLearningGuide(selected,"start");document.getElementById("learningAreas").hidden=true;document.getElementById("learningIntro").hidden=true;document.getElementById("learningProgressPanel").hidden=true;document.getElementById("toggleLearningProgress").hidden=true;document.getElementById("learningLevels").hidden=false;document.getElementById("learningLevelsTitle").textContent="Niveles · "+lessons[selected].title;document.getElementById("lessonPanel").hidden=true;const saved=readLearningProgress();const levelRoute={basico:selected+"-basico",intermedio:selected+"-intermedio",avanzado:selected+"-avanzado"};document.querySelectorAll("[data-level]").forEach(btn=>{const lev=btn.dataset.level,previous=lev==="basico"?null:saved[levelRoute[lev==="intermedio"?"basico":"intermedio"]],unlocked=lev==="basico"||!!(previous&&previous.examPassed===true);btn.disabled=!unlocked;btn.textContent=unlocked?(lev==="basico"?"Comenzar nivel básico →":lev==="intermedio"?"Comenzar nivel intermedio →":"Comenzar nivel avanzado →"):"🔒 Necesitas 70 % en el nivel anterior";btn.title=unlocked?"Nivel disponible":"Aprueba la evaluación anterior con al menos 70 % para desbloquearlo";btn.onclick=()=>{if(unlocked)openLearningLesson(selected,lev);};});}));
+document.querySelectorAll("[data-topic]").forEach(b=>b.addEventListener("click",()=>{const selected=b.dataset.topic;if(!lessons[selected])return;updateLearningGuide(selected,"start");document.getElementById("learningAreas").hidden=true;document.getElementById("learningIntro").hidden=true;document.getElementById("learningProgressPanel").hidden=true;document.getElementById("toggleLearningProgress").hidden=true;document.getElementById("learningLevels").hidden=false;document.getElementById("learningLevelsTitle").textContent="Niveles · "+lessons[selected].title;document.getElementById("lessonPanel").hidden=true;refreshLearningLevelLocks(selected);}));
 document.getElementById("backToLearningSubjects").addEventListener("click",()=>{updateLearningGuide("finanzas","start");document.getElementById("learningNexoTitle").textContent="¡Hola! Soy Nexo";document.getElementById("learningNexoMessage").textContent="Te acompañaré en cada área. Elige una materia y te explicaré cómo empezar, qué observar y cómo practicar sin presión.";document.getElementById("learningNexoFace").textContent="🦊";document.getElementById("learningLevels").hidden=true;document.getElementById("learningAreas").hidden=false;document.getElementById("learningIntro").hidden=false;document.getElementById("toggleLearningProgress").hidden=false;});
 document.getElementById("toggleLearningProgress").addEventListener("click",()=>{const panel=document.getElementById("learningProgressPanel");const opening=panel.hidden;panel.hidden=!opening;document.getElementById("learningAreas").hidden=opening;document.getElementById("learningIntro").hidden=opening;document.getElementById("toggleLearningProgress").setAttribute("aria-expanded",String(opening));document.getElementById("toggleLearningProgress").textContent=opening?"← Volver a las áreas":"▥ Ver mi progreso";});
 ;document.getElementById("backToLearningAreas").addEventListener("click",()=>{document.getElementById("lessonPanel").hidden=true;document.getElementById("learningLevels").hidden=false;window.scrollTo({top:0,behavior:"auto"});});document.getElementById("lessonPractice").addEventListener("click",()=>{practiceIndex=0;practiceScore=0;practiceAnswered=false;document.getElementById("inlineLessonQuiz").hidden=false;document.getElementById("inlineLessonResult").hidden=true;showMoneyQuestion();document.getElementById("inlineLessonQuiz").scrollIntoView({behavior:"smooth",block:"start"});});document.getElementById("quizTopic").addEventListener("change",e=>{topic=e.target.value;resetQuiz();});nextEl.addEventListener("click",()=>{if(qIndex<quizQuestions.length-1){qIndex++;renderQuestion();}else{feedbackEl.textContent=`Simulacro finalizado. Resultado: ${score} de ${quizQuestions.length} respuestas correctas.`;speak(feedbackEl.textContent);nextEl.textContent="Repetir simulacro";nextEl.onclick=()=>{nextEl.onclick=null;resetQuiz();};}});document.getElementById("readQuestion").addEventListener("click",()=>{const q=quizQuestions[qIndex];speak(`${q[0]}. `+q[1].map((v,i)=>`Opción ${i+1}: ${v}`).join(". "));});document.getElementById("readQuizResult").addEventListener("click",()=>readElement("quizFeedback"));document.getElementById("readLesson").addEventListener("click",()=>readElement("lessonContent"));resetQuiz();
