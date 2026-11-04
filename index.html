@@ -833,38 +833,87 @@ function renderLevelExamQuestion(){
  document.getElementById("levelExamQuestion").textContent=q.q;options.replaceChildren();
  q.o.forEach((label,index)=>{const button=document.createElement("button");button.type="button";button.textContent=String.fromCharCode(65+index)+". "+label;button.addEventListener("click",()=>{if(levelExamAnswered)return;levelExamAnswered=true;const correct=index===q.a;q.userCorrect=correct;if(correct)levelExamScore++;[...options.children].forEach((el,j)=>{el.disabled=true;if(j===q.a)el.classList.add("correct");else if(j===index)el.classList.add("wrong");});feedback.textContent=(correct?"¡Correcto! ":"Repasemos. ")+q.why;feedback.hidden=false;next.disabled=false;if(levelExamIndex===activeLevelExam.length-1){next.hidden=true;document.getElementById("levelExamFinish").hidden=false;}});options.appendChild(button);});
 }
-document.getElementById("startLevelExam").addEventListener("click",()=>{
- const progressBeforeExam=readLearningProgress(),progressKey=topic+"-"+learningLevel,oldHistory=Array.isArray(progressBeforeExam[progressKey]?.history)?progressBeforeExam[progressKey].history:[];
- const normalizeQuestion=q=>String(q||"").normalize("NFD").replace(/\p{M}/gu,"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
- const practicePrompts=new Set([...(learningLessons[topic]?.[learningLevel]?.questions||[]).map(q=>q.q),...extraPracticeQuestions(topic,learningLevel).map(q=>q.q)].map(normalizeQuestion));
- const previouslyAsked=new Set(oldHistory.flatMap(h=>Array.isArray(h.questionTexts)?h.questionTexts:[]).map(normalizeQuestion));
- const allCandidates=[...(levelExamQuestions[topic]?.[learningLevel]||[]),...freshExamPool(topic,learningLevel)];
- let candidates=allCandidates.filter(q=>!practicePrompts.has(normalizeQuestion(q.q))&&!previouslyAsked.has(normalizeQuestion(q.q)));
- // If the learner has exhausted the available pool, allow old exam questions again, but never reuse prompts from the lesson practice.
- if(candidates.length<8)candidates=allCandidates.filter(q=>!practicePrompts.has(normalizeQuestion(q.q)));
- activeLevelExam=shuffleList(candidates).slice(0,8).map(q=>({...randomizePracticeQuestion({...q,o:q.o.slice()}),userCorrect:false}));
- if(activeLevelExam.length<4){activeLevelExam=shuffleList(allCandidates.filter(q=>!practicePrompts.has(normalizeQuestion(q.q)))).slice(0,8).map(q=>({...randomizePracticeQuestion({...q,o:q.o.slice()}),userCorrect:false}));}
- levelExamIndex=0;levelExamScore=0;document.getElementById("levelExamReport").hidden=true;document.getElementById("levelExamIntro").hidden=false;document.getElementById("levelExamQuestion").hidden=false;document.getElementById("levelExamOptions").hidden=false;document.getElementById("levelExamPanel").hidden=false;
- document.getElementById("levelExamTitle").textContent="Examen de dominio · "+lessons[topic].title+" · "+learningLevel;document.getElementById("levelExamIntro").textContent=activeLevelExam.length+" preguntas seleccionadas al azar de un banco de casos. No se repiten las preguntas de la práctica de esta clase. Necesitas al menos 70 % para aprobar y desbloquear el siguiente nivel.";
- renderLevelExamQuestion();document.getElementById("levelExamPanel").scrollIntoView({behavior:"smooth",block:"start"});
+let levelExamSessionId=null;
+async function invokeNexoraAssessment(payload){
+ if(!nexoraCloud)throw new Error("El servicio de evaluaciones no está disponible.");
+ const {data,error}=await nexoraCloud.functions.invoke("nexora-assessments",{body:payload});
+ if(error){
+  let message=error.message||"No se pudo conectar con el servidor de evaluaciones.";
+  try{const context=error.context;if(context&&typeof context.json==="function"){const detail=await context.json();if(detail?.error)message=detail.error;}}catch(_){}
+  throw new Error(message);
+ }
+ if(data?.error)throw new Error(data.error);
+ return data;
+}
+document.getElementById("startLevelExam").addEventListener("click",async()=>{
+ const button=document.getElementById("startLevelExam");
+ button.disabled=true;button.textContent="Preparando evaluación…";
+ try{
+  const progressBeforeExam=readLearningProgress(),progressKey=topic+"-"+learningLevel;
+  const oldHistory=Array.isArray(progressBeforeExam[progressKey]?.history)?progressBeforeExam[progressKey].history:[];
+  const normalizeQuestion=q=>String(q||"").normalize("NFD").replace(/\p{M}/gu,"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
+  const practicePrompts=[...(learningLessons[topic]?.[learningLevel]?.questions||[]).map(q=>q.q),...extraPracticeQuestions(topic,learningLevel).map(q=>q.q)];
+  const previouslyAsked=oldHistory.flatMap(h=>Array.isArray(h.questionTexts)?h.questionTexts:[]);
+  const requestId=crypto.randomUUID();
+  const data=await invokeNexoraAssessment({action:"start",area:topic,level:learningLevel,request_id:requestId,exclude_prompts:[...practicePrompts,...previouslyAsked].map(normalizeQuestion)});
+  levelExamSessionId=data.session_id;
+  activeLevelExam=(data.questions||[]).map(q=>({id:q.id,q:q.prompt,o:q.options,skill:q.skill||"Aplicación",userCorrect:false,userAnswer:null}));
+  if(activeLevelExam.length!==4)throw new Error("El servidor no devolvió las cuatro preguntas necesarias.");
+  levelExamIndex=0;levelExamScore=0;
+  document.getElementById("levelExamReport").hidden=true;
+  document.getElementById("levelExamIntro").hidden=false;
+  document.getElementById("levelExamQuestion").hidden=false;
+  document.getElementById("levelExamOptions").hidden=false;
+  document.getElementById("levelExamPanel").hidden=false;
+  document.getElementById("levelExamTitle").textContent="Evaluación protegida · "+lessons[topic].title+" · "+learningLevel;
+  document.getElementById("levelExamIntro").textContent="4 preguntas seleccionadas en el servidor. Las respuestas correctas no se envían al navegador; el resultado se calcula al entregar la evaluación. Necesitas al menos 70 % para aprobar.";
+  renderLevelExamQuestion();
+  document.getElementById("levelExamPanel").scrollIntoView({behavior:"smooth",block:"start"});
+ }catch(error){
+  alert(error.message||"No se pudo iniciar la evaluación.");
+  document.getElementById("levelExamIntro").textContent=error.message||"No se pudo iniciar la evaluación.";
+ }finally{
+  button.disabled=false;
+  button.textContent="📝 Iniciar examen de nivel · "+({basico:"Básico",intermedio:"Intermedio",avanzado:"Avanzado"}[learningLevel])+" →";
+ }
 });
 document.getElementById("levelExamNext").addEventListener("click",()=>{if(levelExamIndex<activeLevelExam.length-1){levelExamIndex++;renderLevelExamQuestion();}});
-document.getElementById("levelExamFinish").addEventListener("click",()=>{
- const total=activeLevelExam.length,percent=Math.round(levelExamScore/total*100),passed=percent>=70,groups={};
- activeLevelExam.forEach(q=>{const k=q.skill||"Aplicación";if(!groups[k])groups[k]={correct:0,total:0};groups[k].total++;if(q.userCorrect)groups[k].correct++;});
- const skills=Object.entries(groups).map(([name,v])=>({name,percent:Math.round(v.correct/v.total*100),correct:v.correct,total:v.total})).sort((a,b)=>b.percent-a.percent),strong=skills.filter(x=>x.percent>=70).map(x=>x.name),weak=skills.filter(x=>x.percent<70).map(x=>x.name);
- const report=document.getElementById("levelExamReport");report.hidden=false;document.getElementById("levelExamIntro").hidden=true;document.getElementById("levelExamQuestion").hidden=true;document.getElementById("levelExamOptions").hidden=true;document.getElementById("levelExamFeedback").hidden=true;document.getElementById("levelExamNext").hidden=true;document.getElementById("levelExamFinish").hidden=true;document.getElementById("levelExamProgress").textContent="Examen terminado · "+percent+"%";
- const rows=skills.map(x=>'<div class="exam-skill-row"><span>'+x.name+'</span><div class="exam-skill-track" role="img" aria-label="'+x.name+': '+x.percent+' por ciento"><div class="exam-skill-fill '+(x.percent<70?'needs-work':'')+'" style="width:'+x.percent+'%"></div></div><strong>'+x.percent+'%</strong></div>').join("");
- report.innerHTML='<div class="exam-report-grid"><div class="exam-report-stat"><span>Resultado del examen</span><strong>'+levelExamScore+'/'+total+'</strong><small>'+percent+'% de respuestas correctas</small></div><div class="exam-report-stat"><span>Estado del nivel</span><strong>'+(passed?'Aprobado ✓':'Por reforzar')+'</strong><small>'+(passed?'Cumpliste el mínimo del 70 %.':'Necesitas 70 % para aprobar.')+'</small></div></div><h4>📊 Tu mapa de conocimientos</h4><p class="muted">Las barras resumen tu resultado por habilidad.</p><div class="exam-skill-list">'+rows+'</div><div class="exam-report-note"><strong>Lo que ya dominas:</strong> '+(strong.length?strong.join(", "):"sigue practicando para consolidar tus habilidades.")+'<br><strong>Conviene reforzar:</strong> '+(weak.length?weak.join(", "):"ninguna habilidad quedó por debajo del 70 % en esta muestra.")+'</div><p class="muted">Este informe resume las preguntas de esta evaluación; úsalo como orientación de estudio, no como medición completa de todas tus capacidades.</p>';
- const progress=readLearningProgress(),id=topic+"-"+learningLevel,prev=progress[id]||{attempts:0,bestPercent:0},date=new Date().toISOString(),history=Array.isArray(prev.history)?prev.history:[];history.push({date,percent,score:levelExamScore,total,topic,level:learningLevel,type:"exam",skills,questionTexts:activeLevelExam.map(q=>q.q)});
- progress[id]={...prev,attempts:(Number(prev.attempts)||0)+1,bestPercent:Math.max(Number(prev.bestPercent)||0,percent),lastPercent:percent,examPercent:percent,examPassed:prev.examPassed===true||passed,updatedAt:date,history:history.slice(-60),lastExamSkills:skills};
- try{localStorage.setItem(learningProgressKey,JSON.stringify(progress));}catch(_){}
- recordProfileActivity();renderLearningProgress();renderProfile();if(typeof refreshLearningLevelLocks==="function")refreshLearningLevelLocks(topic);if(typeof nexoraQueueSync==="function")nexoraQueueSync();if(window.NEXORA_REFRESH_LEADERBOARD)window.NEXORA_REFRESH_LEADERBOARD();
- const next=document.getElementById("nextLevelCTA"),nextName=learningLevel==="basico"?"intermedio":learningLevel==="intermedio"?"avanzado":null;
- if(next){next.hidden=!(progress[id].examPassed&&nextName);next.textContent=nextName?"¡Examen aprobado! Desbloquear nivel "+nextName+" →":"¡Ruta avanzada completada! Explora otra materia";next.onclick=()=>{if(nextName)openLearningLesson(topic,nextName);else document.querySelector('[data-topic="'+topic+'"]')?.click();};}
- document.getElementById("levelExamProgressFill").style.width="100%";report.scrollIntoView({behavior:"smooth",block:"nearest"});
+document.getElementById("levelExamFinish").addEventListener("click",async()=>{
+ const finishButton=document.getElementById("levelExamFinish");
+ if(!levelExamSessionId)return;
+ if(activeLevelExam.some(q=>!Number.isInteger(q.userAnswer))){alert("Responde todas las preguntas antes de entregar.");return;}
+ finishButton.disabled=true;finishButton.textContent="Calificando en servidor…";
+ try{
+  const result=await invokeNexoraAssessment({action:"submit",session_id:levelExamSessionId,answers:activeLevelExam.map(q=>q.userAnswer)});
+  const total=result.total,percent=result.percent,passed=result.passed,skills=result.skills||[];
+  levelExamScore=result.score;
+  const strong=skills.filter(x=>x.percent>=70).map(x=>x.name),weak=skills.filter(x=>x.percent<70).map(x=>x.name);
+  const report=document.getElementById("levelExamReport");report.hidden=false;
+  document.getElementById("levelExamIntro").hidden=true;document.getElementById("levelExamQuestion").hidden=true;
+  document.getElementById("levelExamOptions").hidden=true;document.getElementById("levelExamFeedback").hidden=true;
+  document.getElementById("levelExamNext").hidden=true;finishButton.hidden=true;
+  document.getElementById("levelExamProgress").textContent="Evaluación terminada · "+percent+"%";
+  const rows=skills.map(x=>'<div class="exam-skill-row"><span>'+x.name+'</span><div class="exam-skill-track" role="img" aria-label="'+x.name+': '+x.percent+' por ciento"><div class="exam-skill-fill '+(x.percent<70?'needs-work':'')+'" style="width:'+x.percent+'%"></div></div><strong>'+x.percent+'%</strong></div>').join("");
+  const review=(result.review||[]).map((x,i)=>'<div class="exam-report-note"><strong>'+String(i+1)+'. '+(x.correct?'Correcta':'Para repasar')+' · '+x.skill+'</strong><p>'+x.prompt+'</p><p>'+x.explanation+'</p></div>').join("");
+  report.innerHTML='<div class="exam-report-grid"><div class="exam-report-stat"><span>Resultado de la evaluación</span><strong>'+levelExamScore+'/'+total+'</strong><small>'+percent+'% de respuestas correctas</small></div><div class="exam-report-stat"><span>Estado del nivel</span><strong>'+(passed?'Aprobado ✓':'Por reforzar')+'</strong><small>'+(passed?'Cumpliste el mínimo del 70 %.':'Necesitas 70 % para aprobar.')+'</small></div></div><h4>📊 Tu mapa de conocimientos</h4><p class="muted">Las barras resumen tu resultado por habilidad.</p><div class="exam-skill-list">'+rows+'</div><div class="exam-report-note"><strong>Lo que ya dominas:</strong> '+(strong.length?strong.join(", "):"sigue practicando para consolidar tus habilidades.")+'<br><strong>Conviene reforzar:</strong> '+(weak.length?weak.join(", "):"ninguna habilidad quedó por debajo del 70 % en esta muestra.")+'</div><h4>Revisión de respuestas</h4>'+review+'<p class="muted">El resultado fue calculado y guardado por el servidor NEXORA. Este informe resume esta evaluación y sirve como orientación de estudio.</p>';
+  const progress=readLearningProgress(),id=topic+"-"+learningLevel,prev=progress[id]||{attempts:0,bestPercent:0},date=new Date().toISOString(),history=Array.isArray(prev.history)?prev.history:[];
+  history.push({date,percent,score:levelExamScore,total,topic,level:learningLevel,type:"exam",skills,questionTexts:activeLevelExam.map(q=>q.q)});
+  progress[id]={...prev,attempts:(Number(prev.attempts)||0)+1,bestPercent:Math.max(Number(prev.bestPercent)||0,percent),lastPercent:percent,examPercent:percent,examPassed:prev.examPassed===true||passed,updatedAt:date,history:history.slice(-60),lastExamSkills:skills};
+  try{localStorage.setItem(learningProgressKey,JSON.stringify(progress));}catch(_){}
+  recordProfileActivity();renderLearningProgress();renderProfile();
+  if(typeof refreshLearningLevelLocks==="function")refreshLearningLevelLocks(topic);
+  if(typeof nexoraQueueSync==="function")nexoraQueueSync();
+  if(window.NEXORA_REFRESH_LEADERBOARD)window.NEXORA_REFRESH_LEADERBOARD();
+  const next=document.getElementById("nextLevelCTA"),nextName=learningLevel==="basico"?"intermedio":learningLevel==="intermedio"?"avanzado":null;
+  if(next){next.hidden=!(progress[id].examPassed&&nextName);next.textContent=nextName?"¡Evaluación aprobada! Desbloquear nivel "+nextName+" →":"¡Ruta avanzada completada! Explora otra materia";next.onclick=()=>{if(nextName)openLearningLesson(topic,nextName);else document.querySelector('[data-topic="'+topic+'"]')?.click();};}
+  document.getElementById("levelExamProgressFill").style.width="100%";report.scrollIntoView({behavior:"smooth",block:"nearest"});
+ }catch(error){
+  alert(error.message||"No se pudo calificar la evaluación.");
+  finishButton.disabled=false;finishButton.textContent="Entregar y ver resultado";
+ }finally{
+  if(document.getElementById("levelExamReport").hidden){finishButton.disabled=false;finishButton.textContent="Entregar y ver resultado";}
+ }
 });
-
 const profileStorageKey="nexora-profile-v1",profileActivityKey="nexora-profile-activity-v1";
 const defaultProfile={name:"",avatar:"🦊"};
 function readProfile(){try{const p=JSON.parse(localStorage.getItem(profileStorageKey)||"{}");return {...defaultProfile,...(p&&typeof p==="object"?p:{})};}catch(_){return {...defaultProfile};}}
