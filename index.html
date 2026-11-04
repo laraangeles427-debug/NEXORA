@@ -153,6 +153,56 @@ body{background:radial-gradient(ellipse at 80% -10%,rgba(0,115,255,.13),transpar
 @media(max-width:680px){.experience-actions{grid-template-columns:1fr}.experience-action{padding:12px}.experience-steps{grid-template-columns:1fr}.experience-hub-head{flex-direction:column;gap:8px}}
 @media(prefers-reduced-motion:reduce){.card,.panel,.chart-panel,.btn,.text-button,.quiz-options button,.challenge-option,.profile-avatar,.hero:before,.hero:after{animation:none!important;transition:none!important}}
 
+
+/* NEXORA — rediseño de presentación premium */
+:root{--bg:#050d1b;--panel:#0a1930;--panel2:#102542;--blue:#1677ff;--cyan:#08c8f5;--white:#f5f9ff;--muted:#a9bad0;--line:rgba(62,190,245,.19)}
+body{background:#050d1b;color:var(--white);font-family:Inter,"Segoe UI",Arial,sans-serif}
+body:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 78% 13%,rgba(0,133,255,.12),transparent 34%),radial-gradient(ellipse at 8% 75%,rgba(0,203,245,.055),transparent 32%),linear-gradient(145deg,#050d1b,#071326 55%,#040a15)}
+.topbar{background:rgba(4,12,26,.88);border-bottom:1px solid rgba(8,200,245,.16);box-shadow:0 8px 35px rgba(0,0,0,.18)}
+.brand-logo{width:48px;height:48px}.navlinks button{font-weight:650;letter-spacing:.01em}.navlinks button.active,.navlinks button:hover{background:rgba(8,200,245,.09);border-color:rgba(8,200,245,.25)}
+#view-inicio{overflow:hidden}
+.nexora-hero{position:relative;min-height:690px;max-width:1240px;display:grid;grid-template-columns:minmax(0,1fr) minmax(380px,.92fr);align-items:center;gap:32px;padding:76px 0 82px;text-align:left}
+.hero-copy{position:relative;z-index:2;max-width:610px}
+.hero-kicker{display:inline-flex;align-items:center;gap:10px;padding:8px 13px;border:1px solid rgba(8,200,245,.22);border-radius:999px;background:rgba(8,200,245,.055);font-size:.68rem;letter-spacing:.16em;font-weight:800;color:#9adff4}
+.hero-kicker-dot{width:7px;height:7px;border-radius:50%;background:#08c8f5;box-shadow:0 0 14px #08c8f5}
+.hero-logo{display:none!important}
+.nexora-hero h1{font-size:clamp(4.4rem,8.8vw,7.4rem);letter-spacing:.035em;line-height:.98;margin:25px 0 18px;font-weight:900}
+.nexora-hero h1 span{background:linear-gradient(100deg,#fff 4%,#68dfff 52%,#1677ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero-lead{max-width:570px;font-size:clamp(1.65rem,3vw,2.55rem);line-height:1.16;font-weight:750;letter-spacing:-.045em;margin:0 0 18px;color:#f5f9ff}
+.hero-lead span{color:#08c8f5}
+.hero-welcome{max-width:510px;color:#a9bad0;font-size:1.03rem;line-height:1.8;margin:0 0 28px}
+.hero-ctas{display:flex;gap:12px;flex-wrap:wrap}
+.hero-ctas .btn{min-height:54px;padding:14px 21px;border-radius:13px;font-size:.92rem}
+.hero-primary{background:linear-gradient(110deg,#0875f9,#08bfe9);border:1px solid rgba(112,226,255,.6);box-shadow:0 10px 32px rgba(0,139,255,.24)}
+.hero-primary span{font-size:1.2rem;margin-left:8px}
+.hero-secondary{background:rgba(255,255,255,.025)!important;border:1px solid rgba(150,194,225,.24)!important;color:#eaf6ff!important}
+.hero-trust{display:flex;align-items:center;gap:10px;margin-top:26px;color:#90a6c0;font-size:.78rem;letter-spacing:.025em}.hero-trust span{color:#08c8f5}.hero-trust i{height:4px;width:4px;border-radius:50%;background:#55728e;margin:0 5px}
+.hero-visual{position:relative;min-height:520px;display:grid;place-items:center;isolation:isolate}
+.visual-glow{position:absolute;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(0,188,255,.23),rgba(0,107,255,.08) 48%,transparent 72%);filter:blur(9px);z-index:-1}
+.visual-orbit{position:absolute;border:1px solid rgba(48,190,245,.18);border-radius:50%;transform:rotate(-24deg)}
+.orbit-one{width:480px;height:290px}.orbit-two{width:390px;height:430px;transform:rotate(48deg);border-color:rgba(26,120,255,.22)}
+.visual-core{width:220px;height:220px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 34% 25%,#173d66,#07172c 60%,#030b17);border:1px solid rgba(105,220,255,.55);box-shadow:0 0 0 12px rgba(8,200,245,.025),0 0 55px rgba(0,164,255,.26),inset 0 0 35px rgba(8,200,245,.12);z-index:1}
+.core-mark{font-size:5.3rem;line-height:1;font-weight:900;letter-spacing:-.1em;background:linear-gradient(145deg,#fff,#08c8f5 60%,#1677ff);color:transparent;background-clip:text}.core-mark span{color:#08c8f5}
+.core-name{font-size:.95rem;letter-spacing:.32em;font-weight:850;margin:5px 0 2px}.core-caption{font-size:.5rem;letter-spacing:.25em;color:#77b6d4}
+.float-card{position:absolute;z-index:2;padding:15px 17px;border:1px solid rgba(102,200,245,.25);border-radius:15px;background:linear-gradient(145deg,rgba(13,37,65,.94),rgba(5,17,34,.94));box-shadow:0 18px 45px rgba(0,0,0,.3);backdrop-filter:blur(16px)}
+.float-label{display:flex;align-items:center;gap:8px;color:#8faecb;font-size:.64rem;font-weight:800;letter-spacing:.13em}.mini-icon{display:grid;place-items:center;width:24px;height:24px;border-radius:8px;color:#08c8f5;background:rgba(8,200,245,.12);font-size:1rem}
+.float-progress{left:-1%;top:14%;width:220px}.float-progress>strong{display:block;font-size:1.04rem;margin:8px 0}.progress-mini{height:5px;background:#1a3551;border-radius:99px;overflow:hidden}.progress-mini span{display:block;width:76%;height:100%;background:linear-gradient(90deg,#1677ff,#08c8f5);border-radius:99px}.float-card small{display:block;color:#90a6c0;font-size:.68rem;margin-top:8px}
+.float-finance{right:-1%;bottom:15%;width:205px}.finance-bars{height:48px;display:flex;align-items:end;gap:7px;padding:5px 0 8px}.finance-bars i{flex:1;border-radius:5px 5px 2px 2px;background:linear-gradient(0deg,#0877f5,#08c8f5);opacity:.9}.finance-bars i:nth-child(1){height:32%}.finance-bars i:nth-child(2){height:48%}.finance-bars i:nth-child(3){height:39%}.finance-bars i:nth-child(4){height:67%}.finance-bars i:nth-child(5){height:56%}.finance-bars i:nth-child(6){height:83%}.finance-bars i:nth-child(7){height:100%}.float-finance>strong{font-size:.77rem}
+.float-areas{right:6%;top:17%;display:flex;align-items:center;gap:10px;padding:11px 14px}.area-dot{width:10px;height:10px;border-radius:50%;background:#08c8f5;box-shadow:0 0 12px #08c8f5}.float-areas strong{display:block;font-size:.85rem}.float-areas small{margin:0}
+.visual-caption{position:absolute;bottom:1%;font-size:.59rem;letter-spacing:.19em;color:#7892ad}.visual-caption span{color:#08c8f5;margin:0 7px}
+.hero-bottomline{position:absolute;bottom:24px;left:0;right:0;border-top:1px solid rgba(112,180,220,.14);padding-top:15px;display:flex;justify-content:space-between;color:#627d99;font-size:.62rem;letter-spacing:.17em;font-weight:800}
+.home-discover{position:relative;padding:75px 0 88px;background:linear-gradient(180deg,rgba(8,200,245,.025),rgba(3,10,21,.65));border-top:1px solid rgba(8,200,245,.12)}
+.discover-heading{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:28px}.discover-heading h2{font-size:clamp(1.8rem,4vw,2.7rem);letter-spacing:-.045em;margin:8px 0 0;line-height:1.1}.discover-heading h2 span{color:#08c8f5}.discover-heading>p{max-width:370px;color:#91a6bf;margin:0 0 3px;font-size:.94rem}
+.discover-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.discover-card{position:relative;min-height:230px;text-align:left;padding:24px;border:1px solid rgba(90,178,225,.18);border-radius:17px;background:linear-gradient(145deg,rgba(12,32,57,.94),rgba(5,16,32,.94));color:#f5f9ff;display:flex;flex-direction:column;align-items:flex-start;transition:transform .2s,border-color .2s,box-shadow .2s}
+.discover-card:hover{transform:translateY(-5px);border-color:rgba(8,200,245,.55);box-shadow:0 18px 40px rgba(0,0,0,.2)}
+.discover-number{position:absolute;top:20px;right:21px;color:#58728f;font-size:.7rem;letter-spacing:.12em}.discover-symbol{display:grid;place-items:center;width:47px;height:47px;border:1px solid rgba(8,200,245,.25);border-radius:13px;background:rgba(8,200,245,.07);color:#08c8f5;font-size:1.5rem;margin-bottom:21px}.discover-card>strong{font-size:1.12rem;margin-bottom:7px}.discover-card>small{font-size:.86rem;line-height:1.6;color:#9bb0c7;max-width:270px}.discover-card>b{display:flex;gap:10px;align-items:center;margin-top:auto;padding-top:22px;font-size:.78rem;color:#08c8f5}.discover-card>b span{font-size:1rem}
+#view-inicio .footer{background:#040b17}
+@media(max-width:900px){.nexora-hero{grid-template-columns:1fr minmax(300px,.8fr);gap:10px}.hero-visual{min-height:420px;transform:scale(.88)}.float-progress{left:-4%}.float-finance{right:-5%}.nexora-hero h1{font-size:clamp(4rem,9vw,6rem)}}
+@media(max-width:700px){.nexora-hero{display:flex;flex-direction:column;align-items:stretch;gap:0;min-height:0;padding:54px 0 70px}.hero-copy{max-width:none}.nexora-hero h1{font-size:clamp(4rem,17vw,6rem);margin:22px 0 15px}.hero-lead{font-size:clamp(1.8rem,7vw,2.45rem)}.hero-welcome{font-size:.96rem}.hero-ctas{display:grid;grid-template-columns:1fr}.hero-visual{min-height:390px;margin-top:12px;transform:scale(.84);transform-origin:center}.orbit-one{width:410px;height:255px}.orbit-two{width:330px;height:370px}.float-progress{left:-1%;top:9%}.float-areas{right:0;top:10%}.float-finance{right:-1%;bottom:7%}.visual-caption{bottom:-2%;font-size:.49rem}.hero-bottomline{bottom:18px;font-size:.53rem}.home-discover{padding:58px 0}.discover-heading{display:block}.discover-heading>p{margin-top:14px}.discover-grid{grid-template-columns:1fr}.discover-card{min-height:190px}}
+@media(max-width:420px){.hero-visual{transform:scale(.73);margin:-18px -35px -22px}.hero-trust{font-size:.69rem}.hero-bottomline{letter-spacing:.09em}.hero-kicker{font-size:.57rem}.discover-card{padding:20px}}
+@media(prefers-reduced-motion:reduce){.discover-card{transition:none}}
+
 </style>
 </head>
 <body>
@@ -168,20 +218,42 @@ body{background:radial-gradient(ellipse at 80% -10%,rgba(0,115,255,.13),transpar
 <button class="active" data-view="inicio">Inicio</button><button data-view="nexora">NEXORA</button><button data-view="aprender">Aprender</button><button data-view="perfil">Mi perfil</button><button data-view="asesoria">Asesoría</button><button data-view="simulacros">Simulacros</button><button data-view="laboratorio">Laboratorio</button><button data-view="comunidad">Comunidad</button><button data-view="accesibilidad">Accesibilidad</button><button data-view="aprender" aria-label="Abrir aula virtual">Aula virtual</button>
 </nav></div></header>
 <main id="main" tabindex="-1">
-<section class="view active" id="view-inicio"><div class="container hero"><div class="hero-inner">
-<img src="./Logotipo%20tecnol%C3%B3gico%20azul%20y%20blanco.png?v=2" alt="Logotipo oficial de NEXORA" style="display:block;width:120px;height:120px;max-height:120px;object-fit:contain;margin:0 auto 20px">
-<h1>NEX<span>ORA</span></h1><p class="intro hero-welcome" role="status">Bienvenidos a NEXORA. Elige una opción para aprender, practicar o consultar a nuestra inteligencia artificial.</p><div class="hero-rule"></div><p class="tagline">CONECTANDO CONOCIMIENTO,</p><p class="tagline2">CREANDO OPORTUNIDADES.</p>
-<div class="trio"><div class="trio-item"><span class="trio-icon">⌂</span><strong>APRENDE</strong><p>Educación financiera, contable y tributaria.</p></div><div class="trio-item"><span class="trio-icon">↗</span><strong>CRECE</strong><p>Desarrolla habilidades para tu futuro.</p></div><div class="trio-item"><span class="trio-icon">♧</span><strong>CONÉCTATE</strong><p>Comparte ideas y experiencias.</p></div></div>
-<div class="hero-actions"><button class="btn" data-go="cuenta">Ingresar</button><button class="btn secondary" data-go="cuenta">Registrarse</button><button class="text-button" data-go="aprender">Explorar como invitado　›</button><button class="text-button" id="installApp" hidden>＋ Instalar NEXORA en este celular</button></div>
-</div></div></section>
-<section class="home-class-shortcut" aria-labelledby="homeClassTitle" style="padding:24px 18px 34px;background:#071629">
-<div class="container"><article class="panel" style="max-width:980px;margin:0 auto;border:2px solid var(--cyan);background:linear-gradient(120deg,#0b2947,#061326);box-shadow:0 0 24px #00d9f522">
-<span class="eyebrow">AULA VIRTUAL · PRIMERA CLASE</span>
-<h2 id="homeClassTitle" style="font-size:clamp(1.5rem,4vw,2rem);margin:8px 0">Mi dinero con propósito</h2>
-<p>Comienza aquí tu recorrido: aprende conceptos, practica con preguntas y aplica lo aprendido en el presupuesto. Todo dentro de la misma página de NEXORA.</p>
-<div class="lesson-actions"><button class="btn" type="button" data-go="aprender">Ir al aula virtual →</button><span class="muted small" style="align-self:center">Inicio → Aprender → Clase → Práctica</span></div>
-</article></div></section>
-
+<section class="view active" id="view-inicio">
+  <div class="container hero nexora-hero">
+    <div class="hero-copy">
+      <div class="hero-kicker"><span class="hero-kicker-dot"></span> PLATAFORMA DE APRENDIZAJE · ECUADOR</div>
+      <img class="hero-logo" src="./Logotipo%20tecnol%C3%B3gico%20azul%20y%20blanco.png?v=2" alt="Logotipo oficial de NEXORA">
+      <h1>NEX<span>ORA</span></h1>
+      <p class="hero-lead">El conocimiento que necesitas para <span>transformar tus decisiones.</span></p>
+      <p class="hero-welcome" role="status">Aprende educación financiera, contabilidad y tributación con experiencias prácticas, herramientas interactivas y una comunidad que crece contigo.</p>
+      <div class="hero-ctas">
+        <button class="btn hero-primary" data-go="aprender">Comenzar a aprender <span aria-hidden="true">↗</span></button>
+        <button class="btn hero-secondary" data-go="cuenta">Mi espacio NEXORA</button>
+      </div>
+      <div class="hero-trust"><span>✦</span> Aprende a tu ritmo <i></i><span>◉</span> Diseñada para todos</div>
+    </div>
+    <div class="hero-visual" aria-label="Vista ilustrativa de las herramientas de NEXORA">
+      <div class="visual-orbit orbit-one"></div><div class="visual-orbit orbit-two"></div>
+      <div class="visual-glow"></div>
+      <div class="visual-core"><div class="core-mark">N<span>.</span></div><div class="core-name">NEXORA</div><div class="core-caption">KNOWLEDGE IN MOTION</div></div>
+      <div class="float-card float-progress"><div class="float-label"><span class="mini-icon">↗</span> TU PROGRESO</div><strong>Aprende. Avanza.</strong><div class="progress-mini"><span></span></div><small>Un paso más hacia tus metas</small></div>
+      <div class="float-card float-finance"><div class="float-label"><span class="mini-icon">◈</span> FINANZAS</div><div class="finance-bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><strong>Decisiones con propósito</strong></div>
+      <div class="float-card float-areas"><div class="area-dot"></div><div><strong>3 áreas</strong><small>Un universo de conocimiento</small></div></div>
+      <div class="visual-caption">CONECTANDO CONOCIMIENTO <span>—</span> CREANDO OPORTUNIDADES</div>
+    </div>
+    <div class="hero-bottomline"><span>01 / APRENDE</span><span>02 / PRACTICA</span><span>03 / TRANSFORMA</span></div>
+  </div>
+  <section class="home-discover">
+    <div class="container">
+      <div class="discover-heading"><div><span class="eyebrow">TU FUTURO EMPIEZA AQUÍ</span><h2>Conocimiento para la <span>vida real.</span></h2></div><p>Explora, practica y convierte lo que aprendes en habilidades para tu día a día.</p></div>
+      <div class="discover-grid">
+        <button class="discover-card" data-go="aprender"><span class="discover-number">01</span><span class="discover-symbol">◈</span><strong>Educación financiera</strong><small>Administra tu dinero, planifica y construye hábitos.</small><b>Explorar área <span>↗</span></b></button>
+        <button class="discover-card" data-go="aprender"><span class="discover-number">02</span><span class="discover-symbol">▤</span><strong>Contabilidad</strong><small>Comprende cómo se organiza y registra un negocio.</small><b>Explorar área <span>↗</span></b></button>
+        <button class="discover-card" data-go="aprender"><span class="discover-number">03</span><span class="discover-symbol">§</span><strong>Tributación</strong><small>Conoce comprobantes, impuestos y cultura tributaria.</small><b>Explorar área <span>↗</span></b></button>
+      </div>
+    </div>
+  </section>
+</section>
 <section class="view" id="view-nexora"><div class="container page"><span class="eyebrow">Nuestra identidad</span><h2 class="page-title">Conocimiento que abre <span class="accent">oportunidades</span></h2><p class="intro">NEXORA es una propuesta de plataforma web educativa que busca facilitar el aprendizaje financiero, contable y tributario mediante herramientas prácticas, accesibles y colaborativas.</p><div class="grid two">
 <article class="card"><div class="card-icon">◎</div><h3>Misión</h3><p>Acercar conocimientos útiles a más personas con contenidos comprensibles y experiencias prácticas.</p></article><article class="card"><div class="card-icon">↗</div><h3>Visión</h3><p>Contribuir a una comunidad que aprende, comparte conocimientos y desarrolla habilidades para tomar decisiones informadas.</p></article><article class="card"><div class="card-icon">◇</div><h3>Aprendizaje inclusivo</h3><p>Ofrecer distintas formas de acceder a la información, incluyendo lectura por voz y opciones visuales adaptables.</p></article><article class="card"><div class="card-icon">♧</div><h3>Comunidad</h3><p>Promover el intercambio de experiencias, preguntas y aprendizaje entre compañeros.</p></article></div><p class="notice">NEXORA es un prototipo en desarrollo. Las cuentas reales, la mensajería y el almacenamiento en la nube necesitan servicios seguros de backend.</p></div></section>
 <section class="view" id="view-cuenta"><div class="container page"><span class="eyebrow">Tu espacio personal</span><h2 class="page-title">Tu cuenta <span class="accent">NEXORA</span></h2><p class="intro">Crea tu cuenta una sola vez. Después podrás volver a entrar y continuar tu aprendizaje desde tu perfil.</p><div class="grid two">
