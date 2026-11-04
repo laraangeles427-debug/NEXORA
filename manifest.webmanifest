@@ -1,8 +1,8 @@
 {
   "id": "./",
-  "name": "NEXORA | Conectando conocimiento",
+  "name": "NEXORA | Conocimiento en movimiento",
   "short_name": "NEXORA",
-  "description": "Aprende educación financiera, contabilidad y tributación de forma inclusiva.",
+  "description": "Plataforma educativa inclusiva de aprendizaje progresivo en educación financiera, contabilidad y tributación.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
@@ -11,10 +11,10 @@
   "theme_color": "#061225",
   "icons": [
     {
-      "src": "./Logotipo%20tecnol%C3%B3gico%20azul%20y%20blanco.png?v=2",
+      "src": "./nexora-icon.svg",
       "sizes": "any",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
     }
   ]
 }
