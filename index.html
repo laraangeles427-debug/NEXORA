@@ -1312,6 +1312,10 @@ const subjectClassHTML={
 document.getElementById("lessonContent").innerHTML=material.html+(subjectClassHTML[selected]&&subjectClassHTML[selected][level]||"");
  renderConceptMap(selected,level);
  renderPracticalChallenge(selected,level);
+ lessonCompleted=false;practicePassed=false;practicalPassed=false;
+ document.getElementById("practicalChallengeMount").hidden=true;
+ document.getElementById("completeLessonStep").disabled=false;document.getElementById("completeLessonStep").textContent="He terminado la clase";
+ document.getElementById("lessonPractice").disabled=true;document.getElementById("lessonPractice").textContent="Completa la clase para practicar →";updateLearningFlowSteps(1);
  activePracticeQuestions=shuffleList([...material.questions,...extraPracticeQuestions(selected,level)]).slice(0,level==="basico"?8:level==="intermedio"?10:12).map(randomizePracticeQuestion);
  practiceIndex=0;practiceScore=0;practiceAnswered=false;
  document.getElementById("inlineLessonQuiz").hidden=true;
