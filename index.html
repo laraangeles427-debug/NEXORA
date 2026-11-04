@@ -759,7 +759,9 @@ async function nexoraLoadCloudState(user){
  const {data:profileData}=await nexoraCloud.auth.getUser();
  const email=profileData?.user?.email||user.email||"";
  const profile=nexoraLocalState()["nexora-profile-v1"]||{};
- if(!profile.name&&email){profile.name=email.split("@")[0];try{localStorage.setItem("nexora-profile-v1",JSON.stringify({...profile,name:profile.name}));}catch(_){}}
+ const metadataName=String(user.user_metadata?.display_name||"").trim();
+ const metadataInterest=String(user.user_metadata?.interest||"").trim();
+ if(!profile.name&&(metadataName||email)){profile.name=metadataName||email.split("@")[0];if(metadataInterest&&!profile.interest)profile.interest=metadataInterest;try{localStorage.setItem("nexora-profile-v1",JSON.stringify(profile));}catch(_){}}
  // Upload the merged state so progress recovered from this device is also available on other devices.
  await nexoraSyncNow();
  nexoraStatus("Cuenta conectada. Tus avances se sincronizan con esta cuenta cuando se guardan.");window.dispatchEvent(new Event("nexora:auth-ready"));
