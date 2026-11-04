@@ -231,6 +231,11 @@ body:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;bac
 #view-comunidad .nexora-level-panel{padding:18px;border:1px solid var(--line);border-radius:18px;background:var(--panel)}#view-comunidad .community-stage-road{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}#view-comunidad .community-stage-road .stage-step{padding:15px;border:1px solid var(--line);border-radius:14px;background:var(--bg)}#view-comunidad .community-stage-road .stage-icon{display:block;margin-bottom:8px;font-size:1.5rem}#view-comunidad .community-stage-road .stage-requirement{color:var(--cyan);font-weight:900}
 @media(max-width:800px){.nexora-league-columns{grid-template-columns:1fr}.nexora-community-hero{grid-template-columns:1fr .65fr!important}.nexora-community-visual{min-height:180px}}
 @media(max-width:600px){.nexora-community-hero{grid-template-columns:1fr!important;padding:23px!important}.nexora-community-visual{min-height:170px}.community-trophy{width:110px;height:110px;font-size:4rem}.community-ring{width:190px;height:190px}.nexora-community-heading{align-items:start}.community-season{white-space:nowrap}.nexora-league-header{align-items:start}.nexora-league-columns{gap:14px}.nexora-ranking-wrap{padding:10px}.nexora-ranking-wrap .leaderboard-row{grid-template-columns:30px minmax(0,1fr) auto;gap:7px;padding:9px}.nexora-ranking-wrap .leaderboard-xp{font-size:.72rem}#view-comunidad .community-stage-road{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* Panel principal: misión siguiente y progreso inmediato */
+.mission-panel{position:relative;z-index:1;margin:20px 0 4px;padding:18px 20px;border:1px solid rgba(8,200,245,.26);border-radius:16px;background:linear-gradient(110deg,rgba(8,200,245,.09),rgba(5,17,33,.72));}
+.mission-top{display:flex;align-items:center;justify-content:space-between;gap:18px}.mission-kicker{font-size:.7rem;font-weight:800;letter-spacing:.16em;color:var(--cyan)}.mission-panel h4{font-size:1.08rem;margin:4px 0}.mission-panel p{margin:3px 0;color:var(--muted);font-size:.88rem}.mission-count{flex:0 0 auto;text-align:right}.mission-count strong{display:block;color:var(--cyan);font-size:1.35rem;line-height:1.1}.mission-count span{font-size:.72rem;color:var(--muted)}.mission-track{height:7px;margin-top:14px;overflow:hidden;border-radius:99px;background:rgba(255,255,255,.09)}.mission-track span{display:block;width:0;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--blue),var(--cyan));transition:width .35s ease}
+@media(max-width:600px){.mission-panel{padding:15px}.mission-top{align-items:flex-start}.mission-panel p{font-size:.82rem}.mission-count strong{font-size:1.15rem}}
 </style>
 <style>
 .reward-center{position:relative;overflow:hidden;margin:22px 0;border-color:rgba(8,200,245,.34);background:radial-gradient(circle at 92% 0,rgba(8,200,245,.13),transparent 34%),linear-gradient(145deg,#0b1d35,#061326)}
@@ -296,7 +301,11 @@ body:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;bac
 <span class="eyebrow">Tu espacio personal</span><h2 class="page-title">Mi perfil <span class="accent">NEXORA</span></h2><p class="intro">Tu recorrido, tus logros y el siguiente paso. Cada pequeño avance cuenta.</p>
 <div class="experience-hub" aria-labelledby="experienceHubTitle">
  <div class="experience-hub-head"><div><span class="eyebrow">NEXORA · centro de misiones</span><h3 id="experienceHubTitle">Tu próxima gran conquista empieza aquí.</h3><p>Aprende, experimenta y convierte cada conocimiento en una habilidad para la vida.</p></div><span class="experience-live">Tu espacio está listo</span></div>
- <div class="experience-actions" aria-label="Accesos rápidos">
+ <section class="mission-panel" aria-labelledby="profileMissionTitle">
+  <div class="mission-top"><div><span class="mission-kicker">TU SIGUIENTE PASO</span><h4 id="profileMissionTitle">Tu primera misión comienza hoy.</h4><p id="profileMissionCopy">Completa una clase, practica y demuestra lo aprendido en una evaluación.</p></div><div class="mission-count"><strong id="profileMissionCount">0/9</strong><span>evaluaciones</span></div></div>
+  <div class="mission-track" role="progressbar" id="profileMissionBar" aria-label="Evaluaciones aprobadas" aria-valuemin="0" aria-valuemax="9" aria-valuenow="0"><span id="profileMissionFill"></span></div>
+</section>
+<div class="experience-actions" aria-label="Accesos rápidos">
   <button class="experience-action" type="button" data-go="aprender"><span class="action-icon">🚀</span><span><strong>Continuar aprendiendo</strong><small>Entra a tus aulas y niveles</small></span></button>
   <button class="experience-action" type="button" data-go="laboratorio"><span class="action-icon">🧪</span><span><strong>Entrar al laboratorio</strong><small>Practica con situaciones reales</small></span></button>
   <button class="experience-action" type="button" data-go="comunidad"><span class="action-icon">🌐</span><span><strong>Ir a la comunidad</strong><small>Comparte, debate y crece</small></span></button>
@@ -869,6 +878,12 @@ function renderProfile(){
  const attempts=entries.reduce((n,e)=>n+(Number(e.attempts)||0),0);
  const xp=entries.reduce((n,e)=>n+Math.max(0,Number(e.bestPercent)||0)+Math.max(0,(Number(e.attempts)||0)-1)*5,0);
  const tier=profileTier(xp),days=readActivity().sort(),today=profileDateKey();
+ const missionTitle=document.getElementById("profileMissionTitle"),missionCopy=document.getElementById("profileMissionCopy"),missionCount=document.getElementById("profileMissionCount"),missionFill=document.getElementById("profileMissionFill"),missionBar=document.getElementById("profileMissionBar");
+ if(missionTitle)missionTitle.textContent=completed===0?"Tu primera misión comienza hoy.":completed===9?"Has completado todas las evaluaciones disponibles.":"Tu siguiente conquista está a un paso.";
+ if(missionCopy)missionCopy.textContent=completed===0?"Elige un área, completa la clase básica y demuestra lo aprendido en su evaluación.":completed===9?"Ya aprobaste las 9 evaluaciones publicadas. Ahora aplica tus conocimientos en el laboratorio.":"Llevas "+completed+" de 9 evaluaciones aprobadas. Continúa con la siguiente clase disponible y sigue construyendo tus habilidades.";
+ if(missionCount)missionCount.textContent=completed+"/9";
+ if(missionFill)missionFill.style.width=Math.min(100,completed/9*100)+"%";
+ if(missionBar)missionBar.setAttribute("aria-valuenow",String(completed));
  let streak=0,day=new Date();if(!days.includes(today))day.setDate(day.getDate()-1);
  for(let i=days.length-1;i>=0;i--){const expected=profileDateKey(day);if(days[i]===expected){streak++;day.setDate(day.getDate()-1);}else if(days[i]<expected)break;}
  const avatar=document.getElementById("profileAvatarBig"),greeting=document.getElementById("profileGreeting"),line=document.getElementById("profileMascotLine"),rank=document.getElementById("profileRank");
