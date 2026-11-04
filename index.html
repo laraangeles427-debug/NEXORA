@@ -829,9 +829,21 @@ let activeLevelExam=[],levelExamIndex=0,levelExamScore=0,levelExamAnswered=false
 function renderLevelExamQuestion(){
  const q=activeLevelExam[levelExamIndex],options=document.getElementById("levelExamOptions"),feedback=document.getElementById("levelExamFeedback"),next=document.getElementById("levelExamNext");
  levelExamAnswered=false;feedback.hidden=true;next.disabled=true;next.hidden=false;document.getElementById("levelExamFinish").hidden=true;
- document.getElementById("levelExamProgress").textContent="Pregunta "+(levelExamIndex+1)+" de "+activeLevelExam.length;document.getElementById("levelExamProgressFill").style.width=(levelExamIndex/activeLevelExam.length*100)+"%";
+ document.getElementById("levelExamProgress").textContent="Pregunta "+(levelExamIndex+1)+" de "+activeLevelExam.length;
+ document.getElementById("levelExamProgressFill").style.width=(levelExamIndex/activeLevelExam.length*100)+"%";
  document.getElementById("levelExamQuestion").textContent=q.q;options.replaceChildren();
- q.o.forEach((label,index)=>{const button=document.createElement("button");button.type="button";button.textContent=String.fromCharCode(65+index)+". "+label;button.addEventListener("click",()=>{if(levelExamAnswered)return;levelExamAnswered=true;const correct=index===q.a;q.userCorrect=correct;if(correct)levelExamScore++;[...options.children].forEach((el,j)=>{el.disabled=true;if(j===q.a)el.classList.add("correct");else if(j===index)el.classList.add("wrong");});feedback.textContent=(correct?"¡Correcto! ":"Repasemos. ")+q.why;feedback.hidden=false;next.disabled=false;if(levelExamIndex===activeLevelExam.length-1){next.hidden=true;document.getElementById("levelExamFinish").hidden=false;}});options.appendChild(button);});
+ q.o.forEach((label,index)=>{
+  const button=document.createElement("button");button.type="button";button.textContent=String.fromCharCode(65+index)+". "+label;
+  button.addEventListener("click",()=>{
+   if(levelExamAnswered)return;
+   levelExamAnswered=true;q.userAnswer=index;
+   [...options.children].forEach((el,j)=>{el.disabled=true;if(j===index)el.classList.add("selected");});
+   feedback.textContent="Respuesta registrada. La evaluación se calificará al entregar todas tus respuestas.";
+   feedback.hidden=false;next.disabled=false;
+   if(levelExamIndex===activeLevelExam.length-1){next.hidden=true;document.getElementById("levelExamFinish").hidden=false;}
+  });
+  options.appendChild(button);
+ });
 }
 let levelExamSessionId=null;
 async function invokeNexoraAssessment(payload){
