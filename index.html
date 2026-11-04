@@ -1102,6 +1102,7 @@ function extraPracticeQuestions(area,level){
  return [...(bank[area]||[]),...((more[level]&&more[level][area])||[])];
 }
 let activePracticeQuestions=[],practiceIndex=0,practiceScore=0,practiceAnswered=false;
+let lessonCompleted=false,practicePassed=false,practicalPassed=false;
 const learningProgressKey="nexora-learning-progress-v1";
 function readLearningProgress(){
  try { const value=JSON.parse(localStorage.getItem(learningProgressKey)||"{}"); return value&&typeof value==="object"?value:{}; }
