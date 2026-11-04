@@ -757,6 +757,7 @@ async function invokeNexoraAssessment(payload){
  return data;
 }
 document.getElementById("startLevelExam").addEventListener("click",async()=>{
+ if(!lessonCompleted||!practicePassed||!practicalPassed){const out=document.getElementById("inlineLessonResult");out.hidden=false;out.textContent="Completa en orden la clase, la práctica con al menos 70 % y el reto aplicado antes de iniciar la evaluación.";return;}
  const button=document.getElementById("startLevelExam");
  button.disabled=true;button.textContent="Preparando evaluación…";
  try{
