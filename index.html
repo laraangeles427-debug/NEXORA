@@ -1696,7 +1696,7 @@ const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition
    table.replaceChildren();setStatus("Has salido de la clasificación. Tu progreso personal no se borra.");return;
   }
   const p=typeof readProfile==="function"?readProfile():{};
-  const s=stats(),name=String(p.name||u.email?.split("@")[0]||"Explorador").trim().slice(0,40)||"Explorador";
+  const s=stats(),name=String(p.name||"Explorador").trim().slice(0,40)||"Explorador";
   const {error}=await db.from("nexora_leaderboard").upsert({user_id:u.id,display_name:name,xp:s.xp,level:s.level,streak:s.streak,badges:s.badges,opted_in:true,updated_at:new Date().toISOString()},{onConflict:"user_id"});
   if(error){setStatus("No se pudo activar la clasificación. Comprueba que tu cuenta esté iniciada e inténtalo otra vez.");console.error("NEXORA leaderboard",error);return;}
   setStatus("¡Ya participas! Se muestra tu alias y tus puntos, no tu correo.");
@@ -1710,7 +1710,7 @@ const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition
    const {data:mine}=await db.from("nexora_leaderboard").select("opted_in").eq("user_id",u.id).maybeSingle();
    opt.checked=!!mine?.opted_in;
    if(!opt.checked){setStatus("Activa la casilla si deseas aparecer. Es opcional.");table.replaceChildren();return;}
-   const s=stats(),p=typeof readProfile==="function"?readProfile():{},name=String(p.name||u.email?.split("@")[0]||"Explorador").trim().slice(0,40)||"Explorador";
+   const s=stats(),p=typeof readProfile==="function"?readProfile():{},name=String(p.name||"Explorador").trim().slice(0,40)||"Explorador";
    const {error:upErr}=await db.from("nexora_leaderboard").upsert({user_id:u.id,display_name:name,xp:s.xp,level:s.level,streak:s.streak,badges:s.badges,opted_in:true,updated_at:new Date().toISOString()},{onConflict:"user_id"});
    if(upErr)throw upErr;
    const {data,error}=await db.from("nexora_leaderboard").select("user_id,display_name,xp,level,streak,badges").eq("opted_in",true).order("level",{ascending:false}).order("xp",{ascending:false}).order("updated_at",{ascending:true}).limit(50);
