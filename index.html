@@ -108,6 +108,51 @@ button,input,select,textarea{font:inherit}button,a,input,select,textarea{-webkit
 
 .level-exam{margin-top:20px;border-color:rgba(0,217,245,.45);background:linear-gradient(145deg,rgba(8,125,255,.08),rgba(0,217,245,.035))}.exam-progress-track{height:8px;border-radius:99px;background:rgba(127,127,127,.18);overflow:hidden;margin:12px 0}.exam-progress-track>div{height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--cyan));transition:width .25s}.exam-report-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:16px 0}.exam-report-stat{padding:14px;border:1px solid var(--line);border-radius:13px;background:var(--bg)}.exam-report-stat strong{display:block;font-size:1.5rem;color:var(--cyan)}.exam-skill-list{display:grid;gap:12px;margin:16px 0}.exam-skill-row{display:grid;grid-template-columns:minmax(115px,1fr) minmax(70px,2fr) 46px;gap:10px;align-items:center}.exam-skill-track{height:12px;border-radius:99px;overflow:hidden;background:rgba(127,127,127,.18)}.exam-skill-fill{height:100%;border-radius:99px;background:#22c55e}.exam-skill-fill.needs-work{background:#f59e0b}.exam-skill-row strong{text-align:right;font-variant-numeric:tabular-nums}.exam-report-note{padding:14px;border:1px solid var(--line);border-radius:12px;background:rgba(0,217,245,.05)}@media(max-width:560px){.exam-report-grid{grid-template-columns:1fr 1fr}.exam-skill-row{grid-template-columns:1fr 70px 42px;gap:7px;font-size:.85rem}}
 .skip-link{position:absolute;top:0;left:0;z-index:10000;padding:.8rem 1rem;background:#fff;color:#061225;border:3px solid #08c8f5;border-radius:0 0 .75rem 0;transform:translateY(-150%);font-weight:800}.skip-link:focus{transform:translateY(0)}
+
+/* NEXORA EXPERIENCE 2.0 · capa visual inmersiva */
+:root{--glow:rgba(0,217,245,.18);--surface:rgba(8,23,43,.82)}
+body{background:radial-gradient(ellipse at 80% -10%,rgba(0,115,255,.13),transparent 34%),radial-gradient(ellipse at 0% 45%,rgba(0,217,245,.07),transparent 30%),var(--bg)}
+.topbar{box-shadow:0 8px 30px rgba(0,0,0,.22)}
+.brand-logo{filter:drop-shadow(0 0 12px rgba(0,217,245,.18))}
+.card,.panel,.chart-panel{backdrop-filter:blur(12px);box-shadow:0 12px 32px rgba(0,0,0,.15);transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}
+.card:hover,.chart-panel:hover{transform:translateY(-4px);border-color:rgba(0,217,245,.48);box-shadow:0 18px 38px rgba(0,0,0,.24),0 0 24px rgba(0,217,245,.06)}
+.btn{box-shadow:0 8px 22px rgba(0,130,255,.18);transition:transform .18s ease,filter .18s ease,box-shadow .18s ease}
+.btn:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(0,190,245,.22)}
+.text-button,.quiz-options button,.challenge-option,.profile-avatars button{transition:transform .18s ease,border-color .18s ease,background .18s ease}
+.text-button:hover,.quiz-options button:hover:not(:disabled),.challenge-option:hover:not(:disabled){transform:translateY(-2px)}
+.view.active{animation:experienceEnter .35s cubic-bezier(.2,.7,.2,1)}
+@keyframes experienceEnter{from{opacity:0;transform:translateY(10px);filter:blur(2px)}to{opacity:1;transform:none;filter:none}}
+.hero{position:relative;isolation:isolate;overflow:hidden}
+.hero:before,.hero:after{content:"";position:absolute;z-index:-1;border-radius:50%;filter:blur(2px);pointer-events:none}
+.hero:before{width:340px;height:340px;right:-130px;top:8%;border:1px solid rgba(0,217,245,.12);box-shadow:0 0 90px rgba(0,145,255,.08),inset 0 0 70px rgba(0,217,245,.05);animation:orbFloat 10s ease-in-out infinite}
+.hero:after{width:210px;height:210px;left:-100px;bottom:8%;border:1px solid rgba(0,217,245,.1);animation:orbFloat 12s ease-in-out infinite reverse}
+@keyframes orbFloat{50%{transform:translate3d(0,-18px,0) scale(1.04)}}
+.profile-hero{position:relative;border-color:rgba(0,217,245,.42);box-shadow:0 18px 44px rgba(0,0,0,.22),inset 0 1px rgba(255,255,255,.04)}
+.profile-avatar{box-shadow:0 0 0 7px rgba(0,217,245,.045),0 12px 34px rgba(0,0,0,.25);animation:avatarPulse 4s ease-in-out infinite}
+@keyframes avatarPulse{50%{box-shadow:0 0 0 12px rgba(0,217,245,.025),0 12px 38px rgba(0,0,0,.3)}}
+.experience-hub{position:relative;overflow:hidden;margin:20px 0 24px;padding:clamp(18px,3vw,28px);border:1px solid rgba(0,217,245,.36);border-radius:22px;background:radial-gradient(circle at 90% 0,rgba(0,217,245,.14),transparent 34%),linear-gradient(125deg,rgba(10,36,65,.96),rgba(5,17,33,.96));box-shadow:0 18px 42px rgba(0,0,0,.22)}
+.experience-hub:after{content:"N";position:absolute;right:20px;top:-50px;font-size:13rem;line-height:1;font-weight:900;color:rgba(0,217,245,.035);pointer-events:none}
+.experience-hub-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;position:relative;z-index:1}
+.experience-hub h3{font-size:clamp(1.25rem,3vw,1.7rem);margin:5px 0}
+.experience-hub p{color:var(--muted);margin:5px 0}
+.experience-live{display:inline-flex;align-items:center;gap:7px;padding:6px 10px;border:1px solid rgba(88,231,170,.3);border-radius:999px;color:#8af0bd;font-size:.76rem;white-space:nowrap}
+.experience-live:before{content:"";width:7px;height:7px;border-radius:50%;background:#63e6a6;box-shadow:0 0 12px #63e6a6}
+.experience-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:20px;position:relative;z-index:1}
+.experience-action{display:flex;align-items:center;gap:12px;min-width:0;padding:14px;border:1px solid rgba(0,217,245,.2);border-radius:15px;background:rgba(3,14,29,.58);color:var(--white);text-align:left;cursor:pointer}
+.experience-action:hover{transform:translateY(-3px);border-color:var(--cyan);background:rgba(0,217,245,.09)}
+.experience-action .action-icon{display:grid;place-items:center;flex:0 0 42px;height:42px;border-radius:13px;background:rgba(0,217,245,.12);font-size:1.35rem}
+.experience-action strong,.experience-action small{display:block}
+.experience-action small{color:var(--muted);font-size:.76rem;margin-top:2px}
+.experience-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:16px;position:relative;z-index:1}
+.experience-step{padding:11px 12px;border-radius:12px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.06)}
+.experience-step strong{display:block;color:var(--cyan);font-size:.82rem}
+.experience-step span{font-size:.78rem;color:var(--muted)}
+.profile-stats .card{position:relative;overflow:hidden}
+.profile-stats .card:after{content:"";position:absolute;width:110px;height:110px;right:-55px;top:-55px;border-radius:50%;background:rgba(0,217,245,.055)}
+.profile-stat strong{letter-spacing:-.04em}
+@media(max-width:680px){.experience-actions{grid-template-columns:1fr}.experience-action{padding:12px}.experience-steps{grid-template-columns:1fr}.experience-hub-head{flex-direction:column;gap:8px}}
+@media(prefers-reduced-motion:reduce){.card,.panel,.chart-panel,.btn,.text-button,.quiz-options button,.challenge-option,.profile-avatar,.hero:before,.hero:after{animation:none!important;transition:none!important}}
+
 </style>
 </head>
 <body>
@@ -144,6 +189,15 @@ button,input,select,textarea{font:inherit}button,a,input,select,textarea{-webkit
 <form class="panel" id="nexoraRegister"><h3>Crear cuenta</h3><div class="field"><label for="displayName">Nombre para mostrar</label><input id="displayName" maxlength="40" autocomplete="name" required placeholder="Tu nombre o alias"></div><div class="field"><label for="registerEmail">Correo electrónico</label><input id="registerEmail" type="email" autocomplete="email" required placeholder="tu@correo.com"></div><div class="field"><label for="registerPassword">Crea una contraseña</label><input id="registerPassword" type="password" autocomplete="new-password" minlength="8" required placeholder="Mínimo 8 caracteres"></div><div class="field"><label for="interest">Área de interés</label><select id="interest"><option>Educación financiera</option><option>Contabilidad</option><option>Tributación</option></select></div><button class="btn secondary" type="submit">Crear mi cuenta</button><div id="registerMessage" class="result" role="status" hidden></div></form></div><div class="panel" id="accountStatus" role="status" style="margin-top:1rem"><strong>Estado de cuenta:</strong> <span id="accountStatusText">Comprobando conexión segura…</span><button class="btn secondary" id="nexoraLogout" type="button" hidden style="margin-left:.5rem">Cerrar sesión</button></div><p class="notice">Utiliza un correo al que puedas acceder y nunca compartas tu contraseña. NEXORA está en fase de prototipo: no ingreses números de identidad, datos bancarios reales ni información privada de terceros. Consulta el <button class="text-button" type="button" data-view="privacidad">aviso de privacidad y datos</button>.</p></div></section>
 <section class="view" id="view-perfil"><div class="container page">
 <span class="eyebrow">Tu espacio personal</span><h2 class="page-title">Mi perfil <span class="accent">NEXORA</span></h2><p class="intro">Tu recorrido, tus logros y el siguiente paso. Cada pequeño avance cuenta.</p>
+<div class="experience-hub" aria-labelledby="experienceHubTitle">
+ <div class="experience-hub-head"><div><span class="eyebrow">NEXORA · centro de misiones</span><h3 id="experienceHubTitle">Tu próxima gran conquista empieza aquí.</h3><p>Aprende, experimenta y convierte cada conocimiento en una habilidad para la vida.</p></div><span class="experience-live">Tu espacio está listo</span></div>
+ <div class="experience-actions" aria-label="Accesos rápidos">
+  <button class="experience-action" type="button" data-go="aprender"><span class="action-icon">🚀</span><span><strong>Continuar aprendiendo</strong><small>Entra a tus aulas y niveles</small></span></button>
+  <button class="experience-action" type="button" data-go="laboratorio"><span class="action-icon">🧪</span><span><strong>Entrar al laboratorio</strong><small>Practica con situaciones reales</small></span></button>
+  <button class="experience-action" type="button" data-go="comunidad"><span class="action-icon">🌐</span><span><strong>Ir a la comunidad</strong><small>Comparte, debate y crece</small></span></button>
+ </div>
+ <div class="experience-steps"><div class="experience-step"><strong>01 · APRENDE</strong><span>Descubre conceptos con clases guiadas.</span></div><div class="experience-step"><strong>02 · EXPERIMENTA</strong><span>Resuelve retos y toma decisiones.</span></div><div class="experience-step"><strong>03 · DOMINA</strong><span>Demuestra lo que sabes y desbloquea logros.</span></div></div>
+</div>
 <div class="profile-hero panel"><div class="profile-avatar" id="profileAvatarBig" aria-hidden="true">🦊</div><div class="profile-identity"><span class="eyebrow">¡Hola, explorador/a!</span><h3 id="profileGreeting">Tu aventura empieza aquí</h3><p class="muted" id="profileMascotLine" aria-live="polite">Soy Nexo. Aprendamos algo útil para tu vida, paso a paso.</p><div class="profile-rank" id="profileRank">🌱 Nivel 1 · Explorador</div></div></div>
 <div class="profile-stats grid"><article class="profile-stat card"><span>⚡ Puntos de experiencia</span><strong id="profileXP">0 XP</strong><small id="profileXPNext">Completa una práctica para ganar tus primeros puntos.</small></article><article class="profile-stat card"><span>📚 Evaluaciones intentadas</span><strong id="profileEvaluations">0</strong><small>Intentos registrados en este dispositivo.</small></article><article class="profile-stat card"><span>🔥 Días de aprendizaje</span><strong id="profileStreak">0</strong><small id="profileStreakNote">Registra avances en días distintos para crear tu racha.</small></article></div><div class="grid two profile-insights">
 <section class="panel"><div class="profile-section-heading"><div><span class="eyebrow">Constancia</span><h3>Tu racha semanal</h3></div><span class="profile-pill" id="profileWeekCount">0/7 días</span></div><p class="muted small">Cada día que completes una evaluación, Nexo marcará tu avance.</p><div class="streak-week" id="profileStreakWeek" aria-label="Actividad de los últimos siete días"></div><p class="streak-message" id="profileStreakMessage">Tu primera llama se enciende con una evaluación.</p></section>
