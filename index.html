@@ -692,6 +692,8 @@ function showView(name,historyUpdate=true){if(!viewNames.includes(name))name="in
 navButtons.forEach(b=>b.addEventListener("click",()=>showView(b.dataset.view)));document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>showView(b.dataset.go)));menuToggle.addEventListener("click",()=>{const open=navlinks.classList.toggle("open");menuToggle.setAttribute("aria-expanded",String(open));menuToggle.textContent=open?"✕ Cerrar":"☰ Menú";});window.addEventListener("popstate",()=>showView(location.hash.slice(1)||"inicio",false));window.addEventListener("hashchange",()=>{const n=location.hash.slice(1);if(viewNames.includes(n))showView(n,false);});showView(viewNames.includes(location.hash.slice(1))?location.hash.slice(1):"inicio",false);
 
 // Ruta de aprendizaje dentro de una sola página: Aprender → Clase → Práctica → Calculadora.
+function updateLearningFlowSteps(active){const root=document.getElementById("learningFlowSteps");if(!root)return;[...root.children].forEach((node,index)=>{node.classList.toggle("current",index+1===active);node.classList.toggle("completed",index+1<active);});}
+document.getElementById("completeLessonStep").addEventListener("click",()=>{lessonCompleted=true;const button=document.getElementById("completeLessonStep");button.disabled=true;button.textContent="✓ Clase completada";const practice=document.getElementById("lessonPractice");practice.disabled=false;practice.textContent="Comenzar práctica →";updateLearningFlowSteps(2);});
 function showMoneyQuestion(){
  const q=activePracticeQuestions[practiceIndex];
  document.getElementById("inlineQuestion").textContent=(practiceIndex+1)+". "+q.q;
