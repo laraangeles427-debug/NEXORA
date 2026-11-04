@@ -771,11 +771,29 @@ if(!nexoraCloud){
 } else {
  nexoraStatus("Conexión preparada. Puedes crear una cuenta o iniciar sesión.");
  document.getElementById("nexoraLogin").addEventListener("submit",async e=>{
-  e.preventDefault();const out=document.getElementById("loginMessage");out.hidden=false;out.textContent="Iniciando sesión…";
-  const email=document.getElementById("loginEmail").value.trim(),password=document.getElementById("loginPassword").value;
-  const {data,error}=await nexoraCloud.auth.signInWithPassword({email,password});
-  if(error){out.textContent="No se pudo iniciar sesión: "+error.message;return;}
-  showView("perfil");out.textContent="Sesión iniciada. Cargando tu perfil…";await nexoraLoadCloudState(data.user);out.textContent="¡Bienvenido/a! Tu perfil está listo.";
+  e.preventDefault();
+  const form=e.currentTarget,out=document.getElementById("loginMessage"),submit=form.querySelector('button[type="submit"]');
+  if(submit?.disabled)return;
+  out.hidden=false;out.setAttribute("role","status");out.textContent="Conectando con tu cuenta…";
+  if(submit){submit.disabled=true;submit.textContent="Ingresando…";}
+  try{
+   if(!nexoraCloud)throw new Error("El servicio de cuentas no está disponible. Recarga la página e inténtalo otra vez.");
+   const email=document.getElementById("loginEmail").value.trim(),password=document.getElementById("loginPassword").value;
+   const {data,error}=await nexoraCloud.auth.signInWithPassword({email,password});
+   if(error)throw error;
+   if(!data?.user)throw new Error("La cuenta no devolvió una sesión válida. Comprueba tu correo y contraseña.");
+   nexoraCloudUser=data.user;
+   // La navegación no debe esperar a que termine la sincronización de la nube.
+   showView("perfil");
+   out.textContent="¡Sesión iniciada! Estamos cargando tus datos…";
+   await nexoraLoadCloudState(data.user);
+   out.textContent="¡Bienvenido/a! Tu perfil está listo.";
+  }catch(error){
+   console.error("NEXORA login:",error);
+   out.textContent="No se pudo iniciar sesión: "+(error?.message||"Error inesperado. Comprueba tu conexión e inténtalo nuevamente.");
+  }finally{
+   if(submit){submit.disabled=false;submit.textContent="Iniciar sesión";}
+  }
  });
  document.getElementById("nexoraRegister").addEventListener("submit",async e=>{
   e.preventDefault();const out=document.getElementById("registerMessage");out.hidden=false;out.textContent="Creando cuenta…";
