@@ -1201,6 +1201,7 @@ function renderPracticalChallenge(selected,level){
    const resultTitle=document.createElement("strong");resultTitle.textContent=correct?"¡Bien pensado!":"Revisemos la decisión";
    const resultText=document.createElement("p");resultText.textContent=data.feedback;
    feedback.append(resultTitle,resultText);feedback.hidden=false;
+   if(correct){practicalPassed=true;updateLearningFlowSteps(4);const examButton=document.getElementById("startLevelExam");if(examButton){examButton.hidden=false;examButton.textContent="📝 Iniciar evaluación de nivel →";examButton.scrollIntoView({behavior:"smooth",block:"nearest"});}}
    if(!correct){const retry=document.createElement("button");retry.type="button";retry.className="text-button";retry.textContent="Intentar de nuevo";retry.addEventListener("click",()=>{[...options.children].forEach(el=>{el.disabled=false;el.setAttribute("aria-pressed","false");});feedback.hidden=true;});feedback.appendChild(retry);}
   });
   options.appendChild(button);
