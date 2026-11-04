@@ -715,11 +715,11 @@ function showMoneyQuestion(){
 document.getElementById("inlineNext").addEventListener("click",()=>{if(practiceIndex<activePracticeQuestions.length-1){practiceIndex++;showMoneyQuestion();}});
 document.getElementById("inlineFinish").addEventListener("click",()=>{
  const out=document.getElementById("inlineLessonResult");out.hidden=false;
- const total=activePracticeQuestions.length,percent=Math.round(practiceScore/total*100);
- out.textContent="Práctica completada: "+practiceScore+" de "+total+" ("+percent+"%). "+(percent>=70?"¡Buen trabajo! Ahora demuestra lo aprendido en el examen de nivel.":"Revisa la clase y las explicaciones. La práctica no desbloquea por sí sola el siguiente nivel.");
- const startExam=document.getElementById("startLevelExam");startExam.hidden=false;startExam.textContent="📝 Iniciar examen de nivel · "+({basico:"Básico",intermedio:"Intermedio",avanzado:"Avanzado"}[learningLevel])+" →";
+ const total=activePracticeQuestions.length,percent=Math.round(practiceScore/total*100);practicePassed=percent>=70;
+ const challenge=document.getElementById("practicalChallengeMount"),startExam=document.getElementById("startLevelExam");
  document.getElementById("levelExamPanel").hidden=true;document.getElementById("nextLevelCTA").hidden=true;
- startExam.scrollIntoView({behavior:"smooth",block:"nearest"});
+ if(practicePassed){out.textContent="Práctica superada: "+practiceScore+" de "+total+" ("+percent+"%). Ahora completa el reto aplicado para habilitar la evaluación.";challenge.hidden=false;updateLearningFlowSteps(3);challenge.scrollIntoView({behavior:"smooth",block:"start"});}
+ else{out.textContent="Obtuviste "+percent+"%. Necesitas al menos 70 % para avanzar. Revisa la clase y vuelve a intentarlo; el reto aplicado y la evaluación siguen bloqueados.";challenge.hidden=true;startExam.hidden=true;const retry=document.getElementById("lessonPractice");retry.disabled=false;retry.textContent="Repetir práctica →";updateLearningFlowSteps(2);retry.scrollIntoView({behavior:"smooth",block:"nearest"});}
 });
 
 
