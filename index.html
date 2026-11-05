@@ -1262,8 +1262,13 @@ document.getElementById("technologyClassroomContinue")?.addEventListener("click"
 
 function refreshLearningLevelLocks(selected){
  const saved=readLearningProgress();
- const basic=saved[selected+"-basico"]?.examPassed===true;
- const intermediate=saved[selected+"-intermedio"]?.examPassed===true;
+ const passed=id=>{
+  const entry=saved[id]||{};
+  const examHistory=Array.isArray(entry.history)&&entry.history.some(item=>item&&item.type==="exam"&&Number(item.percent)>=70);
+  return entry.examPassed===true||Number(entry.examPercent)>=70||examHistory;
+ };
+ const basic=passed(selected+"-basico");
+ const intermediate=passed(selected+"-intermedio");
  const unlocked={basico:true,intermedio:basic,avanzado:basic&&intermediate};
  document.querySelectorAll("[data-level]").forEach(btn=>{
   const lev=btn.dataset.level,open=!!unlocked[lev];
