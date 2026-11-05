@@ -883,7 +883,17 @@ document.getElementById("levelExamFinish").addEventListener("click",async()=>{
     next.onclick=()=>window.NEXORA_DOWNLOAD_LEVEL_CERTIFICATE?.({topic,level:"integrador",percent,skills});
    }
   }
-  else if(next){const nextName=learningLevel==="basico"?"intermedio":learningLevel==="intermedio"?"avanzado":null;next.hidden=!(progress[id].examPassed&&nextName);next.textContent=nextName?"¡Evaluación aprobada! Desbloquear nivel "+nextName+" →":"¡Nivel avanzado aprobado! Abre el nivel para presentar el examen integrador";next.onclick=()=>{if(nextName)openLearningLesson(topic,nextName);else showCompletedLearningLevel(topic,"avanzado",progress[id]);};}
+  else if(next&&(topic==="tecnologia"||topic==="inclusion")){
+   const routeKeys=["basico","intermedio","avanzado",...Array.from({length:12},(_,i)=>"nivel_"+String(i+4).padStart(2,"0"))];
+   if(learningLevel==="avanzado"){
+    next.hidden=!passed;next.textContent=passed?"Presentar examen integrador de la fase 1 →":"Vuelve a intentarlo cuando estés preparado";
+    next.onclick=()=>showCompletedLearningLevel(topic,"avanzado",progress[id]);
+   }else{
+    const routeIndex=routeKeys.indexOf(learningLevel),nextId=routeKeys[routeIndex+1];
+    next.hidden=!(passed&&nextId);
+    if(nextId){next.textContent="¡Evaluación aprobada! Desbloquear nivel "+(routeIndex+2)+" →";next.onclick=()=>openLearningLesson(topic,nextId);}
+   }
+  }else if(next){const nextName=learningLevel==="basico"?"intermedio":learningLevel==="intermedio"?"avanzado":null;next.hidden=!(progress[id].examPassed&&nextName);next.textContent=nextName?"¡Evaluación aprobada! Desbloquear nivel "+nextName+" →":"¡Nivel avanzado aprobado! Abre el nivel para presentar el examen integrador";next.onclick=()=>{if(nextName)openLearningLesson(topic,nextName);else showCompletedLearningLevel(topic,"avanzado",progress[id]);};}
   document.getElementById("levelExamProgressFill").style.width="100%";report.scrollIntoView({behavior:"smooth",block:"nearest"});
  }catch(error){
   alert(error.message||"No se pudo calificar la evaluación.");
