@@ -530,7 +530,7 @@ body{background:var(--nx-black)}
 <span class="eyebrow" id="lessonEyebrow">Aula virtual · Primera clase</span>
 <h3 id="lessonTitle" tabindex="-1">Mi dinero con propósito</h3>
 <p id="lessonIntro" class="muted">Comprende los conceptos básicos antes de pasar a la práctica.</p>
-<div class="learning-flow-steps" id="learningFlowSteps" aria-label="Etapas de aprendizaje"><span class="current">1. Clase</span><span>2. Práctica</span><span>3. Reto aplicado</span><span>4. Evaluación</span></div><div class="quiz-sound-row"><button class="text-button" id="quizSoundToggle" type="button" aria-pressed="true">🔊 Sonidos activados</button><span class="muted small">Señal sonora al responder.</span></div>
+<div class="learning-flow-steps" id="learningFlowSteps" aria-label="Etapas de aprendizaje"><span class="current">1. Clase</span><span>2. Práctica</span><span>3. Reto aplicado</span><span>4. Evaluación</span></div>
 <div id="lessonContent"></div>
 <div id="conceptMapMount"></div>
 <div id="practicalChallengeMount" hidden></div>
@@ -741,7 +741,7 @@ function showView(name,historyUpdate=true){if(!viewNames.includes(name))name="in
 navButtons.forEach(b=>b.addEventListener("click",()=>showView(b.dataset.view)));document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>showView(b.dataset.go)));menuToggle.addEventListener("click",()=>{const open=navlinks.classList.toggle("open");menuToggle.setAttribute("aria-expanded",String(open));menuToggle.textContent=open?"✕ Cerrar":"☰ Menú";});window.addEventListener("popstate",()=>showView(location.hash.slice(1)||"inicio",false));window.addEventListener("hashchange",()=>{const n=location.hash.slice(1);if(viewNames.includes(n))showView(n,false);});showView("inicio",false);if(location.hash)history.replaceState({view:"inicio"},"",location.pathname+location.search);
 
 // Ruta de aprendizaje dentro de una sola página: Aprender → Clase → Práctica → Calculadora.
-let nexoraQuizSoundEnabled=true;try{nexoraQuizSoundEnabled=localStorage.getItem("nexora-quiz-sound-v1")!=="off";}catch(_){} function playNexoraQuizSound(result="select"){if(!nexoraQuizSoundEnabled)return;try{const AudioCtx=window.AudioContext||window.webkitAudioContext;if(!AudioCtx)return;const ctx=new AudioCtx(),osc=ctx.createOscillator(),gain=ctx.createGain(),now=ctx.currentTime;osc.connect(gain);gain.connect(ctx.destination);const notes=result==="correct"?[660,880]:result==="wrong"?[260,185]:[520];osc.type="sine";osc.frequency.setValueAtTime(notes[0],now);if(notes.length>1)osc.frequency.exponentialRampToValueAtTime(notes[1],now+.13);gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(.12,now+.018);gain.gain.exponentialRampToValueAtTime(.0001,now+.2);osc.start(now);osc.stop(now+.21);osc.onended=()=>ctx.close();}catch(_){}} const quizSoundToggle=document.getElementById("quizSoundToggle");if(quizSoundToggle){const paintSoundToggle=()=>{quizSoundToggle.textContent=nexoraQuizSoundEnabled?"🔊 Sonidos activados":"🔇 Sonidos desactivados";quizSoundToggle.setAttribute("aria-pressed",String(nexoraQuizSoundEnabled));};paintSoundToggle();quizSoundToggle.addEventListener("click",()=>{nexoraQuizSoundEnabled=!nexoraQuizSoundEnabled;try{localStorage.setItem("nexora-quiz-sound-v1",nexoraQuizSoundEnabled?"on":"off");}catch(_){}paintSoundToggle();if(nexoraQuizSoundEnabled)playNexoraQuizSound("select");});} function updateLearningFlowSteps(active){const root=document.getElementById("learningFlowSteps");if(!root)return;[...root.children].forEach((node,index)=>{node.classList.toggle("current",index+1===active);node.classList.toggle("completed",index+1<active);});}
+let nexoraUiAudio=null;function playNexoraQuizSound(){try{const AudioCtx=window.AudioContext||window.webkitAudioContext;if(!AudioCtx)return;if(!nexoraUiAudio)nexoraUiAudio=new AudioCtx();const ctx=nexoraUiAudio;const ring=()=>{const now=ctx.currentTime;[[740,0],[988,.045]].forEach(([hz,delay])=>{const osc=ctx.createOscillator(),gain=ctx.createGain();osc.type="sine";osc.frequency.setValueAtTime(hz,now+delay);gain.gain.setValueAtTime(.0001,now+delay);gain.gain.exponentialRampToValueAtTime(.035,now+delay+.012);gain.gain.exponentialRampToValueAtTime(.0001,now+delay+.115);osc.connect(gain);gain.connect(ctx.destination);osc.start(now+delay);osc.stop(now+delay+.125);});};if(ctx.state==="suspended")ctx.resume().then(ring).catch(()=>{});else ring();}catch(_){}}document.addEventListener("click",event=>{const target=event.target instanceof Element?event.target.closest("button,a,[role=button],input,select,textarea,summary,[data-go]"):null;if(!target||target.disabled||target.getAttribute("aria-disabled")==="true")return;playNexoraQuizSound();},true);function updateLearningFlowSteps(active){const root=document.getElementById("learningFlowSteps");if(!root)return;[...root.children].forEach((node,index)=>{node.classList.toggle("current",index+1===active);node.classList.toggle("completed",index+1<active);});}
 document.getElementById("completeLessonStep").addEventListener("click",()=>{lessonCompleted=true;const button=document.getElementById("completeLessonStep");button.disabled=true;button.textContent="✓ Clase completada";const practice=document.getElementById("lessonPractice");practice.disabled=false;practice.hidden=false;practice.textContent="Comenzar práctica →";document.getElementById("inlineLessonQuiz").hidden=true;document.getElementById("inlineLessonResult").hidden=true;updateLearningFlowSteps(2);});
 function showMoneyQuestion(){
  const q=activePracticeQuestions[practiceIndex];
@@ -754,7 +754,7 @@ function showMoneyQuestion(){
  document.getElementById("inlineScore").textContent="Pregunta "+(practiceIndex+1)+" de "+activePracticeQuestions.length;
  practiceAnswered=false;
  q.o.forEach((label,i)=>{const b=document.createElement("button");b.type="button";b.textContent=label;b.addEventListener("click",()=>{
-  if(practiceAnswered)return;practiceAnswered=true;const ok=i===q.a;playNexoraQuizSound(ok?"correct":"wrong");if(ok)practiceScore++;
+  if(practiceAnswered)return;practiceAnswered=true;const ok=i===q.a;if(ok)practiceScore++;
   [...options.children].forEach((el,j)=>{el.disabled=true;if(j===q.a)el.classList.add("correct");else if(j===i)el.classList.add("wrong");});
   const fb=document.getElementById("inlineFeedback");fb.hidden=false;fb.classList.remove("quiz-feedback-pop");void fb.offsetWidth;fb.classList.add("quiz-feedback-pop");fb.textContent=(ok?"✓ ¡Correcto! Muy bien. ":"✕ ¡Casi! Esa respuesta no es correcta. ")+q.why;
   document.getElementById("inlineNext").disabled=false;
@@ -784,7 +784,7 @@ function renderLevelExamQuestion(){
   const button=document.createElement("button");button.type="button";button.textContent=String.fromCharCode(65+index)+". "+label;
   button.addEventListener("click",()=>{
    if(levelExamAnswered)return;
-   levelExamAnswered=true;playNexoraQuizSound("select");q.userAnswer=index;
+   levelExamAnswered=true;q.userAnswer=index;
    [...options.children].forEach((el,j)=>{el.disabled=true;if(j===index)el.classList.add("selected");});
    feedback.textContent="Respuesta registrada. La evaluación se calificará al entregar todas tus respuestas.";
    feedback.hidden=false;next.disabled=false;
@@ -796,7 +796,7 @@ function renderLevelExamQuestion(){
 let levelExamSessionId=null;
 async function invokeNexoraAssessment(payload){
  if(!nexoraCloud)throw new Error("El servicio de evaluaciones no está disponible.");
- const {data,error}=await nexoraCloud.functions.invoke("nexora-assessments",{body:payload});
+ const request=nexoraCloud.functions.invoke("nexora-assessments",{body:payload});let timeoutId;const timeout=new Promise((_,reject)=>{timeoutId=setTimeout(()=>reject(new Error("El servidor está tardando más de lo esperado. Tu evaluación sigue protegida; espera unos segundos y vuelve a consultar antes de iniciar otra.")),20000);});let data,error;try{({data,error}=await Promise.race([request,timeout]));}finally{clearTimeout(timeoutId);}
  if(error){
   let message=error.message||"No se pudo conectar con el servidor de evaluaciones.";
   try{const context=error.context;if(context&&typeof context.json==="function"){const detail=await context.json();if(detail?.error)message=detail.error;}}catch(_){}
@@ -843,7 +843,7 @@ document.getElementById("levelExamFinish").addEventListener("click",async()=>{
  const finishButton=document.getElementById("levelExamFinish");
  if(!levelExamSessionId)return;
  if(activeLevelExam.some(q=>!Number.isInteger(q.userAnswer))){alert("Responde todas las preguntas antes de entregar.");return;}
- finishButton.disabled=true;finishButton.textContent="Calificando en servidor…";
+ finishButton.disabled=true;finishButton.textContent="Calificando…";document.getElementById("levelExamIntro").textContent="Estamos verificando tus respuestas en el servidor seguro de NEXORA. Esto puede tardar unos segundos; no cierres esta ventana.";
  try{
   const result=await invokeNexoraAssessment({action:"submit",session_id:levelExamSessionId,answers:activeLevelExam.map(q=>q.userAnswer)});
   const total=result.total,percent=result.percent,passed=result.passed,skills=result.skills||[];
@@ -870,9 +870,9 @@ document.getElementById("levelExamFinish").addEventListener("click",async()=>{
   document.getElementById("levelExamProgressFill").style.width="100%";report.scrollIntoView({behavior:"smooth",block:"nearest"});
  }catch(error){
   alert(error.message||"No se pudo calificar la evaluación.");
-  finishButton.disabled=false;finishButton.textContent="Entregar y ver resultado";
+  finishButton.disabled=false;finishButton.textContent="Volver a consultar resultado";
  }finally{
-  if(document.getElementById("levelExamReport").hidden){finishButton.disabled=false;finishButton.textContent="Entregar y ver resultado";}
+  if(document.getElementById("levelExamReport").hidden){finishButton.disabled=false;finishButton.textContent="Volver a consultar resultado";}
  }
 });
 const profileStorageKey="nexora-profile-v1",profileActivityKey="nexora-profile-activity-v1";
@@ -1266,7 +1266,7 @@ function renderPracticalChallenge(selected,level){
    feedback.replaceChildren();
    const resultTitle=document.createElement("strong");resultTitle.textContent=correct?"¡Bien pensado!":"Revisemos la decisión";
    const resultText=document.createElement("p");resultText.textContent=data.feedback;
-   feedback.append(resultTitle,resultText);feedback.hidden=false;feedback.classList.remove("quiz-feedback-pop");void feedback.offsetWidth;feedback.classList.add("quiz-feedback-pop");playNexoraQuizSound(correct?"correct":"wrong");
+   feedback.append(resultTitle,resultText);feedback.hidden=false;feedback.classList.remove("quiz-feedback-pop");void feedback.offsetWidth;feedback.classList.add("quiz-feedback-pop");
    if(correct){practicalPassed=true;updateLearningFlowSteps(4);const examButton=document.getElementById("startLevelExam");if(examButton){examButton.hidden=false;examButton.textContent="📝 Iniciar evaluación de nivel →";examButton.scrollIntoView({behavior:"smooth",block:"nearest"});}}
    if(!correct){const retry=document.createElement("button");retry.type="button";retry.className="text-button";retry.textContent="Intentar de nuevo";retry.addEventListener("click",()=>{[...options.children].forEach(el=>{el.disabled=false;el.setAttribute("aria-pressed","false");});feedback.hidden=true;});feedback.appendChild(retry);}
   });
