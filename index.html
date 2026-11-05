@@ -806,7 +806,7 @@ async function invokeNexoraAssessment(payload){
  return data;
 }
 document.getElementById("startLevelExam").addEventListener("click",async()=>{
- if(!lessonCompleted||!practicePassed||!practicalPassed){const out=document.getElementById("inlineLessonResult");out.hidden=false;out.textContent="Completa en orden la clase, la práctica con al menos 70 % y el reto aplicado antes de iniciar la evaluación.";return;}
+ if(nexoraExamMode!=="integrative"&&(!lessonCompleted||!practicePassed||!practicalPassed)){const out=document.getElementById("inlineLessonResult");out.hidden=false;out.textContent="Completa en orden la clase, la práctica con al menos 70 % y el reto aplicado antes de iniciar la evaluación.";return;}
  const button=document.getElementById("startLevelExam");
  button.disabled=true;button.textContent="Preparando evaluación…";
  try{
@@ -816,7 +816,9 @@ document.getElementById("startLevelExam").addEventListener("click",async()=>{
   const practicePrompts=[...(learningLessons[topic]?.[learningLevel]?.questions||[]).map(q=>q.q),...extraPracticeQuestions(topic,learningLevel).map(q=>q.q)];
   const previouslyAsked=oldHistory.flatMap(h=>Array.isArray(h.questionTexts)?h.questionTexts:[]);
   const requestId=crypto.randomUUID();
-  const data=await invokeNexoraAssessment({action:"start",area:topic,level:learningLevel,request_id:requestId,exclude_prompts:practicePrompts.map(normalizeQuestion),previous_prompts:previouslyAsked.map(normalizeQuestion)});
+  const examLevel=nexoraExamMode==="integrative"?"integrador":learningLevel;
+  const priorQuestions=nexoraExamMode==="integrative"?["basico","intermedio","avanzado"].flatMap(l=>(progressBeforeExam[topic+"-"+l]?.history||[]).flatMap(x=>x.questionTexts||[])):previouslyAsked;
+  const data=await invokeNexoraAssessment({action:"start",area:topic,level:examLevel,request_id:requestId,exclude_prompts:practicePrompts.map(normalizeQuestion),previous_prompts:priorQuestions.map(normalizeQuestion)});
   levelExamSessionId=data.session_id;
   activeLevelExam=(data.questions||[]).map(q=>({id:q.id,q:q.prompt,o:q.options,skill:q.skill||"Aplicación",userCorrect:false,userAnswer:null}));
   if(activeLevelExam.length!==4)throw new Error("El servidor no devolvió las cuatro preguntas necesarias.");
@@ -826,8 +828,8 @@ document.getElementById("startLevelExam").addEventListener("click",async()=>{
   document.getElementById("levelExamQuestion").hidden=false;
   document.getElementById("levelExamOptions").hidden=false;
   document.getElementById("levelExamPanel").hidden=false;
-  document.getElementById("levelExamTitle").textContent="Evaluación protegida · "+lessons[topic].title+" · "+learningLevel;
-  document.getElementById("levelExamIntro").textContent="4 preguntas seleccionadas en el servidor. Las respuestas correctas no se envían al navegador; el resultado se calcula al entregar la evaluación. Necesitas al menos 70 % para aprobar.";
+  document.getElementById("levelExamTitle").textContent=nexoraExamMode==="integrative"?"Examen integrador · "+lessons[topic].title:"Evaluación protegida · "+lessons[topic].title+" · "+learningLevel;
+  document.getElementById("levelExamIntro").textContent=nexoraExamMode==="integrative"?"Preguntas de los niveles básico, intermedio y avanzado. Necesitas al menos 70 % para obtener el certificado integral.":"4 preguntas seleccionadas en el servidor. Las respuestas correctas no se envían al navegador; el resultado se calcula al entregar la evaluación. Necesitas al menos 70 % para aprobar.";
   renderLevelExamQuestion();
   document.getElementById("levelExamPanel").scrollIntoView({behavior:"smooth",block:"start"});
  }catch(error){
@@ -835,7 +837,7 @@ document.getElementById("startLevelExam").addEventListener("click",async()=>{
   document.getElementById("levelExamIntro").textContent=error.message||"No se pudo iniciar la evaluación.";
  }finally{
   button.disabled=false;
-  button.textContent="📝 Iniciar examen de nivel · "+({basico:"Básico",intermedio:"Intermedio",avanzado:"Avanzado"}[learningLevel])+" →";
+  button.textContent=nexoraExamMode==="integrative"?"Iniciar examen integrador →":"📝 Iniciar examen de nivel · "+({basico:"Básico",intermedio:"Intermedio",avanzado:"Avanzado"}[learningLevel])+" →";
  }
 });
 document.getElementById("levelExamNext").addEventListener("click",()=>{if(levelExamIndex<activeLevelExam.length-1){levelExamIndex++;renderLevelExamQuestion();}});
@@ -859,19 +861,20 @@ document.getElementById("levelExamFinish").addEventListener("click",async()=>{
   report.innerHTML='<div class="exam-report-grid"><div class="exam-report-stat"><span>Resultado de la evaluación</span><strong>'+levelExamScore+'/'+total+'</strong><small>'+percent+'% de respuestas correctas</small></div><div class="exam-report-stat"><span>Estado del nivel</span><strong>'+(passed?'Aprobado ✓':'Por reforzar')+'</strong><small>'+(passed?'Cumpliste el mínimo del 70 %.':'Necesitas 70 % para aprobar.')+'</small></div></div><h4>📊 Tu mapa de conocimientos</h4><p class="muted">Las barras resumen tu resultado por habilidad.</p><div class="exam-skill-list">'+rows+'</div><div class="exam-report-note"><strong>Lo que ya dominas:</strong> '+(strong.length?strong.join(", "):"sigue practicando para consolidar tus habilidades.")+'<br><strong>Conviene reforzar:</strong> '+(weak.length?weak.join(", "):"ninguna habilidad quedó por debajo del 70 % en esta muestra.")+'</div><h4>Revisión de respuestas</h4>'+review+'<p class="muted">El resultado fue calculado y guardado por el servidor NEXORA. Este informe resume esta evaluación y sirve como orientación de estudio.</p>';
   if(passed){
    const certificateButton=document.createElement("button");certificateButton.type="button";certificateButton.className="btn secondary";certificateButton.textContent="↓ Descargar certificado";certificateButton.setAttribute("aria-label","Descargar certificado de aprobación del nivel");
-   certificateButton.addEventListener("click",()=>{if(window.NEXORA_DOWNLOAD_LEVEL_CERTIFICATE)window.NEXORA_DOWNLOAD_LEVEL_CERTIFICATE({topic,level:learningLevel,percent,skills});else alert("El módulo de certificados todavía se está preparando. Recarga la página e inténtalo de nuevo.");});
+   certificateButton.addEventListener("click",()=>{if(window.NEXORA_DOWNLOAD_LEVEL_CERTIFICATE)window.NEXORA_DOWNLOAD_LEVEL_CERTIFICATE({topic,level:nexoraExamMode==="integrative"?"integrador":learningLevel,percent,skills});else alert("El módulo de certificados todavía se está preparando. Recarga la página e inténtalo de nuevo.");});
    const certificateActions=document.createElement("div");certificateActions.className="lesson-actions";certificateActions.appendChild(certificateButton);report.appendChild(certificateActions);
   }
-  const progress=readLearningProgress(),id=topic+"-"+learningLevel,prev=progress[id]||{attempts:0,bestPercent:0},date=new Date().toISOString(),history=Array.isArray(prev.history)?prev.history:[];
-  history.push({date,percent,score:levelExamScore,total,topic,level:learningLevel,type:"exam",skills,questionTexts:activeLevelExam.map(q=>q.q)});
+  const progress=readLearningProgress(),savedLevel=nexoraExamMode==="integrative"?"integrador":learningLevel,id=topic+"-"+savedLevel,prev=progress[id]||{attempts:0,bestPercent:0},date=new Date().toISOString(),history=Array.isArray(prev.history)?prev.history:[];
+  history.push({date,percent,score:levelExamScore,total,topic,level:savedLevel,type:nexoraExamMode==="integrative"?"integrative_exam":"exam",skills,questionTexts:activeLevelExam.map(q=>q.q)});
   progress[id]={...prev,attempts:(Number(prev.attempts)||0)+1,bestPercent:Math.max(Number(prev.bestPercent)||0,percent),lastPercent:percent,examPercent:percent,examPassed:prev.examPassed===true||passed,updatedAt:date,history:history.slice(-60),lastExamSkills:skills};
   try{localStorage.setItem(learningProgressKey,JSON.stringify(progress));}catch(_){}
   recordProfileActivity();renderLearningProgress();renderProfile();
   if(typeof refreshLearningLevelLocks==="function")refreshLearningLevelLocks(topic);
   if(typeof nexoraQueueSync==="function")nexoraQueueSync();
   if(window.NEXORA_REFRESH_LEADERBOARD)window.NEXORA_REFRESH_LEADERBOARD();
-  const next=document.getElementById("nextLevelCTA"),nextName=learningLevel==="basico"?"intermedio":learningLevel==="intermedio"?"avanzado":null;
-  if(next){next.hidden=!(progress[id].examPassed&&nextName);next.textContent=nextName?"¡Evaluación aprobada! Desbloquear nivel "+nextName+" →":"¡Ruta avanzada completada! Explora otra materia";next.onclick=()=>{if(nextName)openLearningLesson(topic,nextName);else document.querySelector('[data-topic="'+topic+'"]')?.click();};}
+  const next=document.getElementById("nextLevelCTA");
+  if(next&&nexoraExamMode==="integrative"){next.hidden=!passed;next.textContent=passed?"✓ Evaluación integradora aprobada · Descargar certificado":"Vuelve a intentarlo cuando estés preparado";next.onclick=()=>window.NEXORA_DOWNLOAD_LEVEL_CERTIFICATE?.({topic,level:"integrador",percent,skills});}
+  else if(next){const nextName=learningLevel==="basico"?"intermedio":learningLevel==="intermedio"?"avanzado":null;next.hidden=!(progress[id].examPassed&&nextName);next.textContent=nextName?"¡Evaluación aprobada! Desbloquear nivel "+nextName+" →":"¡Nivel avanzado aprobado! Abre el nivel para presentar el examen integrador";next.onclick=()=>{if(nextName)openLearningLesson(topic,nextName);else showCompletedLearningLevel(topic,"avanzado",progress[id]);};}
   document.getElementById("levelExamProgressFill").style.width="100%";report.scrollIntoView({behavior:"smooth",block:"nearest"});
  }catch(error){
   alert(error.message||"No se pudo calificar la evaluación.");
@@ -1342,12 +1345,12 @@ function refreshLearningLevelLocks(selected){
  const intermediate=passed(selected+"-intermedio");
  const unlocked={basico:true,intermedio:basic,avanzado:basic&&intermediate};
  document.querySelectorAll("[data-level]").forEach(btn=>{
-  const lev=btn.dataset.level,open=!!unlocked[lev];
+  const lev=btn.dataset.level,open=!!unlocked[lev],done=open&&passed(selected+"-"+lev);
   btn.disabled=!open;
-  btn.textContent=open?(lev==="basico"?"Comenzar nivel básico →":lev==="intermedio"?"Comenzar nivel intermedio →":"Comenzar nivel avanzado →"):(lev==="intermedio"?"🔒 Completa y aprueba el nivel 1":"🔒 Completa y aprueba el nivel 2");
-  btn.title=open?"Nivel disponible":lev==="intermedio"?"Aprueba el nivel 1 con al menos 70 % para desbloquearlo":"Aprueba primero los niveles 1 y 2 con al menos 70 % cada uno";
-  btn.setAttribute("aria-label",open?"Abrir "+lev:"Bloqueado: "+btn.title);
-  btn.classList.toggle("level-locked",!open);
+  btn.textContent=done?"✓ Nivel "+({basico:"básico",intermedio:"intermedio",avanzado:"avanzado"}[lev])+" concluido · Ver certificado":open?(lev==="basico"?"Comenzar nivel básico →":lev==="intermedio"?"Comenzar nivel intermedio →":"Comenzar nivel avanzado →"):(lev==="intermedio"?"🔒 Completa y aprueba el nivel 1":"🔒 Completa y aprueba el nivel 2");
+  btn.title=done?"Nivel aprobado. Consulta tu certificado y continúa.":open?"Nivel disponible":lev==="intermedio"?"Aprueba el nivel 1 con al menos 70 % para desbloquearlo":"Aprueba primero los niveles 1 y 2 con al menos 70 % cada uno";
+  btn.setAttribute("aria-label",done?"Nivel "+lev+" concluido: ver certificado":open?"Abrir "+lev:"Bloqueado: "+btn.title);
+  btn.classList.toggle("level-locked",!open);btn.classList.toggle("level-completed",done);
  });
  return unlocked;
 }
@@ -1356,6 +1359,10 @@ function openLearningLesson(selected,level){
  const unlocked=refreshLearningLevelLocks(selected);
  if(!unlocked[level])return;
  topic=selected;learningLevel=level;updateLearningGuide(selected,level);
+ const completedRecord=readLearningProgress()[selected+"-"+level]||{};
+ if(completedRecord.examPassed===true||Number(completedRecord.examPercent)>=70||(Array.isArray(completedRecord.history)&&completedRecord.history.some(x=>x&&x.type==="exam"&&Number(x.percent)>=70))){showCompletedLearningLevel(selected,level,completedRecord);return;}
+ nexoraExamMode="level";document.getElementById("learningFlowSteps").hidden=false;
+ ["completeLessonStep","lessonPractice","readLesson"].forEach(id=>{document.getElementById(id).hidden=false;});
  const names={basico:"Básico",intermedio:"Intermedio",avanzado:"Avanzado"};
  const material=learningLessons[selected][level];
  document.getElementById("learningLevels").hidden=true;
@@ -1403,6 +1410,45 @@ document.getElementById("lessonContent").innerHTML=material.html+(subjectClassHT
  document.getElementById("lessonPractice").textContent="Practicar y evaluar · "+names[level]+" →";
  resetQuiz();showView("aprender");
  requestAnimationFrame(()=>{document.getElementById("lessonTitle").focus({preventScroll:true});window.scrollTo({top:0,behavior:"auto"});});
+}
+function showCompletedLearningLevel(selected,level,record){
+ const names={basico:"Básico",intermedio:"Intermedio",avanzado:"Avanzado"},areaName=lessons[selected].title,percent=Math.max(Number(record.bestPercent)||0,Number(record.examPercent)||0);
+ document.getElementById("lessonPanel").hidden=false;document.getElementById("learningLevels").hidden=true;
+ document.getElementById("lessonEyebrow").textContent="Tu avance · "+areaName;
+ document.getElementById("lessonTitle").textContent="¡Nivel "+names[level]+" concluido!";
+ document.getElementById("lessonIntro").textContent="Este nivel ya está aprobado y guardado. No necesitas repetir sus clases ni su evaluación.";
+ document.getElementById("learningFlowSteps").hidden=true;
+ document.getElementById("lessonContent").innerHTML="<section class='lesson-complete-card'><div class='lesson-complete-mark'>✓</div><span class='eyebrow'>NIVEL APROBADO</span><h3>"+names[level]+"</h3><p>"+areaName+" · Resultado registrado: <strong>"+percent+"%</strong></p><p>Tu aprendizaje queda concluido. Puedes consultar tu certificado y continuar.</p></section>";
+ ["conceptMapMount","practicalChallengeMount","inlineLessonQuiz","inlineLessonResult","levelExamPanel"].forEach(id=>{const el=document.getElementById(id);if(el)el.hidden=true;});
+ ["completeLessonStep","lessonPractice","readLesson","startLevelExam"].forEach(id=>{const el=document.getElementById(id);if(el)el.hidden=true;});
+ const next=document.getElementById("nextLevelCTA");next.hidden=false;
+ const actions=document.createElement("div");actions.className="lesson-actions";
+ const cert=document.createElement("button");cert.type="button";cert.className="btn secondary";cert.textContent="↓ Descargar certificado del nivel";
+ cert.addEventListener("click",()=>window.NEXORA_DOWNLOAD_LEVEL_CERTIFICATE?.({topic:selected,level,percent,skills:record.lastExamSkills||[]}));actions.appendChild(cert);
+ document.getElementById("lessonContent").appendChild(actions);
+ if(level==="avanzado"){
+  const integrated=readLearningProgress()[selected+"-integrador"]||{};
+  if(integrated.examPassed===true){next.textContent="✓ Examen integrador aprobado · Descargar certificado";next.onclick=()=>window.NEXORA_DOWNLOAD_LEVEL_CERTIFICATE?.({topic:selected,level:"integrador",percent:integrated.bestPercent||integrated.examPercent||100,skills:integrated.lastExamSkills||[]});}
+  else{next.textContent="📝 Presentar examen integrador de los tres niveles →";next.onclick=()=>startIntegrativeAssessment(selected);}
+ }else{const nextName=level==="basico"?"intermedio":"avanzado";next.textContent="Pasar al nivel "+nextName+" →";next.onclick=()=>openLearningLesson(selected,nextName);}
+ showView("aprender");requestAnimationFrame(()=>document.getElementById("lessonPanel").scrollIntoView({behavior:"smooth",block:"start"}));
+}
+let nexoraExamMode="level";
+function startIntegrativeAssessment(selected){
+ const p=readLearningProgress();
+ if(!["basico","intermedio","avanzado"].every(l=>{const x=p[selected+"-"+l]||{};return x.examPassed===true||Number(x.examPercent)>=70;})){alert("Primero debes aprobar los niveles básico, intermedio y avanzado.");return;}
+ topic=selected;learningLevel="avanzado";nexoraExamMode="integrative";
+ document.getElementById("lessonPanel").hidden=false;document.getElementById("learningLevels").hidden=true;
+ document.getElementById("lessonEyebrow").textContent="Evaluación final · "+lessons[selected].title;
+ document.getElementById("lessonTitle").textContent="Examen integrador";
+ document.getElementById("lessonIntro").textContent="Preguntas de los niveles básico, intermedio y avanzado. Necesitas al menos 70 % para obtener el certificado integral.";
+ document.getElementById("learningFlowSteps").hidden=true;
+ document.getElementById("lessonContent").innerHTML="<section class='lesson-complete-card'><span class='eyebrow'>EVALUACIÓN INTEGRADORA</span><h3>Demuestra todo lo aprendido</h3><p>El servidor seleccionará preguntas del banco de los tres niveles y calificará tus respuestas de forma segura.</p></section>";
+ ["conceptMapMount","practicalChallengeMount","inlineLessonQuiz","inlineLessonResult"].forEach(id=>{const el=document.getElementById(id);if(el)el.hidden=true;});
+ ["completeLessonStep","lessonPractice","readLesson"].forEach(id=>{const el=document.getElementById(id);if(el)el.hidden=true;});
+ const start=document.getElementById("startLevelExam");start.hidden=false;start.disabled=false;start.textContent="Iniciar examen integrador →";
+ document.getElementById("levelExamPanel").hidden=true;document.getElementById("levelExamReport").hidden=true;
+ showView("aprender");start.scrollIntoView({behavior:"smooth",block:"center"});
 }
 function openLearningArea(selected){if(!lessons[selected]||!learningLessons[selected])return;window.NEXORA_ACTIVE_LEARNING_AREA=selected;topic=selected;updateLearningGuide(selected,"start");document.getElementById("learningAreas").hidden=true;document.getElementById("learningIntro").hidden=true;document.getElementById("learningProgressPanel").hidden=true;document.getElementById("toggleLearningProgress").hidden=true;document.getElementById("learningLevels").hidden=false;document.getElementById("learningLevelsTitle").textContent="Aula de "+lessons[selected].title;document.getElementById("learningPageTitle").textContent="Aula de "+lessons[selected].title;document.getElementById("lessonPanel").hidden=true;refreshLearningLevelLocks(selected);showView("aprender");}
 document.querySelectorAll("[data-topic]").forEach(b=>b.addEventListener("click",()=>openLearningArea(b.dataset.topic)));
@@ -1974,14 +2020,14 @@ const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition
   const labels={basic:"CERTIFICADO DE LOGRO",distinction:"DISTINCIÓN DE ÁREA",premium:"RECONOCIMIENTO INTEGRAL"};
   const safeName=esc(name||"Estudiante NEXORA"),safeSubject=esc(subject||"Ruta integral NEXORA"),safeLevel=esc(level||"Trayectoria integral"),safeSkill=esc(skill||"Aprendizaje financiero, contable y tributario"),safeSubtitle=esc(subtitle);
   const tierClass=tier==="premium"?"premium":tier==="distinction"?"distinction":"basic";
-  const title=tier==="premium"?"NEXUS INTEGRAL":tier==="distinction"?"Distinción de Aprendizaje":"Certificado de Aprobación";
+  const title=tier==="premium"?"NEXUS INTEGRAL":tier==="distinction"?"Distinción de Aprendizaje":level==="Examen integrador · Básico, Intermedio y Avanzado"?"Certificado Integral NEXORA":"Certificado de Aprobación";
   const percent=Number.isFinite(Number(score))?Math.max(0,Math.min(100,Number(score))):100;
-  const copy=tier==="premium"?"ha culminado la ruta integral de aprendizaje reconocida por NEXORA.":tier==="distinction"?"ha demostrado un desempeño destacado en el área de aprendizaje indicada.":"ha aprobado satisfactoriamente la evaluación del nivel indicado, alcanzando el porcentaje mínimo requerido.";
+  const copy=tier==="premium"?"ha culminado la ruta integral de aprendizaje reconocida por NEXORA.":tier==="distinction"?"ha demostrado un desempeño destacado en el área de aprendizaje indicada.":level==="Examen integrador · Básico, Intermedio y Avanzado"?"ha aprobado la evaluación integradora de los niveles básico, intermedio y avanzado.":"ha aprobado satisfactoriamente la evaluación del nivel indicado, alcanzando el porcentaje mínimo requerido.";
   win.document.open();
   win.document.write(`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title} · NEXORA</title><style>
 *{box-sizing:border-box}
 :root{--navy:#07172b;--navy2:#102b47;--cyan:#00b9dc;--gold:#c7a66a;--ink:#182a3d;--muted:#647386;--paper:#f8f5ed}
-html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif;color:var(--ink)}
+html,body{margin:0;min-height:100%;font-family:"Times New Roman",Times,serif;color:var(--ink)}
 body{padding:26px;background:#e9edf2}
 .certificate{position:relative;isolation:isolate;overflow:hidden;display:grid;grid-template-columns:27% 73%;width:min(100%,1120px);aspect-ratio:297/210;margin:0 auto;background:var(--paper);border:1px solid #d7c49c;box-shadow:0 20px 55px rgba(7,23,43,.18)}
 .certificate:before{content:"";position:absolute;inset:9px;z-index:-1;border:1px solid rgba(181,145,83,.62);pointer-events:none}
@@ -1997,12 +2043,12 @@ body{padding:26px;background:#e9edf2}
 .rail-bottom{font-size:8px;line-height:1.7;letter-spacing:1.5px;text-transform:uppercase;color:#bdcad6}
 .main{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px 54px 25px;position:relative}
 .kicker{font-size:9px;font-weight:800;letter-spacing:3px;color:#8b7045;text-transform:uppercase}
-.heading{font-family:Georgia,"Times New Roman",serif;font-size:clamp(25px,3vw,39px);font-weight:500;letter-spacing:.5px;color:var(--navy);margin:12px 0 7px}
-.intro{font-family:Georgia,serif;font-size:14px;color:#5f6e7d;margin:8px 0 5px}
-.person{font-family:"Segoe Script","Brush Script MT",cursive;font-size:clamp(27px,3.5vw,43px);font-style:italic;color:#087f9d;line-height:1.25;margin:5px 0 9px;padding:0 15px 7px;border-bottom:1px solid #c8ad7c;max-width:100%;overflow-wrap:anywhere}
-.copy{font-family:Georgia,serif;font-size:12px;line-height:1.55;color:#536273;max-width:650px;margin:6px auto}
+.heading{font-family:"Times New Roman",Times,serif;font-size:clamp(28px,3.2vw,42px);font-weight:500;letter-spacing:.5px;color:var(--navy);margin:12px 0 7px}
+.intro{font-family:"Times New Roman",Times,serif;font-size:15px;color:#5f6e7d;margin:8px 0 5px}
+.person{font-family:"URW Chancery L","Brush Script MT","Segoe Script","Times New Roman",cursive;font-size:clamp(31px,3.8vw,48px);font-style:italic;color:#087f9d;line-height:1.25;margin:5px 0 9px;padding:0 15px 7px;border-bottom:1px solid #c8ad7c;max-width:100%;overflow-wrap:anywhere}
+.copy{font-family:"Times New Roman",Times,serif;font-size:13px;line-height:1.55;color:#536273;max-width:650px;margin:6px auto}
 .subject{margin-top:13px;padding:8px 19px;border:1px solid #d8c49a;background:#f1eadb;color:#243b52;font-size:11px;font-weight:800;letter-spacing:1.1px;text-transform:uppercase}
-.level{font-family:Georgia,serif;font-size:17px;font-weight:700;color:#122b45;margin:11px 0 4px}
+.level{font-family:"Times New Roman",Times,serif;font-size:19px;font-weight:700;color:#122b45;margin:11px 0 4px}
 .skill{font-size:9px;line-height:1.5;color:#6b7785;max-width:600px;margin:3px auto}
 .result{display:inline-flex;align-items:center;gap:9px;margin-top:12px;padding:8px 16px;border-radius:30px;background:#e4f4f4;border:1px solid #a9d7d8;color:#116b75;font-size:10px;font-weight:800;letter-spacing:.4px}
 .result-mark{width:17px;height:17px;display:grid;place-items:center;border-radius:50%;background:#117c81;color:#fff;font-size:11px}
@@ -2069,7 +2115,7 @@ body{padding:26px;background:#e9edf2}
  }
  window.NEXORA_DOWNLOAD_LEVEL_CERTIFICATE=({topic,level,percent,skills=[]}={})=>{
    const subject=subjects.find(item=>item.id===topic);
-   const levelNames={basico:"Nivel 1 · Fundamentos",intermedio:"Nivel 2 · Aplicación",avanzado:"Nivel 3 · Análisis"};
+   const levelNames={basico:"Nivel 1 · Fundamentos",intermedio:"Nivel 2 · Aplicación",avanzado:"Nivel 3 · Análisis",integrador:"Examen integrador · Básico, Intermedio y Avanzado"};
    const skill=Array.isArray(skills)&&skills.length?skills.map(item=>item.name).filter(Boolean).join(" · "):"Aprendizaje y aplicación de conocimientos";
    certificateDocument({name:getName(profileData()),subject:subject?.name||"Área NEXORA",level:levelNames[level]||"Nivel completado",score:percent,skill,tier:"basic",subtitle:"Evaluación aprobada con el mínimo requerido del 70 %."});
   };
