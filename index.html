@@ -2152,7 +2152,7 @@ body{padding:26px;background:#e9edf2}
   }
   if(roadmapRoot){
    const items=roadmapNames.map((name,index)=>{
-    const number=index+1,el=document.createElement("div");el.className="roadmap-level "+(number<=3?"active":"planned");
+    const number=index+1,el=document.createElement("div");el.className="roadmap-level active";
     const title=document.createElement("strong");title.textContent="Nivel "+number;
     const label=document.createElement("span");label.textContent=name+(number<=3?" · Disponible en las cinco áreas":" · Disponible en Tecnología e Inclusión");
     el.append(title,label);return el;
