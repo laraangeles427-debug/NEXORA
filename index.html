@@ -2362,34 +2362,83 @@ body{padding:26px;background:#e9edf2}
 (function(){
  if(document.getElementById("nexoraMusicToggle"))return;
  const style=document.createElement("style");
- style.textContent="#nexoraMusicToggle{position:fixed;top:88px;right:18px;z-index:1100;border:1px solid rgba(8,200,245,.35);border-radius:999px;background:rgba(6,18,37,.94);color:#eaf7ff;padding:9px 14px;font:600 12px/1.2 system-ui,sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.18);cursor:pointer}#nexoraMusicToggle[aria-pressed=true]{border-color:#08c8f5;color:#08c8f5}#nexoraMusicToggle:focus-visible{outline:3px solid #08c8f5;outline-offset:3px}@media(max-width:640px){#nexoraMusicToggle{top:auto;bottom:86px;right:12px;font-size:11px;padding:8px 11px}}";
+ style.textContent=`
+ #nexoraMusicToggle{position:fixed;top:88px;right:18px;z-index:1100;border:1px solid rgba(8,200,245,.42);border-radius:999px;background:linear-gradient(135deg,rgba(6,18,37,.97),rgba(12,43,72,.97));color:#eaf7ff;padding:10px 15px;font:700 12px/1.2 system-ui,sans-serif;box-shadow:0 8px 26px rgba(0,0,0,.22);cursor:pointer;transition:transform .2s,border-color .2s}
+ #nexoraMusicToggle:hover{transform:translateY(-2px);border-color:#08c8f5}
+ #nexoraMusicToggle[aria-pressed=true]{border-color:#08c8f5;color:#63e4ff;box-shadow:0 0 0 3px rgba(8,200,245,.1),0 8px 26px rgba(0,0,0,.22)}
+ #nexoraMusicToggle:focus-visible{outline:3px solid #08c8f5;outline-offset:3px}
+ @media(max-width:640px){#nexoraMusicToggle{top:auto;bottom:86px;right:12px;font-size:11px;padding:9px 12px}}
+ `;
  document.head.appendChild(style);
- const button=document.createElement("button");button.id="nexoraMusicToggle";button.type="button";button.setAttribute("aria-pressed","false");button.textContent="♫ Música suave · apagada";button.setAttribute("aria-label","Activar música ambiental suave");document.body.appendChild(button);
- let context=null,master=null,timer=null,step=0,pads=[];
- const melody=[261.63,329.63,392.00,329.63,293.66,349.23,392.00,349.23];
- function note(freq){
-  if(!context||!master)return;
-  const osc=context.createOscillator(),gain=context.createGain();
-  osc.type="sine";osc.frequency.value=freq;gain.gain.setValueAtTime(.0001,context.currentTime);gain.gain.exponentialRampToValueAtTime(.12,context.currentTime+.18);gain.gain.exponentialRampToValueAtTime(.0001,context.currentTime+1.25);
-  osc.connect(gain);gain.connect(master);osc.start();osc.stop(context.currentTime+1.3);
+ const button=document.createElement("button");
+ button.id="nexoraMusicToggle";button.type="button";button.setAttribute("aria-pressed","false");
+ button.textContent="🎮 Modo aventura · apagado";
+ button.setAttribute("aria-label","Activar música y efectos de juego");
+ document.body.appendChild(button);
+ let ctx=null,master=null,musicTimer=null,beat=0,pads=[],enabled=false,lastCue="";
+ const melody=[392,493.88,587.33,493.88,440,523.25,659.25,587.33,392,493.88,659.25,783.99,659.25,587.33,523.25,493.88];
+ function tone(freq,duration=.22,wave="triangle",volume=.12,delay=0){
+  if(!ctx||!master)return;
+  const osc=ctx.createOscillator(),gain=ctx.createGain(),now=ctx.currentTime+delay;
+  osc.type=wave;osc.frequency.setValueAtTime(freq,now);
+  gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(volume,now+.025);
+  gain.gain.exponentialRampToValueAtTime(.0001,now+duration);
+  osc.connect(gain);gain.connect(master);osc.start(now);osc.stop(now+duration+.03);
  }
- async function start(){
-  const Ctx=window.AudioContext||window.webkitAudioContext;
-  if(!Ctx){button.textContent="♫ Audio no disponible";button.disabled=true;return;}
-  context=new Ctx();await context.resume();master=context.createGain();master.gain.value=.035;master.connect(context.destination);
-  [130.81,196.00,261.63].forEach((freq,i)=>{const osc=context.createOscillator(),gain=context.createGain();osc.type="triangle";osc.frequency.value=freq;gain.gain.value=i===0?.08:.035;osc.connect(gain);gain.connect(master);osc.start();pads.push({osc,gain});});
-  step=0;note(melody[step++%melody.length]);timer=window.setInterval(()=>note(melody[step++%melody.length]),1550);
-  button.textContent="♫ Música suave · activada";button.setAttribute("aria-pressed","true");button.setAttribute("aria-label","Desactivar música ambiental suave");
+ function chord(root){
+  [root,root*1.25,root*1.5].forEach((f,i)=>tone(f,.58,"sine",.025,i*.018));
  }
- async function stop(){
-  if(timer){clearInterval(timer);timer=null;}
-  if(master&&context){master.gain.setTargetAtTime(.0001,context.currentTime,.12);}
-  pads.forEach(p=>{try{p.osc.stop(context.currentTime+.35);}catch(_){}});pads=[];
-  const old=context;context=null;master=null;
-  if(old){window.setTimeout(()=>old.close().catch(()=>{}),450);}
-  button.textContent="♫ Música suave · apagada";button.setAttribute("aria-pressed","false");button.setAttribute("aria-label","Activar música ambiental suave");
+ function tick(){
+  if(!enabled||!ctx)return;
+  const i=beat++%melody.length;
+  tone(melody[i],.28,"triangle",.075);
+  if(i%4===0)chord([196,220,174.61,164.81][Math.floor(i/4)]);
+  if(i%2===0)tone(melody[i]/2,.12,"sine",.022,.06);
  }
- button.addEventListener("click",()=>{if(context)stop();else start().catch(()=>{button.textContent="♫ No se pudo activar el audio";});});
+ function effect(kind){
+  if(!enabled||!ctx)return;
+  if(kind==="success"){[523.25,659.25,783.99,1046.5].forEach((f,i)=>tone(f,.2,"triangle",.13,i*.075));}
+  else if(kind==="unlock"){[392,493.88,587.33,783.99,987.77].forEach((f,i)=>tone(f,.25,"sine",.12,i*.085));}
+  else if(kind==="click"){tone(660,.07,"sine",.045);}
+  else if(kind==="challenge"){[440,554.37,659.25].forEach((f,i)=>tone(f,.16,"square",.045,i*.06));}
+ }
+ async function activate(){
+  const Audio=window.AudioContext||window.webkitAudioContext;
+  if(!Audio){button.textContent="Audio no disponible";button.disabled=true;return;}
+  ctx=new Audio();await ctx.resume();master=ctx.createGain();master.gain.value=.48;master.connect(ctx.destination);
+  enabled=true;beat=0;tick();musicTimer=window.setInterval(tick,360);
+  button.textContent="🎮 Modo aventura · activado";button.setAttribute("aria-pressed","true");
+  button.setAttribute("aria-label","Desactivar música y efectos de juego");
+ }
+ async function deactivate(){
+  enabled=false;if(musicTimer){clearInterval(musicTimer);musicTimer=null;}
+  const old=ctx;ctx=null;master=null;pads=[];
+  if(old)try{await old.close();}catch(_){}
+  button.textContent="🎮 Modo aventura · apagado";button.setAttribute("aria-pressed","false");
+  button.setAttribute("aria-label","Activar música y efectos de juego");
+ }
+ button.addEventListener("click",()=>{if(enabled)deactivate();else activate().catch(()=>{button.textContent="No se pudo activar el audio";});});
+ // Efectos ligados a acciones reales de aprendizaje y avance.
+ document.addEventListener("click",e=>{
+  const el=e.target.closest("button,[role=button],a");if(!el||!enabled)return;
+  const label=(el.innerText||el.getAttribute("aria-label")||"").toLowerCase();
+  if(/aprobar|evaluar|comprobar|entregar|finalizar/.test(label))effect("challenge");
+  else if(/desbloquear|siguiente nivel|nueva fase|continuar/.test(label))effect("unlock");
+  else if(/certificado|insignia|recompensa/.test(label))effect("success");
+  else if(/practicar|iniciar|comenzar|jugar/.test(label))effect("click");
+ });
+ // Reconoce mensajes de logro generados por las actividades.
+ const observer=new MutationObserver(records=>{
+  if(!enabled)return;
+  for(const rec of records){
+   const node=rec.target.nodeType===Node.TEXT_NODE?rec.target.parentElement:rec.target;
+   const msg=(node?.textContent||"").toLowerCase();
+   if(/evaluación aprobada|práctica completada|has pasado a la siguiente fase|certificado generado|nivel completado/.test(msg)){
+    const cue=msg.slice(0,110);if(cue!==lastCue){lastCue=cue;effect(/siguiente fase|desbloquear/.test(msg)?"unlock":"success");}break;
+   }
+  }
+ });
+ observer.observe(document.body,{subtree:true,childList:true,characterData:true});
 })();
 </script>
 </body>
