@@ -1171,7 +1171,7 @@ function renderLearningProgress(){
   {key:"inclusion",label:"Inclusión Digital",destination:"inclusion",status:"Mapa curricular definido; clases y evaluaciones en desarrollo."}
  ];
  const states=areas.map(area=>{
-  const passedLevels=[],attemptedLevels=[],records=[];
+  const passedLevels=[],attemptedLevels=[];
   for(let n=1;n<=15;n++){
    const code=String(n).padStart(2,"0"),ids=[];
    if(area.legacy&&n<=3)ids.push(area.key+"-"+area.legacy[n-1]);
@@ -1179,9 +1179,8 @@ function renderLearningProgress(){
    const matches=ids.filter(id=>Object.prototype.hasOwnProperty.call(progress,id)).map(id=>[id,progress[id]]);
    if(matches.length)attemptedLevels.push(n);
    if(matches.some(([,entry])=>entry&&entry.examPassed===true))passedLevels.push(n);
-   records.push(...matches);
   }
-  return {...area,passedLevels,attemptedLevels,records};
+  return {...area,passedLevels,attemptedLevels};
  });
  const completed=states.reduce((n,a)=>n+a.passedLevels.length,0),attempted=states.reduce((n,a)=>n+a.attemptedLevels.length,0),total=75,percent=Math.round(completed/total*100);
  const count=document.getElementById("learningProgressCount"),bar=document.getElementById("learningProgressBar"),fill=document.getElementById("learningProgressFill"),badge=document.getElementById("learningProgressBadge");
@@ -1201,7 +1200,6 @@ function renderLearningProgress(){
   const p=document.createElement("div");p.className="progress-meta";p.innerHTML="<span>"+area.passedLevels.length+" de 15 niveles aprobados</span><strong>"+Math.round(area.passedLevels.length/15*100)+"%</strong>";card.appendChild(p);
   const track=document.createElement("div");track.className="progress-track";track.setAttribute("role","progressbar");track.setAttribute("aria-label","Niveles aprobados de "+area.label);track.setAttribute("aria-valuemin","0");track.setAttribute("aria-valuemax","15");track.setAttribute("aria-valuenow",String(area.passedLevels.length));
   const barFill=document.createElement("div");barFill.className="progress-fill";track.appendChild(barFill);card.appendChild(track);
-  const best=area.records.filter(([,v])=>v&&v.examPassed===true).reduce((max,[,v])=>Math.max(max,Number(v.bestPercent)||Number(v.examPercent)||0),0);
   const score=document.createElement("p");score.className="muted";score.textContent=area.attemptedLevels.length?area.status+" "+area.attemptedLevels.length+" niveles iniciados.":"0 intentos registrados. "+area.status;card.appendChild(score);
   const button=document.createElement("button");button.type="button";button.className="text-button progress-open";button.textContent=area.destination==="aprender"?(area.attemptedLevels.length?"Seguir aprendiendo →":"Explorar área →"):"Ver área →";
   button.addEventListener("click",()=>{if(area.destination==="aprender"){const target=document.querySelector('[data-topic="'+area.key+'"]');if(target)target.click();}else showView(area.destination);});card.appendChild(button);
