@@ -1254,7 +1254,8 @@ function updateLearningGuide(subject=topic,level="start"){
  if(step)step.textContent=level==="start"?"Un paso a la vez. Puedes escuchar este consejo cuando quieras.":"Consejo para "+names[level].toLowerCase()+". Aprende a tu ritmo.";
  if(button)button.setAttribute("data-guide-text",text);
 }
-document.getElementById("technologyClassroomContinue")?.addEventListener("click",()=>{document.querySelector("#view-tecnologia .nx-spaces-wrap")?.scrollIntoView({behavior:"smooth",block:"start"});});\ndocument.getElementById("learningNexoSpeak")?.addEventListener("click",()=>{
+document.getElementById("technologyClassroomContinue")?.addEventListener("click",()=>{document.querySelector("#view-tecnologia .nx-spaces-wrap")?.scrollIntoView({behavior:"smooth",block:"start"});});
+document.getElementById("learningNexoSpeak")?.addEventListener("click",()=>{
  const text=document.getElementById("learningNexoMessage")?.textContent||"Aprende a tu ritmo. Cada paso cuenta.";
  if(typeof speak==="function")speak(text);
  else if("speechSynthesis" in window){window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang="es-EC";window.speechSynthesis.speak(u);}
