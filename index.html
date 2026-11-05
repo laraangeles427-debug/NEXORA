@@ -2030,7 +2030,7 @@ body{padding:24px;background:#e8edf2}
     const title=document.createElement("p");title.textContent="Nivel "+level.number+" · "+level.name;
     const status=document.createElement("div");status.className="certificate-status "+(earned?"ready":"");status.textContent=earned?"✓ Disponible · Mejor resultado: "+score+"%":(index>0&&!levels.slice(0,index).every(previous=>passed(progress,subject,previous))?"🔒 Completa primero los niveles anteriores":"🔒 Aprueba la evaluación con al menos 70 %");
     el.append(heading,title,status);
-    if(earned)el.appendChild(makeButton("Ver / imprimir certificado",()=>certificateDocument({name:getName(profile),subject:subject.name,level:"Nivel "+level.number+" · "+level.name,score:score,skill:subject.skills[index],tier:"basic"})));
+    if(earned)el.appendChild(makeButton("↓ Descargar certificado",()=>certificateDocument({name:getName(profile),subject:subject.name,level:"Nivel "+level.number+" · "+level.name,score:score,skill:subject.skills[index],tier:"basic"})));
     cards.push(el);
    });
   });
