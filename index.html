@@ -1438,6 +1438,7 @@ function startIntegrativeAssessment(selected){
  const p=readLearningProgress();
  if(!["basico","intermedio","avanzado"].every(l=>{const x=p[selected+"-"+l]||{};return x.examPassed===true||Number(x.examPercent)>=70;})){alert("Primero debes aprobar los niveles básico, intermedio y avanzado.");return;}
  topic=selected;learningLevel="avanzado";nexoraExamMode="integrative";
+ document.getElementById("nextLevelCTA").hidden=true;
  document.getElementById("lessonPanel").hidden=false;document.getElementById("learningLevels").hidden=true;
  document.getElementById("lessonEyebrow").textContent="Evaluación final · "+lessons[selected].title;
  document.getElementById("lessonTitle").textContent="Examen integrador";
