@@ -821,7 +821,7 @@ document.getElementById("startLevelExam").addEventListener("click",async()=>{
   const data=await invokeNexoraAssessment({action:"start",area:topic,level:examLevel,request_id:requestId,exclude_prompts:practicePrompts.map(normalizeQuestion),previous_prompts:priorQuestions.map(normalizeQuestion)});
   levelExamSessionId=data.session_id;
   activeLevelExam=(data.questions||[]).map(q=>({id:q.id,q:q.prompt,o:q.options,skill:q.skill||"Aplicación",userCorrect:false,userAnswer:null}));
-  if(activeLevelExam.length!==(nexoraExamMode==="integrative"?6:4))throw new Error("El servidor no devolvió todas las preguntas necesarias para esta evaluación.");
+  if(activeLevelExam.length!==(nexoraExamMode==="integrative"?9:4))throw new Error("El servidor no devolvió todas las preguntas necesarias para esta evaluación.");
   levelExamIndex=0;levelExamScore=0;
   document.getElementById("levelExamReport").hidden=true;
   document.getElementById("levelExamIntro").hidden=false;
@@ -829,7 +829,7 @@ document.getElementById("startLevelExam").addEventListener("click",async()=>{
   document.getElementById("levelExamOptions").hidden=false;
   document.getElementById("levelExamPanel").hidden=false;
   document.getElementById("levelExamTitle").textContent=nexoraExamMode==="integrative"?"Examen integrador · "+lessons[topic].title:"Evaluación protegida · "+lessons[topic].title+" · "+learningLevel;
-  document.getElementById("levelExamIntro").textContent=nexoraExamMode==="integrative"?"Seis preguntas seleccionadas en el servidor: dos de cada nivel (básico, intermedio y avanzado). Necesitas al menos 70 % para obtener el certificado integral.":"4 preguntas seleccionadas en el servidor. Las respuestas correctas no se envían al navegador; el resultado se calcula al entregar la evaluación. Necesitas al menos 70 % para aprobar.";
+  document.getElementById("levelExamIntro").textContent=nexoraExamMode==="integrative"?"Nueve preguntas seleccionadas en el servidor: tres de cada nivel (básico, intermedio y avanzado). Necesitas al menos 70 % para obtener el certificado integral.":"4 preguntas seleccionadas en el servidor. Las respuestas correctas no se envían al navegador; el resultado se calcula al entregar la evaluación. Necesitas al menos 70 % para aprobar.";
   renderLevelExamQuestion();
   document.getElementById("levelExamPanel").scrollIntoView({behavior:"smooth",block:"start"});
  }catch(error){
