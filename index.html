@@ -1361,7 +1361,7 @@ function openLearningLesson(selected,level){
  topic=selected;learningLevel=level;updateLearningGuide(selected,level);
  const completedRecord=readLearningProgress()[selected+"-"+level]||{};
  if(completedRecord.examPassed===true||Number(completedRecord.examPercent)>=70||(Array.isArray(completedRecord.history)&&completedRecord.history.some(x=>x&&x.type==="exam"&&Number(x.percent)>=70))){showCompletedLearningLevel(selected,level,completedRecord);return;}
- nexoraExamMode="level";document.getElementById("learningFlowSteps").hidden=false;
+ nexoraExamMode="level";document.getElementById("nextLevelCTA").hidden=true;document.getElementById("learningFlowSteps").hidden=false;
  ["completeLessonStep","lessonPractice","readLesson"].forEach(id=>{document.getElementById(id).hidden=false;});
  const names={basico:"Básico",intermedio:"Intermedio",avanzado:"Avanzado"};
  const material=learningLessons[selected][level];
