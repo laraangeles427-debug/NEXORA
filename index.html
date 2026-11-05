@@ -873,7 +873,16 @@ document.getElementById("levelExamFinish").addEventListener("click",async()=>{
   if(typeof nexoraQueueSync==="function")nexoraQueueSync();
   if(window.NEXORA_REFRESH_LEADERBOARD)window.NEXORA_REFRESH_LEADERBOARD();
   const next=document.getElementById("nextLevelCTA");
-  if(next&&nexoraExamMode==="integrative"){next.hidden=!passed;next.textContent=passed?"✓ Evaluación integradora aprobada · Descargar certificado":"Vuelve a intentarlo cuando estés preparado";next.onclick=()=>window.NEXORA_DOWNLOAD_LEVEL_CERTIFICATE?.({topic,level:"integrador",percent,skills});}
+  if(next&&nexoraExamMode==="integrative"){
+   next.hidden=!passed;
+   if(passed&&(topic==="tecnologia"||topic==="inclusion")){
+    next.textContent="¡Has pasado a la siguiente fase! · Abrir nivel 4 →";
+    next.onclick=()=>window.openLearningLesson(topic,"nivel_04");
+   }else{
+    next.textContent=passed?"✓ Evaluación integradora aprobada · Descargar certificado":"Vuelve a intentarlo cuando estés preparado";
+    next.onclick=()=>window.NEXORA_DOWNLOAD_LEVEL_CERTIFICATE?.({topic,level:"integrador",percent,skills});
+   }
+  }
   else if(next){const nextName=learningLevel==="basico"?"intermedio":learningLevel==="intermedio"?"avanzado":null;next.hidden=!(progress[id].examPassed&&nextName);next.textContent=nextName?"¡Evaluación aprobada! Desbloquear nivel "+nextName+" →":"¡Nivel avanzado aprobado! Abre el nivel para presentar el examen integrador";next.onclick=()=>{if(nextName)openLearningLesson(topic,nextName);else showCompletedLearningLevel(topic,"avanzado",progress[id]);};}
   document.getElementById("levelExamProgressFill").style.width="100%";report.scrollIntoView({behavior:"smooth",block:"nearest"});
  }catch(error){
@@ -1175,8 +1184,8 @@ function renderLearningProgress(){
   {key:"finanzas",label:"Educación Financiera",destination:"aprender",legacy:["basico","intermedio","avanzado"],status:"Base inicial de 3 niveles disponible; 12 niveles en desarrollo."},
   {key:"contabilidad",label:"Contabilidad",destination:"aprender",legacy:["basico","intermedio","avanzado"],status:"Base inicial de 3 niveles disponible; 12 niveles en desarrollo."},
   {key:"tributacion",label:"Tributación",destination:"aprender",legacy:["basico","intermedio","avanzado"],status:"Base inicial de 3 niveles disponible; 12 niveles en desarrollo."},
-  {key:"tecnologia",label:"Tecnología Educativa",destination:"tecnologia",status:"Hay módulos introductorios; la ruta de 15 niveles está en desarrollo."},
-  {key:"inclusion",label:"Inclusión Digital",destination:"inclusion",status:"Mapa curricular definido; clases y evaluaciones en desarrollo."}
+  {key:"tecnologia",label:"Tecnología Educativa",destination:"tecnologia",legacy:["basico","intermedio","avanzado"],status:"Ruta funcional de 15 niveles disponible."},
+  {key:"inclusion",label:"Inclusión Digital",destination:"inclusion",legacy:["basico","intermedio","avanzado"],status:"Ruta funcional de 15 niveles disponible."}
  ];
  const states=areas.map(area=>{
   const passedLevels=[],attemptedLevels=[];
@@ -2020,13 +2029,11 @@ const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition
  const subjects=[
   {id:"finanzas",name:"Educación financiera",skills:["Presupuesto y decisiones financieras","Organización de ingresos y gastos","Análisis de situaciones financieras"]},
   {id:"contabilidad",name:"Contabilidad",skills:["Conceptos contables fundamentales","Registro y clasificación de operaciones","Análisis de operaciones contables"]},
-  {id:"tributacion",name:"Tributación",skills:["Conceptos tributarios esenciales","Aplicación responsable de conceptos tributarios","Análisis de casos y consulta de fuentes oficiales"]}
+  {id:"tributacion",name:"Tributación",skills:["Conceptos tributarios esenciales","Aplicación responsable de conceptos tributarios","Análisis de casos y consulta de fuentes oficiales"]},
+  {id:"tecnologia",name:"Tecnología Educativa",skills:["Dispositivos digitales","Sistema operativo y ajustes","Archivos y carpetas","Navegación y buscadores","Evaluación de fuentes","Documentos digitales","Hojas de cálculo","Presentaciones visuales","Entornos virtuales de aprendizaje","Colaboración en la nube","Comunicación digital","Ciudadanía y huella digital","Ciberseguridad cotidiana","Creación multimedia","Proyecto digital integrador"]},
+  {id:"inclusion",name:"Inclusión Digital",skills:["Alfabetización digital inicial","Acceso y configuración","Conectividad responsable","Navegación accesible","Lectura y escritura accesibles","Accesibilidad visual","Accesibilidad auditiva","Navegación por teclado y movilidad","Tecnologías de apoyo","Diseño universal para el aprendizaje","Comunicación inclusiva","Privacidad y seguridad para todos","Servicios y trámites digitales","Autonomía y solución de barreras","Proyecto de inclusión digital comunitaria"]}
  ];
- const levels=[
-  {id:"basico",name:"Fundamentos",number:1,description:"Comprender conceptos esenciales."},
-  {id:"intermedio",name:"Aplicación",number:2,description:"Aplicar lo aprendido en situaciones prácticas."},
-  {id:"avanzado",name:"Análisis",number:3,description:"Resolver casos de mayor complejidad."}
- ];
+ const levels=[{"id":"basico","name":"Fundamentos","number":1,"description":"Comprender conceptos esenciales."},{"id":"intermedio","name":"Aplicación","number":2,"description":"Aplicar lo aprendido en situaciones prácticas."},{"id":"avanzado","name":"Análisis","number":3,"description":"Resolver casos de mayor complejidad."},{"id":"nivel_04","name":"Práctica guiada","number":4,"description":"Aplicar y profundizar competencias de la ruta."},{"id":"nivel_05","name":"Resolución de casos","number":5,"description":"Aplicar y profundizar competencias de la ruta."},{"id":"nivel_06","name":"Integración","number":6,"description":"Aplicar y profundizar competencias de la ruta."},{"id":"nivel_07","name":"Planificación","number":7,"description":"Aplicar y profundizar competencias de la ruta."},{"id":"nivel_08","name":"Evaluación aplicada","number":8,"description":"Aplicar y profundizar competencias de la ruta."},{"id":"nivel_09","name":"Pensamiento crítico","number":9,"description":"Aplicar y profundizar competencias de la ruta."},{"id":"nivel_10","name":"Gestión","number":10,"description":"Aplicar y profundizar competencias de la ruta."},{"id":"nivel_11","name":"Estrategia","number":11,"description":"Aplicar y profundizar competencias de la ruta."},{"id":"nivel_12","name":"Análisis avanzado","number":12,"description":"Aplicar y profundizar competencias de la ruta."},{"id":"nivel_13","name":"Proyecto aplicado","number":13,"description":"Aplicar y profundizar competencias de la ruta."},{"id":"nivel_14","name":"Dominio integral","number":14,"description":"Aplicar y profundizar competencias de la ruta."},{"id":"nivel_15","name":"NEXORA Master","number":15,"description":"Aplicar y profundizar competencias de la ruta."}];
  const roadmapNames=["Fundamentos","Aplicación","Análisis","Práctica guiada","Resolución de casos","Integración","Planificación","Evaluación aplicada","Pensamiento crítico","Gestión","Estrategia","Análisis avanzado","Proyecto aplicado","Dominio integral","NEXORA Master"];
  function progressData(){try{const p=JSON.parse(localStorage.getItem("nexora-learning-progress-v1")||"{}");return p&&typeof p==="object"?p:{}}catch(_){return {}}}
  function profileData(){try{const p=JSON.parse(localStorage.getItem("nexora-profile-v1")||"{}");return p&&typeof p==="object"?p:{}}catch(_){return {}}}
@@ -2097,7 +2104,145 @@ body{padding:26px;background:#e9edf2}
 @media print{html,body{width:297mm;height:210mm;margin:0;padding:0;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}.certificate{width:297mm;height:210mm;max-width:none;aspect-ratio:auto;margin:0;box-shadow:none;break-inside:avoid;page-break-inside:avoid}.rail{padding:8mm 6mm}.logo-wrap{width:25mm;height:25mm}.brand{font-size:13pt}.brand-sub{font-size:6pt}.rail-caption{font-size:11pt}.rail-bottom{font-size:6pt}.main{padding:8mm 13mm 6mm}.kicker{font-size:7pt}.heading{font-size:25pt;margin:3mm 0 1mm}.intro{font-size:10pt}.person{font-size:27pt;margin:1mm 0 2mm}.copy{font-size:9pt;margin:1mm auto}.subject{font-size:8pt;margin-top:3mm;padding:2mm 5mm}.level{font-size:13pt;margin:2mm 0 1mm}.skill{font-size:7pt}.result{font-size:8pt;margin-top:2mm;padding:2mm 4mm}.footer{margin-top:auto;padding-top:4mm;gap:12mm}.footer-block{font-size:7pt;padding-top:2mm}.footer-block strong{font-size:8pt}.disclaimer{font-size:5.5pt;margin-top:2mm}.actions{display:none}}
 </style></head><body><main class="certificate ${tierClass}">
 <aside class="rail"><div><div class="logo-wrap"><img class="logo" src="${esc(logoUrl)}" alt="Logotipo NEXORA"></div><div class="brand">NEX<span>O</span>RA</div><div class="brand-sub">Conocimiento que abre caminos</div><div class="rail-rule"></div><div class="rail-caption">Conectando conocimiento,<br>creando oportunidades.</div></div><div class="rail-bottom">Plataforma educativa<br>Formación · Innovación · Inclusión</div></aside>
-<section class="main"><div class="kicker">${labels[tier]} · NEXORA</div><h1 class="heading">${title}</h1><p class="intro">Se concede el presente reconocimiento a</p><div class="person">${safeName}</div><p class="copy">${copy}</p><div class="subject">${safeSubject}</div><div class="level">${safeLevel}</div><p class="skill">${safeSubtitle ? safeSubtitle+" · " : ""}${safeSkill}</p><div class="result"><span class="result-mark">✓</span> APROBADO · ${percent}% DE DESEMPEÑO</div><div class="footer"><div class="footer-block"><strong>${esc(date)}</strong>Fecha de emisión</div><div class="footer-block"><strong>NEXORA</strong>Conectando conocimiento, creando oportunidades.</div></div><p class="disclaimer">Reconocimiento educativo generado por la plataforma NEXORA. No equivale a un título oficial, certificación profesional ni acreditación emitida por una institución autorizada.</p></section></main><div class="actions"><button class="print" onclick="window.print()">Imprimir o guardar como PDF</button></div></body></html>`);
+<section class="main"><div class="kicker">${labels[tier]} · NEXORA</div><h1 class="heading">${title}</h1><p class="intro">Se concede el presente reconocimiento a</p><div class="person">${safeName}</div><p class="copy">${copy}</p><div class="subject">${safeSubject}</div><div class="level">${safeLevel}</div><p class="skill">${safeSubtitle ? safeSubtitle+" · " : ""}${safeSkill}</p><div class="result"><span class="result-mark">✓</span> APROBADO · ${percent}% DE DESEMPEÑO</div><div class="footer"><div class="footer-block"><strong>${esc(date)}</strong>Fecha de emisión</div><div class="footer-block"><strong>NEXORA</strong>Conectando conocimiento, creando oportunidades.</div></div><p class="disclaimer">Reconocimiento educativo generado por la plataforma NEXORA. No equivale a un título oficial, certificación profesional ni acreditación emitida por una institución autorizada.</p></section></main><div class="actions"><button class="print" onclick="window.print()">Imprimir o guardar como PDF</button></div><script id="nexora-15-routes">
+(function(){
+ const curricula={"tecnologia":[["Dispositivos digitales","Un dispositivo combina componentes físicos y programas para recibir, procesar y mostrar información.","Identificar sus componentes, comprobar su estado y elegir el equipo adecuado para la tarea.","Preparas una clase virtual y verificas batería, conexión, cámara y teclado antes de ingresar.","Usar el equipo con criterio y evitar interrupciones por fallas previsibles."],["Sistema operativo y ajustes","El sistema operativo administra el dispositivo, sus aplicaciones, archivos y preferencias.","Revisar actualizaciones, idioma, accesibilidad, almacenamiento y permisos antes de instalar algo.","Una aplicación no funciona y revisas la versión del sistema y los permisos necesarios.","Mantener un entorno estable, seguro y adaptado a la actividad."],["Archivos y carpetas","Los archivos guardan información y las carpetas permiten clasificarla para encontrarla fácilmente.","Nombrar documentos con claridad, organizarlos por tema y fecha y conservar copias de respaldo.","Guardas tareas de varias asignaturas y creas carpetas separadas para evitar confusiones.","Localizar, proteger y recuperar información sin duplicaciones innecesarias."],["Navegación y buscadores","Un buscador localiza páginas y documentos a partir de palabras clave y filtros.","Elegir términos concretos, comparar resultados y evitar abrir enlaces sospechosos.","Investigas un tema escolar y ajustas las palabras clave para encontrar fuentes relevantes.","Encontrar información útil con menos ruido y mayor seguridad."],["Evaluación de fuentes","Una fuente confiable identifica autoría, fecha, evidencia y propósito de publicación.","Comprobar quién publica, cuándo se actualizó y si otras fuentes confiables confirman el dato.","Encuentras una guía antigua y contrastas su contenido con una fuente institucional vigente.","Distinguir información sustentada de rumores, publicidad o contenido desactualizado."],["Documentos digitales","Un procesador de texto permite redactar, estructurar, revisar y compartir documentos.","Usar títulos, párrafos claros, ortografía, fuentes legibles y nombres de archivo descriptivos.","Preparas un informe y utilizas estilos de título para que sea fácil de leer y navegar.","Comunicar ideas de forma ordenada, editable y profesional."],["Hojas de cálculo","Una hoja de cálculo organiza datos en celdas y permite calcular mediante fórmulas.","Separar encabezados y datos, usar fórmulas verificables y revisar referencias antes de compartir.","Registras gastos escolares y calculas el total con una fórmula en lugar de sumar manualmente.","Reducir errores y convertir datos en información comprensible."],["Presentaciones visuales","Una presentación combina texto y recursos visuales para explicar una idea a una audiencia.","Organizar una idea por diapositiva, priorizar legibilidad y citar imágenes o datos ajenos.","Expones un proyecto y reemplazas párrafos largos por ideas clave y gráficos claros.","Explicar resultados con claridad sin saturar a quienes escuchan."],["Entornos virtuales de aprendizaje","Un aula virtual reúne materiales, tareas, evaluaciones, avisos y comunicación académica.","Revisar instrucciones, fechas y archivos; entregar la actividad y confirmar el envío.","Tu docente publica una tarea y verificas que el archivo correcto quedó enviado.","Gestionar el aprendizaje y las entregas sin perder información."],["Colaboración en la nube","Las herramientas en la nube permiten crear y editar archivos compartidos con permisos.","Definir quién puede ver o editar, usar comentarios y revisar el historial de cambios.","Un equipo elabora un informe y asigna permisos de edición solo a sus integrantes.","Trabajar en equipo con control de versiones y responsabilidades claras."],["Comunicación digital","La comunicación digital requiere adaptar el mensaje, el canal y el tono al propósito.","Escribir asuntos claros, respetar horarios y comprobar destinatario y archivos adjuntos.","Envías una consulta formal a tu docente y revisas el mensaje antes de enviarlo.","Comunicarte con respeto y evitar errores o malentendidos."],["Ciudadanía y huella digital","La huella digital es el rastro de datos que dejamos al publicar, comentar o utilizar servicios.","Pensar antes de publicar, respetar derechos de autor y cuidar la reputación propia y ajena.","Una publicación incluye datos de otra persona y solicitas permiso antes de compartirla.","Participar en línea de manera responsable, respetuosa y consciente."],["Ciberseguridad cotidiana","La ciberseguridad protege dispositivos, cuentas y datos frente a accesos o engaños.","Usar contraseñas únicas, autenticación adicional y verificar enlaces y remitentes.","Recibes un mensaje urgente que pide tu clave y confirmas por un canal oficial sin abrir el enlace.","Reducir riesgos de suplantación, fraude y pérdida de información."],["Creación multimedia","Los recursos multimedia combinan imágenes, audio y video para comunicar contenidos.","Elegir formatos adecuados, comprimir archivos y respetar licencias y permisos de uso.","Creas un tutorial breve y utilizas imágenes propias o con licencia permitida.","Producir recursos claros, accesibles y respetuosos de la autoría."],["Proyecto digital integrador","Un proyecto digital integra planificación, herramientas, seguridad, colaboración y evaluación.","Definir objetivo, audiencia, recursos, cronograma, permisos y criterios para revisar el resultado.","Diseñas una guía digital para tu curso y pruebas su claridad antes de compartirla.","Entregar una solución digital útil, segura y evaluable."]],"inclusion":[["Alfabetización digital inicial","La alfabetización digital reúne habilidades para usar dispositivos, información y servicios con autonomía.","Reconocer funciones básicas, practicar pasos con calma y pedir apoyo sin entregar contraseñas.","Una persona aprende a abrir una aplicación, volver al inicio y cerrar sesión de forma segura.","Realizar tareas digitales cotidianas con mayor confianza."],["Acceso y configuración","La configuración del dispositivo puede reducir barreras mediante tamaño, idioma, sonido y controles.","Ajustar preferencias según las necesidades y comprobar que los cambios sean cómodos.","Aumentas el tamaño del texto para leer instrucciones sin forzar la vista.","Adaptar la tecnología a la persona y no exigir que todas la usen igual."],["Conectividad responsable","La conectividad permite acceder a recursos, pero depende de redes, datos y prácticas seguras.","Elegir redes confiables, reconocer conexiones públicas y evitar trámites sensibles en redes abiertas.","Necesitas consultar una tarea desde una red pública y evitas ingresar datos privados.","Acceder a internet con precaución y continuidad."],["Navegación accesible","Una navegación accesible ofrece estructura clara, controles identificables y alternativas de interacción.","Usar encabezados, enlaces descriptivos, foco visible y recorridos previsibles.","Navegas una página con teclado y reconoces dónde estás gracias al foco visible.","Encontrar funciones sin depender exclusivamente del ratón o de señales visuales."],["Lectura y escritura accesibles","Los contenidos accesibles presentan lenguaje claro, estructura y formatos que facilitan comprender y producir textos.","Usar frases directas, títulos descriptivos, listas y documentos compatibles con lectores de pantalla.","Preparas una guía con encabezados ordenados y explicas las siglas la primera vez que aparecen.","Comprender y compartir información con menos barreras."],["Accesibilidad visual","Las opciones visuales incluyen contraste, ampliación, lectores de pantalla y descripciones alternativas.","Ajustar contraste y zoom, añadir texto alternativo y no comunicar solo mediante colores.","Una imagen contiene información importante y añades una descripción que explica su contenido.","Permitir que más personas perciban y comprendan la información."],["Accesibilidad auditiva","La accesibilidad auditiva utiliza subtítulos, transcripciones y señales visuales equivalentes al audio.","Incluir subtítulos sincronizados y transcripciones completas en materiales audiovisuales.","Publicas una clase grabada y adjuntas subtítulos y una transcripción revisada.","Acceder al contenido sin depender de escuchar el audio."],["Navegación por teclado y movilidad","La interacción por teclado y controles alternativos facilita usar servicios con distintas capacidades motoras.","Comprobar el orden del foco, permitir pausas y evitar controles que exijan movimientos precisos.","Completar un formulario usando Tab, Enter y las indicaciones visibles.","Navegar y completar tareas con métodos de interacción flexibles."],["Tecnologías de apoyo","Las tecnologías de apoyo incluyen lectores de pantalla, dictado, magnificadores y dispositivos alternativos.","Identificar la barrera, elegir la herramienta apropiada y practicar sus funciones básicas.","Una persona utiliza dictado por voz para redactar cuando escribir con teclado le resulta difícil.","Aumentar autonomía mediante herramientas ajustadas a cada necesidad."],["Diseño universal para el aprendizaje","El diseño universal ofrece múltiples formas de presentar información, participar y demostrar lo aprendido.","Combinar texto, audio, ejemplos, práctica y alternativas de respuesta sin bajar el objetivo educativo.","Una lección ofrece lectura, audio y una actividad visual para alcanzar el mismo objetivo.","Ampliar oportunidades de aprendizaje para grupos diversos."],["Comunicación inclusiva","La comunicación inclusiva utiliza lenguaje respetuoso, formatos alternativos y canales comprensibles.","Preguntar preferencias, evitar estereotipos y ofrecer texto, audio o apoyos cuando sean necesarios.","En una actividad grupal acuerdas cómo compartir instrucciones para que todos puedan participar.","Favorecer participación sin excluir ni asumir necesidades ajenas."],["Privacidad y seguridad para todos","La protección digital debe ser comprensible y aplicable por personas con diferentes niveles de experiencia.","Explicar permisos en lenguaje claro, proteger claves y verificar solicitudes antes de compartir datos.","Una aplicación solicita acceso a contactos sin explicar para qué y revisas o rechazas el permiso.","Tomar decisiones informadas y reducir riesgos de abuso o exposición."],["Servicios y trámites digitales","Los servicios digitales permiten realizar consultas y gestiones, pero deben ser seguros y comprensibles.","Verificar el sitio oficial, leer requisitos y solicitar apoyo confiable sin compartir credenciales.","Necesitas realizar un trámite y confirmas que estás en el portal oficial antes de ingresar datos.","Acceder a oportunidades y servicios con autonomía y seguridad."],["Autonomía y solución de barreras","La autonomía digital se fortalece al identificar obstáculos, probar ajustes y evaluar resultados.","Describir la barrera, elegir una alternativa, probarla y registrar qué funcionó.","Un botón no se puede activar con teclado y reportas el problema y buscas una ruta alternativa segura.","Resolver tareas y comunicar barreras de manera práctica."],["Proyecto de inclusión digital comunitaria","Un proyecto inclusivo identifica necesidades reales y propone una solución digital accesible y evaluable.","Consultar a las personas usuarias, definir objetivos, probar accesibilidad y mejorar con retroalimentación.","Organizas una guía accesible para ayudar a tu comunidad a usar un servicio digital.","Crear una mejora útil que amplíe el acceso y la participación."]]};
+ const levelDefs=[{"id":"basico","name":"Básico","short":"Fundamentos","number":1},{"id":"intermedio","name":"Intermedio","short":"Aplicación","number":2},{"id":"avanzado","name":"Avanzado","short":"Análisis","number":3},{"id":"nivel_04","name":"Nivel 4","short":"Práctica guiada","number":4},{"id":"nivel_05","name":"Nivel 5","short":"Resolución de casos","number":5},{"id":"nivel_06","name":"Nivel 6","short":"Integración","number":6},{"id":"nivel_07","name":"Nivel 7","short":"Planificación","number":7},{"id":"nivel_08","name":"Nivel 8","short":"Evaluación aplicada","number":8},{"id":"nivel_09","name":"Nivel 9","short":"Pensamiento crítico","number":9},{"id":"nivel_10","name":"Nivel 10","short":"Gestión","number":10},{"id":"nivel_11","name":"Nivel 11","short":"Estrategia","number":11},{"id":"nivel_12","name":"Nivel 12","short":"Análisis avanzado","number":12},{"id":"nivel_13","name":"Nivel 13","short":"Proyecto aplicado","number":13},{"id":"nivel_14","name":"Nivel 14","short":"Dominio integral","number":14},{"id":"nivel_15","name":"Nivel 15","short":"NEXORA Master","number":15}];
+ const areaNames={tecnologia:"Tecnología Educativa",inclusion:"Inclusión Digital"};
+ const isNewArea=id=>id==="tecnologia"||id==="inclusion";
+ const levelName=id=>levelDefs.find(x=>x.id===id)?.short||"Nivel";
+ const levelNumber=id=>levelDefs.find(x=>x.id===id)?.number||1;
+ const progress=()=>{try{return JSON.parse(localStorage.getItem("nexora-learning-progress-v1")||"{}")||{}}catch(_){return {}}};
+ const passed=(p,id)=>{const x=p[id]||{};return x.examPassed===true||Number(x.examPercent)>=70||(Array.isArray(x.history)&&x.history.some(h=>h&&h.type==="exam"&&Number(h.percent)>=70));};
+ const makeQuestion=(q,o,a,why)=>({q,o,a,why});
+ Object.entries(curricula).forEach(([area,items])=>{
+  lessons[area]={title:areaNames[area],html:"<p>Ruta de aprendizaje progresiva en "+areaNames[area]+".</p>",questions:[["¿Qué ayuda a aprender mejor?",["Practicar y comprobar lo aprendido","Evitar revisar las instrucciones","Compartir contraseñas"],0,"La práctica guiada permite aplicar y comprobar conocimientos."]]};
+  learningLessons[area]={};
+  conceptMapData[area]={};practicalChallenges[area]={};
+  items.forEach((item,index)=>{
+   const [title,concept,action,scenario,outcome]=item;
+   const level=levelDefs[index].id;
+   const distractConcept="Una acción improvisada sin comprobar información ni contexto.";
+   const distractAction="Compartir datos personales o ignorar las instrucciones.";
+   const distractScenario="Omitir la revisión y utilizar cualquier recurso sin verificarlo.";
+   const distractOutcome="Aumentar errores y crear barreras innecesarias.";
+   const questions=[
+    makeQuestion("¿Qué idea define mejor «"+title+"»?",[concept,distractConcept,"Una actividad que solo se realiza sin tecnología."],0,"La idea central es: "+concept),
+    makeQuestion("¿Qué práctica ayuda a aplicar «"+title+"»?",[action,distractAction,"Evitar planificar y no revisar el resultado."],0,"La práctica adecuada consiste en: "+action),
+    makeQuestion("¿Qué situación representa una aplicación correcta?",[scenario,distractScenario,"Publicar información privada para resolver la tarea."],0,"La situación planteada aplica el aprendizaje: "+scenario),
+    makeQuestion("¿Qué resultado se busca al dominar este tema?",[outcome,distractOutcome,"Depender siempre de otra persona y no comprobar nada."],0,"El resultado esperado es: "+outcome)
+   ];
+   const html="<article class='lesson-class'><span class='eyebrow'>RUTA "+areaNames[area].toUpperCase()+" · NIVEL "+(index+1)+" DE 15</span><h4>"+title+"</h4><h4>Objetivo de aprendizaje</h4><p>Al terminar esta clase podrás comprender y aplicar el tema en situaciones reales.</p><h4>Concepto esencial</h4><p>"+concept+"</p><h4>Cómo llevarlo a la práctica</h4><p>"+action+"</p><h4>Ejemplo aplicado</h4><p>"+scenario+"</p><div class='notice'><strong>Resultado esperado:</strong> "+outcome+"</div><h4>Antes de continuar</h4><p>Explica con tus propias palabras qué harías, por qué lo harías y cómo comprobarías que tu decisión fue adecuada.</p></article>";
+   learningLessons[area][level]={title:title,html:html,questions:questions};
+   conceptMapData[area][level]={root:title,nodes:[["Concepto esencial",concept,concept,scenario],["Aplicación",action,action,scenario],["Resultado",outcome,outcome,scenario]]};
+   practicalChallenges[area][level]={title:"Reto aplicado · "+title,scenario:scenario+" ¿Cuál es la decisión más adecuada?",options:[["A",action],["B",distractAction],["C",distractScenario]],correct:0,feedback:action+" "+outcome};
+  });
+ });
+ function renderNewAreaLevels(area){
+  const root=document.getElementById("learningLevels");if(!root)return;
+  let grid=root.querySelector(":scope > .grid");
+  if(!grid){grid=document.createElement("div");grid.className="grid";root.appendChild(grid);}
+  grid.innerHTML=levelDefs.map(def=>"<article class='card level-route-card'><span class='eyebrow'>FASE "+(def.number<=3?"1":"2")+" · NIVEL "+def.number+"</span><h3>"+def.short+"</h3><p>"+(def.number<=3?["Comprende los conceptos esenciales.","Aplica lo aprendido en tareas guiadas.","Analiza situaciones y justifica decisiones."][def.number-1]:"Profundiza y aplica nuevas competencias digitales.")+"</p><button class='text-button' type='button' data-level='"+def.id+"'>Comenzar "+def.short+" →</button></article>").join("");
+ }
+ const originalRefresh=window.refreshLearningLevelLocks;
+ window.refreshLearningLevelLocks=function(selected){
+  if(!isNewArea(selected))return originalRefresh(selected);
+  renderNewAreaLevels(selected);
+  const p=progress(),phaseOne=["basico","intermedio","avanzado"].every(l=>passed(p,selected+"-"+l)),integrator=passed(p,selected+"-integrador");
+  const unlocked={basico:true,intermedio:passed(p,selected+"-basico"),avanzado:passed(p,selected+"-intermedio")};
+  levelDefs.slice(3).forEach((def,i)=>{unlocked[def.id]=integrator&&(i===0||passed(p,selected+"-"+levelDefs[i+2].id));});
+  document.querySelectorAll("#learningLevels [data-level]").forEach(btn=>{
+   const id=btn.dataset.level,done=passed(p,selected+"-"+id),open=!!unlocked[id],n=levelNumber(id);
+   btn.disabled=!open;
+   btn.textContent=done?"✓ Nivel "+n+" concluido · Ver certificado":open?"Comenzar nivel "+n+" →":n===4?"🔒 Aprueba el examen integrador de la fase 1":"🔒 Completa el nivel anterior";
+   btn.title=done?"Nivel aprobado. Consulta tu certificado y continúa.":open?"Nivel disponible":n===4?"Aprueba los tres primeros niveles y el examen integrador para abrir la fase 2.":"Aprueba el nivel anterior para continuar.";
+   btn.classList.toggle("level-locked",!open);btn.classList.toggle("level-completed",done);
+  });
+  return unlocked;
+ };
+ const originalOpen=window.openLearningLesson;
+ window.openLearningLesson=function(selected,level){
+  if(!isNewArea(selected))return originalOpen(selected,level);
+  const material=learningLessons[selected]?.[level];if(!material)return;
+  const unlocked=window.refreshLearningLevelLocks(selected);if(!unlocked[level])return;
+  topic=selected;learningLevel=level;nexoraExamMode="level";
+  const record=progress()[selected+"-"+level]||{};
+  if(passed(progress(),selected+"-"+level)){window.showCompletedLearningLevel(selected,level,record);return;}
+  document.getElementById("nextLevelCTA").hidden=true;
+  document.getElementById("learningLevels").hidden=true;document.getElementById("lessonPanel").hidden=false;
+  document.getElementById("learningFlowSteps").hidden=false;
+  document.getElementById("lessonEyebrow").textContent="Aula virtual · "+areaNames[selected]+" · Nivel "+levelNumber(level);
+  document.getElementById("lessonTitle").textContent=material.title+" · "+levelName(level);
+  document.getElementById("lessonIntro").textContent="Aprende, practica, resuelve el reto aplicado y supera la evaluación con al menos 70 %.";
+  document.getElementById("lessonContent").innerHTML=material.html;
+  window.renderConceptMap(selected,level);window.renderPracticalChallenge(selected,level);
+  lessonCompleted=false;practicePassed=false;practicalPassed=false;
+  document.getElementById("practicalChallengeMount").hidden=true;
+  ["completeLessonStep","lessonPractice","readLesson"].forEach(id=>{document.getElementById(id).hidden=false;});
+  document.getElementById("completeLessonStep").disabled=false;document.getElementById("completeLessonStep").textContent="He terminado la clase";
+  document.getElementById("lessonPractice").disabled=true;document.getElementById("lessonPractice").textContent="Completa la clase para practicar →";
+  activePracticeQuestions=shuffleList(material.questions.map(randomizePracticeQuestion));practiceIndex=0;practiceScore=0;practiceAnswered=false;
+  document.getElementById("inlineLessonQuiz").hidden=true;document.getElementById("inlineLessonResult").hidden=true;
+  document.getElementById("startLevelExam").hidden=true;document.getElementById("levelExamPanel").hidden=true;document.getElementById("levelExamReport").hidden=true;
+  ["conceptMapMount","practicalChallengeMount"].forEach(id=>{document.getElementById(id).hidden=false;});
+  window.updateLearningGuide(selected,level);
+  window.updateLearningFlowSteps(1);resetQuiz();showView("aprender");
+  requestAnimationFrame(()=>{document.getElementById("lessonTitle").focus({preventScroll:true});window.scrollTo({top:0,behavior:"auto"});});
+ };
+ const originalCompleted=window.showCompletedLearningLevel;
+ window.showCompletedLearningLevel=function(selected,level,record){
+  if(!isNewArea(selected))return originalCompleted(selected,level,record);
+  const n=levelNumber(level),areaName=lessons[selected].title,percent=Math.max(Number(record.bestPercent)||0,Number(record.examPercent)||0);
+  document.getElementById("lessonPanel").hidden=false;document.getElementById("learningLevels").hidden=true;
+  document.getElementById("lessonEyebrow").textContent="Tu avance · "+areaName;
+  document.getElementById("lessonTitle").textContent="¡Nivel "+n+" concluido!";
+  document.getElementById("lessonIntro").textContent="Este nivel está aprobado y guardado. Puedes descargar tu certificado y continuar.";
+  document.getElementById("learningFlowSteps").hidden=true;
+  document.getElementById("lessonContent").innerHTML="<section class='lesson-complete-card'><div class='lesson-complete-mark'>✓</div><span class='eyebrow'>NIVEL APROBADO</span><h3>"+levelName(level)+"</h3><p>"+areaName+" · Resultado registrado: <strong>"+percent+"%</strong></p><p>Tu progreso se ha guardado. Continúa cuando estés preparado.</p></section>";
+  ["conceptMapMount","practicalChallengeMount","inlineLessonQuiz","inlineLessonResult","levelExamPanel"].forEach(id=>{const el=document.getElementById(id);if(el)el.hidden=true;});
+  ["completeLessonStep","lessonPractice","readLesson","startLevelExam"].forEach(id=>{const el=document.getElementById(id);if(el)el.hidden=true;});
+  const next=document.getElementById("nextLevelCTA");next.hidden=false;
+  const actions=document.createElement("div");actions.className="lesson-actions";
+  const cert=document.createElement("button");cert.type="button";cert.className="btn secondary";cert.textContent="↓ Descargar certificado del nivel";
+  cert.addEventListener("click",()=>window.NEXORA_DOWNLOAD_LEVEL_CERTIFICATE?.({topic:selected,level,percent,skills:record.lastExamSkills||[]}));actions.appendChild(cert);
+  document.getElementById("lessonContent").appendChild(actions);
+  if(n===3){
+   const integrated=progress()[selected+"-integrador"]||{};
+   if(passed(progress(),selected+"-integrador")){
+    next.textContent="✓ Examen integrador aprobado · Descargar certificado";next.onclick=()=>window.NEXORA_DOWNLOAD_LEVEL_CERTIFICATE?.({topic:selected,level:"integrador",percent:integrated.bestPercent||integrated.examPercent||100,skills:integrated.lastExamSkills||[]});
+    const phase=document.createElement("button");phase.type="button";phase.className="btn";phase.textContent="¡Has pasado a la siguiente fase! · Abrir nivel 4 →";phase.addEventListener("click",()=>window.openLearningLesson(selected,"nivel_04"));actions.appendChild(phase);
+   }else{next.textContent="📝 Presentar examen integrador de la fase 1 →";next.onclick=()=>window.startIntegrativeAssessment(selected);}
+  }else if(n<15){const nextDef=levelDefs[n];next.textContent="Pasar al nivel "+(n+1)+" · "+nextDef.short+" →";next.onclick=()=>window.openLearningLesson(selected,nextDef.id);}
+  else{next.hidden=true;const finish=document.createElement("p");finish.className="notice";finish.textContent="¡Has completado los 15 niveles de "+areaName+"! Tu ruta formativa está concluida.";actions.appendChild(finish);}
+  showView("aprender");
+ };
+ const originalGuide=window.updateLearningGuide;
+ window.updateLearningGuide=function(subject,level){
+  if(!isNewArea(subject))return originalGuide(subject,level);
+  const title=document.getElementById("learningNexoTitle"),message=document.getElementById("learningNexoMessage"),face=document.getElementById("learningNexoFace"),step=document.getElementById("learningNexoStep");
+  const def=levelDefs.find(x=>x.id===level),item=curricula[subject][def?def.number-1:0];
+  if(title)title.textContent=level==="start"?"¡Vamos con "+areaNames[subject]+"!":item[0]+" · Nivel "+def.number;
+  if(message)message.textContent=level==="start"?"Esta ruta tiene 15 niveles. Avanza paso a paso: comprende, practica, resuelve retos y demuestra lo aprendido.":item[1]+" "+item[2];
+  if(face)face.textContent=subject==="tecnologia"?"💻":"🌐";
+  if(step)step.textContent=level==="start"?"15 niveles para aprender con autonomía.":"Consejo de NEXO · Aprende a tu ritmo.";
+ };
+ const areasRoot=document.getElementById("learningAreas");
+ if(areasRoot){
+  areasRoot.insertAdjacentHTML("beforeend",'<article class="card"><div class="card-icon">⌘</div><h3>Tecnología Educativa</h3><p>Herramientas, información, colaboración y seguridad digital.</p><button class="text-button" type="button" data-nexora-route="tecnologia">Estudiar · 15 niveles →</button></article><article class="card"><div class="card-icon">◎</div><h3>Inclusión Digital</h3><p>Accesibilidad, autonomía y participación sin barreras.</p><button class="text-button" type="button" data-nexora-route="inclusion">Estudiar · 15 niveles →</button></article>');
+  areasRoot.querySelectorAll("[data-nexora-route]").forEach(b=>b.addEventListener("click",()=>openLearningArea(b.dataset.nexoraRoute)));
+ }
+ [["view-tecnologia","tecnologia"],["view-inclusion","inclusion"]].forEach(([view,area])=>{
+  const root=document.getElementById(view)?.querySelector(".container.page");if(!root)return;
+  const panel=document.createElement("section");panel.className="panel";panel.style.marginTop="22px";
+  panel.innerHTML="<span class='eyebrow'>RUTA FORMATIVA COMPLETA</span><h3>15 niveles · "+areaNames[area]+"</h3><p class='muted'>Clases, prácticas, retos aplicados, evaluaciones y certificados por nivel. Aprueba los tres primeros niveles y el examen integrador para desbloquear la fase 2.</p><button class='btn secondary' type='button'>Abrir mi ruta de aprendizaje →</button>";
+  panel.querySelector("button").addEventListener("click",()=>openLearningArea(area));root.appendChild(panel);
+ });
+ document.getElementById("levelExamFinish")?.addEventListener("click",()=>{});
+ const examFinishPatchMarker="NEXORA_15_PHASE_BUTTON";
+ window.NEXORA_LEVEL_NAME=levelName;
+})();
+</script>
+</body></html>`);
   win.document.close();
  }
  function render(){
@@ -2111,7 +2256,7 @@ body{padding:26px;background:#e9edf2}
     const title=document.createElement("p");title.textContent="Nivel "+level.number+" · "+level.name;
     const status=document.createElement("div");status.className="certificate-status "+(earned?"ready":"");status.textContent=earned?"✓ Disponible · Mejor resultado: "+score+"%":(index>0&&!levels.slice(0,index).every(previous=>passed(progress,subject,previous))?"🔒 Completa primero los niveles anteriores":"🔒 Aprueba la evaluación con al menos 70 %");
     el.append(heading,title,status);
-    if(earned)el.appendChild(makeButton("↓ Descargar certificado",()=>certificateDocument({name:getName(profile),subject:subject.name,level:"Nivel "+level.number+" · "+level.name,score:score,skill:subject.skills[index],tier:"basic"})));
+    if(earned)el.appendChild(makeButton("↓ Descargar certificado",()=>certificateDocument({name:getName(profile),subject:subject.name,level:"Nivel "+level.number+" · "+level.name,score:score,skill:subject.skills[index]||"Aprendizaje y aplicación de competencias",tier:"basic"})));
     cards.push(el);
    });
   });
@@ -2120,12 +2265,12 @@ body{padding:26px;background:#e9edf2}
    const awards=[];
    subjects.forEach(subject=>{
     const earned=areaComplete(progress,subject);
-    const el=card("Distinción · "+subject.name,"Reconoce la culminación de los tres niveles evaluables disponibles en esta área.",earned?"✓ Distinción disponible":"🔒 Aprueba los niveles 1, 2 y 3 de esta área",earned,"distinction");
-    if(earned)el.appendChild(makeButton("Ver / imprimir distinción",()=>certificateDocument({name:getName(profile),subject:subject.name,level:"Ruta completa del área · Niveles 1–3",score:100,skill:"Trayectoria secuencial de aprendizaje",tier:"distinction",subtitle:"Se verificó el progreso registrado en la plataforma."})));
+    const el=card("Distinción · "+subject.name,"Reconoce la culminación de los 15 niveles de aprendizaje de esta área.",earned?"✓ Distinción disponible":"🔒 Aprueba los 15 niveles de esta área",earned,"distinction");
+    if(earned)el.appendChild(makeButton("Ver / imprimir distinción",()=>certificateDocument({name:getName(profile),subject:subject.name,level:"Ruta completa del área · 15 niveles",score:100,skill:"Trayectoria secuencial de aprendizaje",tier:"distinction",subtitle:"Se verificó el progreso registrado en la plataforma."})));
     awards.push(el);
    });
    const premiumEarned=allCurrentLevelsComplete(progress);
-   const premium=card("NEXUS Integral Premium","Reconocimiento de la fase piloto: culminación de las tres áreas y los nueve niveles evaluables disponibles.",premiumEarned?"★ Reconocimiento integral disponible":"🔒 Completa los 9 niveles evaluables de Finanzas, Contabilidad y Tributación",premiumEarned,"premium");
+   const premium=card("NEXUS Integral Premium","Reconocimiento integral: culminación de los 75 niveles de las cinco áreas.",premiumEarned?"★ Reconocimiento integral disponible":"🔒 Completa los 75 niveles de las cinco áreas",premiumEarned,"premium");
    if(premiumEarned)premium.appendChild(makeButton("Ver / imprimir certificado premium",()=>certificateDocument({name:getName(profile),subject:"Educación financiera · Contabilidad · Tributación",level:"Ruta integral de aprendizaje · Fase piloto",score:100,skill:"Culminación de todas las evaluaciones disponibles",tier:"premium",subtitle:"Reconocimiento integral de la ruta educativa actualmente implementada."})));
    awards.push(premium);
    awardsRoot.replaceChildren(...awards);
@@ -2142,7 +2287,7 @@ body{padding:26px;background:#e9edf2}
  }
  window.NEXORA_DOWNLOAD_LEVEL_CERTIFICATE=({topic,level,percent,skills=[]}={})=>{
    const subject=subjects.find(item=>item.id===topic);
-   const levelNames={basico:"Nivel 1 · Fundamentos",intermedio:"Nivel 2 · Aplicación",avanzado:"Nivel 3 · Análisis",integrador:"Examen integrador · Básico, Intermedio y Avanzado"};
+   const levelNames={basico:"Nivel 1 · Fundamentos",intermedio:"Nivel 2 · Aplicación",avanzado:"Nivel 3 · Análisis",integrador:"Examen integrador · Básico, Intermedio y Avanzado",nivel_04:"Nivel 4 · Práctica guiada",nivel_05:"Nivel 5 · Resolución de casos",nivel_06:"Nivel 6 · Integración",nivel_07:"Nivel 7 · Planificación",nivel_08:"Nivel 8 · Evaluación aplicada",nivel_09:"Nivel 9 · Pensamiento crítico",nivel_10:"Nivel 10 · Gestión",nivel_11:"Nivel 11 · Estrategia",nivel_12:"Nivel 12 · Análisis avanzado",nivel_13:"Nivel 13 · Proyecto aplicado",nivel_14:"Nivel 14 · Dominio integral",nivel_15:"Nivel 15 · NEXORA Master"};
    const skill=Array.isArray(skills)&&skills.length?skills.map(item=>item.name).filter(Boolean).join(" · "):"Aprendizaje y aplicación de conocimientos";
    certificateDocument({name:getName(profileData()),subject:subject?.name||"Área NEXORA",level:levelNames[level]||"Nivel completado",score:percent,skill,tier:"basic",subtitle:"Evaluación aprobada con el mínimo requerido del 70 %."});
   };
