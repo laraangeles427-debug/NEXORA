@@ -1451,7 +1451,33 @@ function startIntegrativeAssessment(selected){
  document.getElementById("levelExamPanel").hidden=true;document.getElementById("levelExamReport").hidden=true;
  showView("aprender");start.scrollIntoView({behavior:"smooth",block:"center"});
 }
-function openLearningArea(selected){if(!lessons[selected]||!learningLessons[selected])return;window.NEXORA_ACTIVE_LEARNING_AREA=selected;topic=selected;updateLearningGuide(selected,"start");document.getElementById("learningAreas").hidden=true;document.getElementById("learningIntro").hidden=true;document.getElementById("learningProgressPanel").hidden=true;document.getElementById("toggleLearningProgress").hidden=true;document.getElementById("learningLevels").hidden=false;document.getElementById("learningLevelsTitle").textContent="Aula de "+lessons[selected].title;document.getElementById("learningPageTitle").textContent="Aula de "+lessons[selected].title;document.getElementById("lessonPanel").hidden=true;refreshLearningLevelLocks(selected);showView("aprender");}
+async function syncAssessmentProgressFromServer(selected){
+ try{
+  const data=await invokeNexoraAssessment({action:"progress"});
+  const attempts=(data.attempts||[]).filter(x=>x&&x.area===selected);
+  if(!attempts.length)return;
+  const progress=readLearningProgress(),grouped=new Map();
+  attempts.forEach(row=>{const key=selected+"-"+row.level;if(!grouped.has(key))grouped.set(key,[]);grouped.get(key).push(row);});
+  let changed=false;
+  grouped.forEach((rows,key)=>{
+   const prev=progress[key]||{},history=Array.isArray(prev.history)?prev.history.slice():[];
+   const seen=new Set(history.map(x=>x.requestId).filter(Boolean));
+   rows.forEach(row=>{
+    if(seen.has(row.request_id))return;
+    history.push({date:row.submitted_at,requestId:row.request_id,percent:Number(row.percent)||0,score:Number(row.correct_count)||0,total:Number(row.question_count)||0,topic:row.area,level:row.level,type:row.level==="integrador"?"integrative_exam":"exam",serverVerified:true});
+    seen.add(row.request_id);changed=true;
+   });
+   const best=Math.max(Number(prev.bestPercent)||0,...rows.map(x=>Number(x.percent)||0));
+   const passedRows=rows.filter(x=>x.passed===true);
+   const passedBest=passedRows.length?Math.max(Number(prev.examPercent)||0,...passedRows.map(x=>Number(x.percent)||0)):Number(prev.examPercent)||0;
+   const latest=rows[rows.length-1];
+   const merged={...prev,attempts:Math.max(Number(prev.attempts)||0,rows.length),bestPercent:best,examPercent:passedBest,examPassed:prev.examPassed===true||passedRows.length>0,lastPercent:Number(latest.percent)||0,updatedAt:latest.submitted_at||prev.updatedAt,history:history.slice(-60)};
+   if(JSON.stringify(merged)!==JSON.stringify(prev)){progress[key]=merged;changed=true;}
+  });
+  if(changed){localStorage.setItem(learningProgressKey,JSON.stringify(progress));renderLearningProgress();renderProfile();refreshLearningLevelLocks(selected);if(typeof nexoraQueueSync==="function")nexoraQueueSync();}
+ }catch(error){console.warn("NEXORA: no se pudo reconciliar el historial del servidor.",error?.message||error);}
+}
+function openLearningArea(selected){if(!lessons[selected]||!learningLessons[selected])return;window.NEXORA_ACTIVE_LEARNING_AREA=selected;topic=selected;updateLearningGuide(selected,"start");document.getElementById("learningAreas").hidden=true;document.getElementById("learningIntro").hidden=true;document.getElementById("learningProgressPanel").hidden=true;document.getElementById("toggleLearningProgress").hidden=true;document.getElementById("learningLevels").hidden=false;document.getElementById("learningLevelsTitle").textContent="Aula de "+lessons[selected].title;document.getElementById("learningPageTitle").textContent="Aula de "+lessons[selected].title;document.getElementById("lessonPanel").hidden=true;refreshLearningLevelLocks(selected);showView("aprender");syncAssessmentProgressFromServer(selected);}
 document.querySelectorAll("[data-topic]").forEach(b=>b.addEventListener("click",()=>openLearningArea(b.dataset.topic)));
 document.querySelectorAll("[data-topic-entry]").forEach(b=>b.addEventListener("click",()=>openLearningArea(b.dataset.topicEntry)));
 document.getElementById("learningLevels").addEventListener("click",event=>{const button=event.target.closest("[data-level]");if(!button||button.disabled)return;openLearningLesson(topic,button.dataset.level);});
