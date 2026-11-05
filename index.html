@@ -1971,52 +1971,60 @@ const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition
   const logoUrl=new URL("./Logotipo%20tecnol%C3%B3gico%20azul%20y%20blanco.png?v=2",window.location.href).href;
   const win=window.open("","_blank");
   if(!win){alert("Tu navegador bloqueó la ventana del certificado. Permite las ventanas emergentes para este sitio e inténtalo otra vez.");return;}
-  const labels={basic:"Constancia de nivel",distinction:"Distinción de área",premium:"Reconocimiento integral premium"};
+  const labels={basic:"CERTIFICADO DE LOGRO",distinction:"DISTINCIÓN DE ÁREA",premium:"RECONOCIMIENTO INTEGRAL"};
   const safeName=esc(name||"Estudiante NEXORA"),safeSubject=esc(subject||"Ruta integral NEXORA"),safeLevel=esc(level||"Trayectoria integral"),safeSkill=esc(skill||"Aprendizaje financiero, contable y tributario"),safeSubtitle=esc(subtitle);
   const tierClass=tier==="premium"?"premium":tier==="distinction"?"distinction":"basic";
-  const title=tier==="premium"?"NEXUS Integral Premium":tier==="distinction"?"Distinción de Aprendizaje":"Constancia de Aprendizaje";
-  const awardCopy=tier==="premium"?"ha completado todos los niveles evaluables disponibles de la ruta integral de NEXORA en esta fase piloto.":tier==="distinction"?"ha completado satisfactoriamente los tres niveles evaluables disponibles del área indicada.":"ha aprobado la evaluación correspondiente al nivel indicado, con el resultado requerido por NEXORA.";
+  const title=tier==="premium"?"NEXUS INTEGRAL":tier==="distinction"?"Distinción de Aprendizaje":"Certificado de Aprobación";
   const percent=Number.isFinite(Number(score))?Math.max(0,Math.min(100,Number(score))):100;
+  const copy=tier==="premium"?"ha culminado la ruta integral de aprendizaje reconocida por NEXORA.":tier==="distinction"?"ha demostrado un desempeño destacado en el área de aprendizaje indicada.":"ha aprobado satisfactoriamente la evaluación del nivel indicado, alcanzando el porcentaje mínimo requerido.";
   win.document.open();
-  win.document.write(`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${title} · NEXORA</title><style>*{box-sizing:border-box}
-:root{--navy:#07182d;--navy2:#102b46;--gold:#c9a45b;--cyan:#00aeca;--paper:#f1e7d4;--ink:#17283d}
-html,body{margin:0;min-height:100%;font-family:"Palatino Linotype",Palatino,Georgia,serif;color:var(--ink)}
-body{padding:24px;background:#e8edf2}
-.certificate-doc{position:relative;isolation:isolate;overflow:hidden;width:min(100%,1120px);aspect-ratio:297/210;margin:0 auto;padding:22px 54px 20px 27%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:linear-gradient(135deg,#f6efdf 0%,#ead9b9 100%);border:8px solid #10243b;outline:2px solid var(--gold);outline-offset:-17px;box-shadow:0 18px 50px rgba(7,27,49,.22)}
-.certificate-doc:before{content:"";position:absolute;z-index:-1;inset:0 auto 0 0;width:29%;background:linear-gradient(155deg,#061326 0%,#123a58 58%,#07182d 100%);clip-path:polygon(0 0,100% 0,82% 18%,100% 35%,78% 51%,100% 68%,82% 84%,100% 100%,0 100%);border-right:3px solid var(--gold)}
-.certificate-doc:after{content:"N";position:absolute;z-index:-1;left:5%;top:50%;transform:translateY(-50%);font:700 150px Georgia,serif;color:rgba(255,255,255,.055);letter-spacing:-12px}
-.certificate-doc.basic{background:linear-gradient(135deg,#f6efdf,#e9d7b7);border-color:#10243b}
-.certificate-doc.distinction{background:linear-gradient(135deg,#f4e7e7,#dfc1c6);border-color:#542c3a;outline-color:#c49a72}
-.certificate-doc.premium{background:linear-gradient(135deg,#14263f 0%,#203e60 100%);border-color:#c9a45b;outline-color:#f2d68e;color:#f8f0df}
-.certificate-print-logo{width:88px;height:88px;object-fit:contain;display:block;margin:0 auto 8px;background:#071b31;border:2px solid var(--gold);border-radius:50%;padding:8px;box-shadow:0 4px 15px rgba(7,27,49,.25)}
-.certificate-brandline{font:800 10px Arial,Helvetica,sans-serif;color:#365b77;letter-spacing:3px;text-transform:uppercase}
-.certificate-print-tagline{font:11px Arial,Helvetica,sans-serif;letter-spacing:.5px;color:#48627a;margin:4px 0 9px}
-.certificate-seal{display:inline-block;padding:6px 16px;border:1px solid var(--gold);color:#896729;border-radius:2px;font:800 9px Arial,Helvetica,sans-serif;letter-spacing:2px;text-transform:uppercase;margin-bottom:7px}
-.doc-tier{font:800 9px Arial,Helvetica,sans-serif;letter-spacing:3px;text-transform:uppercase;color:#61758a}
-.title{font:500 31px "Palatino Linotype",Palatino,Georgia,serif;letter-spacing:1.5px;margin:5px 0 3px;color:#0b213b;text-transform:uppercase}
-.subtitle{font:12px Arial,Helvetica,sans-serif;line-height:1.4;max-width:620px;margin:4px 0}
-.doc-name{font-family:"Segoe Script","Brush Script MT","URW Chancery L",cursive;font-style:italic;font-weight:500;font-size:39px;color:#087e9e;border-bottom:1px solid #c2a76e;padding:3px 24px 7px;margin:4px 0 7px;max-width:100%;overflow-wrap:anywhere}
-.doc-level{font-size:16px;font-weight:700;margin:3px 0;color:#122b45}
-.doc-subject{font:700 13px Arial,Helvetica,sans-serif;margin:3px 0}
-.doc-detail{font:10px Arial,Helvetica,sans-serif;line-height:1.4;max-width:620px;color:#506175;margin:4px 0}
-.doc-footer{display:flex;justify-content:space-between;gap:22px;width:100%;margin-top:12px;text-align:left;font:9px Arial,Helvetica,sans-serif;color:#52657a}
-.doc-footer div{border-top:1px solid #bca875;padding-top:5px;flex:1}
-.doc-disclaimer{font:7px Arial,Helvetica,sans-serif;color:#6a7887;max-width:640px;margin:7px 0 0;line-height:1.3}
-.premium .certificate-brandline,.premium .certificate-print-tagline,.premium .doc-tier,.premium .subtitle,.premium .doc-detail,.premium .doc-footer,.premium .doc-disclaimer{color:#e7dfd0}
-.premium .title{color:#fff5df}.premium .doc-name{color:#f0ce7b;border-color:#c9a45b}.premium .doc-level{color:#f0ce7b}.premium .doc-subject{color:#fff5df}.premium .certificate-seal{border-color:#d7b968;color:#f0ce7b}
-.distinction .title{color:#4c2431}.distinction .doc-name{color:#8b4057}
-.print{display:block;margin:18px auto;padding:12px 20px;background:#071b31;color:white;border:1px solid #c9a45b;border-radius:5px;font-weight:700;cursor:pointer}
-@media(max-width:760px){.certificate-doc{aspect-ratio:auto;min-height:760px;padding:105px 22px 30px;justify-content:flex-start}.certificate-doc:before{width:100%;height:82px;inset:0 0 auto;clip-path:none}.certificate-doc:after{display:none}.certificate-print-logo{margin-top:4px}}
+  win.document.write(`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title} · NEXORA</title><style>
+*{box-sizing:border-box}
+:root{--navy:#07172b;--navy2:#102b47;--cyan:#00b9dc;--gold:#c7a66a;--ink:#182a3d;--muted:#647386;--paper:#f8f5ed}
+html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif;color:var(--ink)}
+body{padding:26px;background:#e9edf2}
+.certificate{position:relative;isolation:isolate;overflow:hidden;display:grid;grid-template-columns:27% 73%;width:min(100%,1120px);aspect-ratio:297/210;margin:0 auto;background:var(--paper);border:1px solid #d7c49c;box-shadow:0 20px 55px rgba(7,23,43,.18)}
+.certificate:before{content:"";position:absolute;inset:9px;z-index:-1;border:1px solid rgba(181,145,83,.62);pointer-events:none}
+.rail{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:30px 22px;background:linear-gradient(155deg,#061326 0%,#123653 55%,#07182d 100%);color:#fff;text-align:center}
+.rail:after{content:"";position:absolute;inset:13px;border:1px solid rgba(215,185,121,.55);pointer-events:none}
+.logo-wrap{width:100px;height:100px;display:grid;place-items:center;border:1px solid var(--gold);border-radius:50%;background:#fff;padding:10px;box-shadow:0 8px 25px rgba(0,0,0,.22)}
+.logo{width:100%;height:100%;object-fit:contain}
+.brand{margin-top:13px;font-size:18px;font-weight:800;letter-spacing:5px}
+.brand span{color:var(--cyan)}
+.brand-sub{margin-top:7px;font-size:8px;line-height:1.6;letter-spacing:1.6px;text-transform:uppercase;color:#c7d5e2}
+.rail-rule{width:42px;height:2px;background:var(--gold);margin:19px auto}
+.rail-caption{max-width:170px;font-family:Georgia,serif;font-size:15px;line-height:1.5;color:#e5d5b4}
+.rail-bottom{font-size:8px;line-height:1.7;letter-spacing:1.5px;text-transform:uppercase;color:#bdcad6}
+.main{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px 54px 25px;position:relative}
+.kicker{font-size:9px;font-weight:800;letter-spacing:3px;color:#8b7045;text-transform:uppercase}
+.heading{font-family:Georgia,"Times New Roman",serif;font-size:clamp(25px,3vw,39px);font-weight:500;letter-spacing:.5px;color:var(--navy);margin:12px 0 7px}
+.intro{font-family:Georgia,serif;font-size:14px;color:#5f6e7d;margin:8px 0 5px}
+.person{font-family:"Segoe Script","Brush Script MT",cursive;font-size:clamp(27px,3.5vw,43px);font-style:italic;color:#087f9d;line-height:1.25;margin:5px 0 9px;padding:0 15px 7px;border-bottom:1px solid #c8ad7c;max-width:100%;overflow-wrap:anywhere}
+.copy{font-family:Georgia,serif;font-size:12px;line-height:1.55;color:#536273;max-width:650px;margin:6px auto}
+.subject{margin-top:13px;padding:8px 19px;border:1px solid #d8c49a;background:#f1eadb;color:#243b52;font-size:11px;font-weight:800;letter-spacing:1.1px;text-transform:uppercase}
+.level{font-family:Georgia,serif;font-size:17px;font-weight:700;color:#122b45;margin:11px 0 4px}
+.skill{font-size:9px;line-height:1.5;color:#6b7785;max-width:600px;margin:3px auto}
+.result{display:inline-flex;align-items:center;gap:9px;margin-top:12px;padding:8px 16px;border-radius:30px;background:#e4f4f4;border:1px solid #a9d7d8;color:#116b75;font-size:10px;font-weight:800;letter-spacing:.4px}
+.result-mark{width:17px;height:17px;display:grid;place-items:center;border-radius:50%;background:#117c81;color:#fff;font-size:11px}
+.footer{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:auto;padding-top:19px}
+.footer-block{border-top:1px solid #bca777;padding-top:7px;text-align:left;font-size:9px;color:#637182;line-height:1.5}
+.footer-block strong{display:block;color:#24394e;font-size:10px}
+.footer-block:last-child{text-align:right}
+.disclaimer{font-size:7px;line-height:1.4;color:#88919a;margin:10px 0 0;max-width:660px}
+.premium .rail{background:linear-gradient(155deg,#101a2b,#233d5a 60%,#0b1b30)}
+.premium .main{background:linear-gradient(135deg,#f8f1df,#e9dfc8)}
+.premium .heading{color:#80602e}
+.distinction .rail{background:linear-gradient(155deg,#3c1d31,#6d354b 60%,#30182a)}
+.distinction .person{color:#8b4057}
+.actions{display:flex;justify-content:center;margin:18px auto 0}
+.print{border:0;border-radius:9px;padding:12px 22px;background:#07172b;color:#fff;font-weight:700;letter-spacing:.2px;cursor:pointer;box-shadow:0 5px 16px rgba(7,23,43,.18)}
+.print:hover{background:#123653}
+@media(max-width:760px){body{padding:12px}.certificate{aspect-ratio:auto;min-height:760px;grid-template-columns:1fr}.rail{min-height:190px;padding:20px}.rail:after{inset:8px}.logo-wrap{width:70px;height:70px}.brand{font-size:15px}.rail-rule,.rail-caption,.rail-bottom{display:none}.main{padding:28px 20px}.footer{margin-top:25px}}
 @page{size:A4 landscape;margin:0}
-@media print{html,body{width:297mm;height:210mm;margin:0;padding:0;background:transparent;-webkit-print-color-adjust:exact;print-color-adjust:exact}.certificate-doc{width:297mm;height:210mm;max-width:none;aspect-ratio:auto;min-height:0;margin:0;padding:8mm 12mm 7mm 27%;box-shadow:none;break-inside:avoid;page-break-inside:avoid}.certificate-doc:before{width:29%}.certificate-doc:after{display:block}.certificate-print-logo{width:20mm;height:20mm}.certificate-brandline{font-size:8pt}.certificate-print-tagline{font-size:8pt;margin:2mm 0}.certificate-seal{font-size:7pt;margin-bottom:1.5mm}.title{font-size:22pt}.doc-name{font-size:27pt}.subtitle{font-size:9pt}.doc-level{font-size:11pt}.doc-subject{font-size:9pt}.doc-detail{font-size:7.5pt}.doc-footer{margin-top:3mm;font-size:7pt}.doc-disclaimer{font-size:5.5pt;margin-top:1.5mm}.print{display:none}}
-.profile-start-row{display:flex;justify-content:flex-start;margin:0 0 14px}.profile-start-button{display:inline-flex;align-items:center;gap:9px;padding:8px 14px;border:1px solid rgba(8,200,245,.42);border-radius:10px;background:rgba(8,200,245,.09);color:var(--cyan);font-size:.86rem;font-weight:800;letter-spacing:.01em}.profile-start-button:hover{background:rgba(8,200,245,.17);border-color:var(--cyan)}
-.learning-flow-steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:18px 0 12px}.quiz-sound-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 18px}.quiz-sound-row .text-button{border-color:rgba(8,200,245,.38);background:rgba(8,200,245,.07)}.quiz-feedback-pop{animation:quizFeedbackPop .22s ease-out}@keyframes quizFeedbackPop{from{opacity:.55;transform:translateY(4px)}to{opacity:1;transform:none}}.learning-flow-steps span{padding:10px 8px;text-align:center;border:1px solid var(--line);border-radius:12px;color:var(--muted);font-size:.82rem;background:rgba(5,18,35,.7)}.learning-flow-steps span.current{border-color:var(--cyan);color:var(--white);background:rgba(8,200,245,.12)}.learning-flow-steps span.completed{border-color:rgba(34,197,94,.45);color:#a7f3d0;background:rgba(34,197,94,.07)}#lessonPractice:disabled{opacity:.5;cursor:not-allowed}.app-install-section{padding:30px 0;margin-top:34px;border-top:1px solid rgba(8,200,245,.22);background:linear-gradient(100deg,#061225,#091c30)}.app-install-inner{display:flex;align-items:center;justify-content:space-between;gap:24px}.app-install-inner h2{font-size:clamp(1.35rem,3vw,2rem);margin:5px 0}.app-install-inner p{color:var(--muted);margin:5px 0;max-width:700px}.app-install-inner .app-install-help{font-size:.82rem}@media(max-width:650px){.learning-flow-steps{grid-template-columns:repeat(2,minmax(0,1fr))}.app-install-inner{align-items:stretch;flex-direction:column}.app-install-inner .btn{width:100%}}
-
-/* Tecnología Educativa: módulos desplegables y lectura clara */
-.nx-space-grid-core{grid-template-columns:repeat(4,minmax(0,1fr))}@media(max-width:980px){.nx-space-grid-core{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:560px){.nx-space-grid-core{grid-template-columns:1fr}}
-
-.nx-tech-modules{align-items:start}.nx-tech-module summary{position:relative;display:block;list-style:none;cursor:pointer;padding-right:30px}.nx-tech-module summary::-webkit-details-marker{display:none}.nx-tech-module summary:after{content:"+";position:absolute;right:2px;top:0;color:var(--cyan);font-size:1.45rem;font-weight:800}.nx-tech-module[open] summary:after{content:"−"}.nx-tech-module summary .card-icon{display:inline-flex;margin-bottom:12px}.nx-tech-module summary h3{margin:0 0 8px}.nx-tech-module summary p{margin:0;color:var(--muted)}.nx-tech-detail{margin-top:16px;padding-top:14px;border-top:1px solid rgba(8,200,245,.22)}.nx-tech-detail li{margin:7px 0;color:var(--muted);line-height:1.6}.nx-tech-detail p{line-height:1.7}.nx-tech-check{margin-top:24px}.nx-tech-check>p{margin-top:14px;color:var(--cyan);font-weight:650}
-</style></head><body><main class="certificate-doc ${tierClass}"><img class="certificate-print-logo" src="${esc(logoUrl)}" alt="Logotipo oficial de NEXORA"><div class="certificate-brandline">NEXORA · Aprendizaje con propósito</div><p class="certificate-print-tagline">Conectando conocimiento, creando oportunidades.</p><div class="certificate-seal">${labels[tier]}</div><div class="doc-tier">RECONOCIMIENTO EDUCATIVO</div><h1 class="title">${title}</h1><p class="subtitle">Se otorga el presente reconocimiento a</p><div class="doc-name">${safeName}</div><p class="subtitle">${awardCopy}</p><div class="doc-level">${safeLevel}</div><div class="doc-subject">${safeSubject}</div><p class="doc-detail">${safeSubtitle} ${safeSkill}. ${safeSubtitle} ${safeSkill}. ${tier==="basic" ? 'Resultado registrado: <strong>${percent}%</strong>. Requisito mínimo de aprobación: 70%.' : tier==="distinction" ? 'Se verificó la aprobación secuencial de los niveles 1, 2 y 3 del área.' : 'Se verificó la culminación de los nueve niveles evaluables disponibles en esta fase piloto.'}</p><div class="doc-footer"><div><strong>${esc(date)}</strong><br>Fecha de emisión</div><div><strong>Plataforma educativa NEXORA</strong><br>Conectando conocimiento, creando oportunidades.</div></div><p class="doc-disclaimer">Reconocimiento educativo generado por la plataforma NEXORA. No equivale a un título oficial, certificación profesional ni acreditación emitida por una institución autorizada. La verificación pública de autenticidad no está disponible en esta versión.</p></main><button class="print" onclick="window.print()">Imprimir o guardar como PDF</button></body></html>`)
+@media print{html,body{width:297mm;height:210mm;margin:0;padding:0;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}.certificate{width:297mm;height:210mm;max-width:none;aspect-ratio:auto;margin:0;box-shadow:none;break-inside:avoid;page-break-inside:avoid}.rail{padding:8mm 6mm}.logo-wrap{width:25mm;height:25mm}.brand{font-size:13pt}.brand-sub{font-size:6pt}.rail-caption{font-size:11pt}.rail-bottom{font-size:6pt}.main{padding:8mm 13mm 6mm}.kicker{font-size:7pt}.heading{font-size:25pt;margin:3mm 0 1mm}.intro{font-size:10pt}.person{font-size:27pt;margin:1mm 0 2mm}.copy{font-size:9pt;margin:1mm auto}.subject{font-size:8pt;margin-top:3mm;padding:2mm 5mm}.level{font-size:13pt;margin:2mm 0 1mm}.skill{font-size:7pt}.result{font-size:8pt;margin-top:2mm;padding:2mm 4mm}.footer{margin-top:auto;padding-top:4mm;gap:12mm}.footer-block{font-size:7pt;padding-top:2mm}.footer-block strong{font-size:8pt}.disclaimer{font-size:5.5pt;margin-top:2mm}.actions{display:none}}
+</style></head><body><main class="certificate ${tierClass}">
+<aside class="rail"><div><div class="logo-wrap"><img class="logo" src="${esc(logoUrl)}" alt="Logotipo NEXORA"></div><div class="brand">NEX<span>O</span>RA</div><div class="brand-sub">Conocimiento que abre caminos</div><div class="rail-rule"></div><div class="rail-caption">Conectando conocimiento,<br>creando oportunidades.</div></div><div class="rail-bottom">Plataforma educativa<br>Formación · Innovación · Inclusión</div></aside>
+<section class="main"><div class="kicker">${labels[tier]} · NEXORA</div><h1 class="heading">${title}</h1><p class="intro">Se concede el presente reconocimiento a</p><div class="person">${safeName}</div><p class="copy">${copy}</p><div class="subject">${safeSubject}</div><div class="level">${safeLevel}</div><p class="skill">${safeSubtitle ? safeSubtitle+" · " : ""}${safeSkill}</p><div class="result"><span class="result-mark">✓</span> APROBADO · ${percent}% DE DESEMPEÑO</div><div class="footer"><div class="footer-block"><strong>${esc(date)}</strong>Fecha de emisión</div><div class="footer-block"><strong>NEXORA</strong>Conectando conocimiento, creando oportunidades.</div></div><p class="disclaimer">Reconocimiento educativo generado por la plataforma NEXORA. No equivale a un título oficial, certificación profesional ni acreditación emitida por una institución autorizada.</p></section></main><div class="actions"><button class="print" onclick="window.print()">Imprimir o guardar como PDF</button></div></body></html>`);
   win.document.close();
  }
  function render(){
