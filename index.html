@@ -868,6 +868,7 @@ document.getElementById("levelExamFinish").addEventListener("click",async()=>{
   history.push({date,percent,score:levelExamScore,total,topic,level:savedLevel,type:nexoraExamMode==="integrative"?"integrative_exam":"exam",skills,questionTexts:activeLevelExam.map(q=>q.q)});
   progress[id]={...prev,attempts:(Number(prev.attempts)||0)+1,bestPercent:Math.max(Number(prev.bestPercent)||0,percent),lastPercent:percent,examPercent:percent,examPassed:prev.examPassed===true||passed,updatedAt:date,history:history.slice(-60),lastExamSkills:skills};
   try{localStorage.setItem(learningProgressKey,JSON.stringify(progress));}catch(_){}
+  if(window.NEXORA_RENDER_CERTIFICATES)window.NEXORA_RENDER_CERTIFICATES();
   recordProfileActivity();renderLearningProgress();renderProfile();
   if(typeof refreshLearningLevelLocks==="function")refreshLearningLevelLocks(topic);
   if(typeof nexoraQueueSync==="function")nexoraQueueSync();
@@ -1493,7 +1494,7 @@ async function syncAssessmentProgressFromServer(selected){
    const merged={...prev,attempts:Math.max(Number(prev.attempts)||0,rows.length),bestPercent:best,examPercent:passedBest,examPassed:prev.examPassed===true||passedRows.length>0,lastPercent:Number(latest.percent)||0,updatedAt:latest.submitted_at||prev.updatedAt,history:history.slice(-60)};
    if(JSON.stringify(merged)!==JSON.stringify(prev)){progress[key]=merged;changed=true;}
   });
-  if(changed){localStorage.setItem(learningProgressKey,JSON.stringify(progress));renderLearningProgress();renderProfile();refreshLearningLevelLocks(selected);if(typeof nexoraQueueSync==="function")nexoraQueueSync();}
+  if(changed){localStorage.setItem(learningProgressKey,JSON.stringify(progress));renderLearningProgress();renderProfile();refreshLearningLevelLocks(selected);if(window.NEXORA_RENDER_CERTIFICATES)window.NEXORA_RENDER_CERTIFICATES();if(typeof nexoraQueueSync==="function")nexoraQueueSync();}
  }catch(error){console.warn("NEXORA: no se pudo reconciliar el historial del servidor.",error?.message||error);}
 }
 function openLearningArea(selected){if(!lessons[selected]||!learningLessons[selected])return;window.NEXORA_ACTIVE_LEARNING_AREA=selected;topic=selected;updateLearningGuide(selected,"start");document.getElementById("learningAreas").hidden=true;document.getElementById("learningIntro").hidden=true;document.getElementById("learningProgressPanel").hidden=true;document.getElementById("toggleLearningProgress").hidden=true;document.getElementById("learningLevels").hidden=false;document.getElementById("learningLevelsTitle").textContent="Aula de "+lessons[selected].title;document.getElementById("learningPageTitle").textContent="Aula de "+lessons[selected].title;document.getElementById("lessonPanel").hidden=true;refreshLearningLevelLocks(selected);showView("aprender");syncAssessmentProgressFromServer(selected);}
