@@ -856,7 +856,12 @@ document.getElementById("levelExamFinish").addEventListener("click",async()=>{
   document.getElementById("levelExamProgress").textContent="Evaluación terminada · "+percent+"%";
   const rows=skills.map(x=>'<div class="exam-skill-row"><span>'+x.name+'</span><div class="exam-skill-track" role="img" aria-label="'+x.name+': '+x.percent+' por ciento"><div class="exam-skill-fill '+(x.percent<70?'needs-work':'')+'" style="width:'+x.percent+'%"></div></div><strong>'+x.percent+'%</strong></div>').join("");
   const review=(result.review||[]).map((x,i)=>'<div class="exam-report-note"><strong>'+String(i+1)+'. '+(x.correct?'Correcta':'Para repasar')+' · '+x.skill+'</strong><p>'+x.prompt+'</p><p>'+x.explanation+'</p></div>').join("");
-  report.innerHTML='<div class="exam-report-grid"><div class="exam-report-stat"><span>Resultado de la evaluación</span><strong>'+levelExamScore+'/'+total+'</strong><small>${percent}% de respuestas correctas</small></div><div class="exam-report-stat"><span>Estado del nivel</span><strong>'+(passed?'Aprobado ✓':'Por reforzar')+'</strong><small>'+(passed?'Cumpliste el mínimo del 70 %.':'Necesitas 70 % para aprobar.')+'</small></div></div><h4>📊 Tu mapa de conocimientos</h4><p class="muted">Las barras resumen tu resultado por habilidad.</p><div class="exam-skill-list">'+rows+'</div><div class="exam-report-note"><strong>Lo que ya dominas:</strong> '+(strong.length?strong.join(", "):"sigue practicando para consolidar tus habilidades.")+'<br><strong>Conviene reforzar:</strong> '+(weak.length?weak.join(", "):"ninguna habilidad quedó por debajo del 70 % en esta muestra.")+'</div><h4>Revisión de respuestas</h4>'+review+'<p class="muted">El resultado fue calculado y guardado por el servidor NEXORA. Este informe resume esta evaluación y sirve como orientación de estudio.</p>';
+  report.innerHTML='<div class="exam-report-grid"><div class="exam-report-stat"><span>Resultado de la evaluación</span><strong>'+levelExamScore+'/'+total+'</strong><small>'+percent+'% de respuestas correctas</small></div><div class="exam-report-stat"><span>Estado del nivel</span><strong>'+(passed?'Aprobado ✓':'Por reforzar')+'</strong><small>'+(passed?'Cumpliste el mínimo del 70 %.':'Necesitas 70 % para aprobar.')+'</small></div></div><h4>📊 Tu mapa de conocimientos</h4><p class="muted">Las barras resumen tu resultado por habilidad.</p><div class="exam-skill-list">'+rows+'</div><div class="exam-report-note"><strong>Lo que ya dominas:</strong> '+(strong.length?strong.join(", "):"sigue practicando para consolidar tus habilidades.")+'<br><strong>Conviene reforzar:</strong> '+(weak.length?weak.join(", "):"ninguna habilidad quedó por debajo del 70 % en esta muestra.")+'</div><h4>Revisión de respuestas</h4>'+review+'<p class="muted">El resultado fue calculado y guardado por el servidor NEXORA. Este informe resume esta evaluación y sirve como orientación de estudio.</p>';
+  if(passed){
+   const certificateButton=document.createElement("button");certificateButton.type="button";certificateButton.className="btn secondary";certificateButton.textContent="↓ Descargar certificado";certificateButton.setAttribute("aria-label","Descargar certificado de aprobación del nivel");
+   certificateButton.addEventListener("click",()=>{if(window.NEXORA_DOWNLOAD_LEVEL_CERTIFICATE)window.NEXORA_DOWNLOAD_LEVEL_CERTIFICATE({topic,level:learningLevel,percent,skills});else alert("El módulo de certificados todavía se está preparando. Recarga la página e inténtalo de nuevo.");});
+   const certificateActions=document.createElement("div");certificateActions.className="lesson-actions";certificateActions.appendChild(certificateButton);report.appendChild(certificateActions);
+  }
   const progress=readLearningProgress(),id=topic+"-"+learningLevel,prev=progress[id]||{attempts:0,bestPercent:0},date=new Date().toISOString(),history=Array.isArray(prev.history)?prev.history:[];
   history.push({date,percent,score:levelExamScore,total,topic,level:learningLevel,type:"exam",skills,questionTexts:activeLevelExam.map(q=>q.q)});
   progress[id]={...prev,attempts:(Number(prev.attempts)||0)+1,bestPercent:Math.max(Number(prev.bestPercent)||0,percent),lastPercent:percent,examPercent:percent,examPassed:prev.examPassed===true||passed,updatedAt:date,history:history.slice(-60),lastExamSkills:skills};
@@ -2054,7 +2059,13 @@ body{padding:24px;background:#e8edf2}
    roadmapRoot.replaceChildren(...items);
   }
  }
- window.NEXORA_RENDER_CERTIFICATES=render;
+ window.NEXORA_DOWNLOAD_LEVEL_CERTIFICATE=({topic,level,percent,skills=[]}={})=>{
+   const subject=subjects.find(item=>item.id===topic);
+   const levelNames={basico:"Nivel 1 · Fundamentos",intermedio:"Nivel 2 · Aplicación",avanzado:"Nivel 3 · Análisis"};
+   const skill=Array.isArray(skills)&&skills.length?skills.map(item=>item.name).filter(Boolean).join(" · "):"Aprendizaje y aplicación de conocimientos";
+   certificateDocument({name:getName(profileData()),subject:subject?.name||"Área NEXORA",level:levelNames[level]||"Nivel completado",score:percent,skill,tier:"basic",subtitle:"Evaluación aprobada con el mínimo requerido del 70 %."});
+  };
+  window.NEXORA_RENDER_CERTIFICATES=render;
  render();
  window.addEventListener("storage",event=>{if(event.key==="nexora-learning-progress-v1"||event.key==="nexora-profile-v1")render();});
 })();
